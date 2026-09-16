@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 import sys
+import time
 
 import pytest
 
@@ -42,6 +43,7 @@ def _manifest(root: Path) -> dict:
         "authority_paths": ["src/evaluator.py"],
         "ignored_directory_names": [".git", "bin", "obj"],
         "ignored_globs": [],
+        "evaluation_budget_seconds": 300,
         "inherit_environment_keys": ["PATH", "HOME"],
         "environment": {},
         "evaluation_commands": [
@@ -206,3 +208,139 @@ def test_manifest_requires_argv_not_shell_string(tmp_path: Path) -> None:
 
     with pytest.raises(real_project.RealProjectError, match="argv array"):
         real_project.validate_manifest(manifest)
+
+
+def test_manifest_requires_explicit_forbidden_prefixes(tmp_path: Path) -> None:
+    host = tmp_path / "host"
+    host.mkdir()
+    _write_host(host)
+    manifest = _manifest(host)
+    manifest["forbidden_prefixes"] = []
+
+    with pytest.raises(real_project.RealProjectError, match="forbidden_prefix"):
+        real_project.validate_manifest(manifest)
+
+
+def test_manifest_refuses_writable_prefix_under_excluded_prefix(tmp_path: Path) -> None:
+    host = tmp_path / "host"
+    host.mkdir()
+    _write_host(host)
+    manifest = _manifest(host)
+    manifest["writable_prefixes"] = ["src", "src/evaluator.py"]
+
+    with pytest.raises(real_project.RealProjectError, match="lies at or under excluded prefix"):
+        real_project.validate_manifest(manifest)
+
+    nested = _manifest(host)
+    nested["writable_prefixes"] = ["src"]
+    nested["forbidden_prefixes"] = [".env", "src"]
+    with pytest.raises(real_project.RealProjectError, match="lies at or under excluded prefix"):
+        real_project.validate_manifest(nested)
+
+
+def test_manifest_requires_bound_run_identities(tmp_path: Path) -> None:
+    host = tmp_path / "host"
+    host.mkdir()
+    _write_host(host)
+
+    missing = _manifest(host)
+    missing["genesis_identity"] = {}
+    with pytest.raises(real_project.RealProjectError, match="non-empty genesis_identity"):
+        real_project.validate_manifest(missing)
+
+    partial = _manifest(host)
+    partial["host_identity"] = {"kind": "test-tree"}
+    with pytest.raises(real_project.RealProjectError, match="host_identity requires a non-empty 'value'"):
+        real_project.validate_manifest(partial)
+
+
+def test_manifest_requires_budget_admitting_one_evaluation_pass(tmp_path: Path) -> None:
+    host = tmp_path / "host"
+    host.mkdir()
+    _write_host(host)
+
+    absent = _manifest(host)
+    del absent["evaluation_budget_seconds"]
+    with pytest.raises(real_project.RealProjectError, match="evaluation_budget_seconds in"):
+        real_project.validate_manifest(absent)
+
+    too_small = _manifest(host)
+    too_small["evaluation_budget_seconds"] = 5
+    with pytest.raises(real_project.RealProjectError, match="one complete evaluation pass"):
+        real_project.validate_manifest(too_small)
+
+
+def test_budget_refuses_a_command_it_cannot_run_to_its_declared_timeout() -> None:
+    budget = real_project._Budget(total_seconds=10, started=time.monotonic() - 9.5)
+
+    budget.require("cheap command", 0.1)
+    with pytest.raises(real_project.RealProjectError, match="cannot admit") as caught:
+        budget.require("expensive command", 5.0)
+    assert caught.value.kind == "budget"
+
+
+def test_gate_fails_closed_when_the_overall_budget_cannot_cover_a_command(tmp_path: Path) -> None:
+    host = tmp_path / "host"
+    host.mkdir()
+    _write_host(host)
+    manifest = _manifest(host)
+    slow = "import time; time.sleep(1.2)"
+    manifest["evaluation_commands"] = [
+        {
+            "name": "slow-mandatory",
+            "role": "mandatory",
+            "argv": [sys.executable, "-c", slow],
+            "timeout_seconds": 2,
+        },
+        {
+            "name": "cheap-objective",
+            "role": "objective",
+            "argv": [sys.executable, "-c", "pass"],
+            "timeout_seconds": 1,
+        },
+    ]
+    manifest["evaluation_budget_seconds"] = 3
+
+    with pytest.raises(real_project.RealProjectError, match="evaluation budget") as caught:
+        real_project.run_gate(host, manifest)
+    assert caught.value.kind == "budget"
+    assert (host / "src" / "feature.txt").read_text(encoding="utf-8") == "disabled\n"
+
+
+def test_gate_refuses_to_pass_without_the_required_safety_invariant_arms(tmp_path: Path) -> None:
+    host = tmp_path / "host"
+    host.mkdir()
+    _write_host(host)
+    manifest = _manifest(host)
+    manifest["candidates"] = [
+        item for item in manifest["candidates"] if item["id"] == "measured-winner"
+    ]
+
+    report = real_project.run_gate(host, manifest)
+
+    assert report["selected_candidate_id"] == "measured-winner"
+    assert report["checks"]["unique_strict_improving_winner"] is True
+    assert report["checks"]["winner_replays_semantically"] is True
+    assert report["checks"]["boundary_violating_arm_refused"] is False
+    assert report["checks"]["host_check_failing_arm_rejected"] is False
+    assert report["passed"] is False
+
+
+def test_gate_reports_safety_invariant_and_disjointness_evidence(tmp_path: Path) -> None:
+    host = tmp_path / "host"
+    host.mkdir()
+    _write_host(host)
+    report = real_project.run_gate(host, _manifest(host))
+
+    assert report["safety_invariant_evidence"]["boundary_refused_candidate_ids"] == ["outside-boundary"]
+    assert sorted(report["safety_invariant_evidence"]["host_check_rejected_candidate_ids"]) == [
+        "break-regression",
+        "runtime-side-effect",
+    ]
+    assert report["selected_candidate_paths"] == ["src/feature.txt"]
+    assert report["checks"]["winner_diff_disjoint_from_authority"] is True
+    assert report["evaluation_budget_seconds"] == 300
+    assert isinstance(report["evaluation_elapsed_ms"], int)
+
+    refused = next(item for item in report["candidates"] if item["id"] == "outside-boundary")
+    assert refused["construction_refusal_kind"] == "path_policy"
