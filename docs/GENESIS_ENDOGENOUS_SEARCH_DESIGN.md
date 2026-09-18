@@ -178,6 +178,22 @@ Only after that should the fixed `PROGRAMME` cease to be the primary metamorphos
 - search must stop at its declared candidate/node/budget bound;
 - two identical runs from the same checkpoint and deterministic search seed must reproduce artifact and verdict digests.
 
+## 8. Recursive research strategy above the MetaPolicy
+
+The next DEVELOPMENT layer is now specified separately at
+[`GENESIS_RECURSIVE_RESEARCH_STRATEGY.md`](GENESIS_RECURSIVE_RESEARCH_STRATEGY.md). It makes the
+*experiment-selection strategy itself* lineage-held, content-addressed and evidence-adaptive.
+
+This does not replace body, policy, MetaPolicy or transformation-language evolution. It sits above
+them and answers a different question: after several measured attempts have produced the same
+aggregate outcome, should the lineage keep exploiting that causal family or spend its next bounded
+experiment on a structurally different hypothesis?
+
+The strategy may adapt only from aggregate admitted records and may only rank inert candidate
+experiments before external evaluation. Hidden cases and scientific acceptance remain outside the
+mutable lineage. The same evidence-memory digest is idempotent, so recursive strategy depth requires
+new evidence rather than repeated invocation.
+
 ## What this would establish
 
 This design would close the most important distinction left in the current DEVELOPMENT apparatus:
