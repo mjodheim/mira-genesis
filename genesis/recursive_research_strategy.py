@@ -76,6 +76,7 @@ def create_strategy(
     weights: Mapping[str, int] | None = None,
     generation: int = 0,
     parent_strategy_digest: str = "",
+    evidence_memory_digest: str = "",
 ) -> dict[str, Any]:
     chosen = dict(DEFAULT_WEIGHTS if weights is None else weights)
     if set(chosen) != set(WEIGHT_KEYS):
@@ -90,14 +91,18 @@ def create_strategy(
     if generation < 0:
         raise RecursiveResearchError("research strategy generation may not be negative")
     parent = str(parent_strategy_digest or "")
-    if generation == 0 and parent:
-        raise RecursiveResearchError("seed research strategy may not name a parent")
-    if generation > 0 and not parent:
-        raise RecursiveResearchError("descendant research strategy must name its parent")
+    evidence = str(evidence_memory_digest or "")
+    if generation == 0 and (parent or evidence):
+        raise RecursiveResearchError("seed research strategy may not name parent or adaptation evidence")
+    if generation > 0 and (not parent or not evidence):
+        raise RecursiveResearchError(
+            "descendant research strategy must name both parent and adaptation evidence"
+        )
     payload = {
         "schema": STRATEGY_SCHEMA,
         "generation": generation,
         "parent_strategy_digest": parent,
+        "evidence_memory_digest": evidence,
         "weights": clean,
     }
     return {**payload, "strategy_digest": digest_of(payload)}
@@ -110,6 +115,7 @@ def validate_strategy(record: Mapping[str, Any]) -> dict[str, Any]:
         weights=dict(record.get("weights") or {}),
         generation=int(record.get("generation", -1)),
         parent_strategy_digest=str(record.get("parent_strategy_digest") or ""),
+        evidence_memory_digest=str(record.get("evidence_memory_digest") or ""),
     )
     if rebuilt != dict(record):
         raise RecursiveResearchError("research strategy does not reconstruct from its own fields")
@@ -359,6 +365,9 @@ def derive_strategy_descendant(
     if recorded != digest_of(unsigned):
         raise RecursiveResearchError("research memory digest does not reproduce")
 
+    if current["evidence_memory_digest"] == memory["memory_digest"]:
+        return {"changed": False, "strategy": current, "reasons": []}
+
     weights = dict(current["weights"])
     reasons: list[str] = []
     weakened = [
@@ -388,6 +397,7 @@ def derive_strategy_descendant(
         weights=weights,
         generation=int(current["generation"]) + 1,
         parent_strategy_digest=current["strategy_digest"],
+        evidence_memory_digest=str(memory["memory_digest"]),
     )
     return {"changed": True, "strategy": descendant, "reasons": reasons}
 
