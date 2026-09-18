@@ -1,0 +1,61 @@
+{
+  "schema": "genesis-free-metamorphosis-v5-preregistration-v1",
+  "preregistration_date": "2026-09-13",
+  "policy_id": "GENESIS_FREE_METAMORPHOSIS_CUMULATIVE_SEARCH_V5_2026-09-12",
+  "private_control_merge": "5f6f874394bee26bd18515cfe1deffd686108b95",
+  "prospective": true,
+  "v4_results_rescored": false,
+  "proposer": {
+    "external": true,
+    "generated_prompt": true,
+    "attempt_specific_human_guidance_allowed": false,
+    "case_level_evaluator_information_disclosed": false
+  },
+  "frontier": {
+    "champions": 1,
+    "max_neutral_nodes": 8,
+    "max_neutral_depth": 2,
+    "neutral_can_be_proposal_parent": true,
+    "promotion_is_champion_relative": true,
+    "parent_schedule": "odd_champion_even_neutral_when_available"
+  },
+  "selection": {
+    "hard_boundary_required": true,
+    "protected_regression_allowed": false,
+    "positive_signal": "capability_category_plus_one_or_warning_count_minus_one",
+    "cross_runner_elapsed_time_is_fitness": false,
+    "neutral_changed_descendants_can_enter_frontier": true
+  },
+  "fitness_surfaces": {
+    "wording_family_routing": true,
+    "offline_execution_contracts": true,
+    "execution_contracts_informed_by_v4_plateau": true,
+    "independent_retrospective_confirmation_of_v4": false
+  },
+  "success_criterion": {
+    "minimum_champion_promotions": 2,
+    "requires_promotion_through_prior_neutral_ancestor": true,
+    "requires_later_bundle_inheriting_resulting_champion": true,
+    "requires_hard_boundary_and_no_protected_regression": true
+  },
+  "claim_boundary": {
+    "bounded_mira_task_surface_only": true,
+    "agi": false,
+    "consciousness": false,
+    "unrestricted_self_programming": false,
+    "autonomous_production_authority": false,
+    "broad_cross_project_generality": false,
+    "open_ended_recursive_self_improvement": false
+  },
+  "redaction": {
+    "private_source_published": false,
+    "raw_proposals_published": false,
+    "proposer_bundles_published": false,
+    "campaign_state_archives_published": false,
+    "evaluator_cases_published": false,
+    "execution_fixture_details_published": false,
+    "private_paths_published": false,
+    "raw_logs_published": false,
+    "credentials_or_environment_values_published": false
+  }
+}
