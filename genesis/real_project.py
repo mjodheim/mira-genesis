@@ -34,6 +34,40 @@ CANDIDATE_SCHEMA = "genesis-real-project-candidate-v1"
 class RealProjectError(RuntimeError):
     """Raised when the immutable host/evaluator contract is malformed or violated."""
 
+    def __init__(self, message: str, *, kind: str = "contract") -> None:
+        super().__init__(message)
+        self.kind = kind
+
+
+@dataclass
+class _Budget:
+    """Overall wall-clock allowance for one bounded gate run."""
+
+    total_seconds: int
+    started: float
+
+    def remaining(self) -> float:
+        return self.total_seconds - (time.monotonic() - self.started)
+
+    def consumed_ms(self) -> int:
+        return int((time.monotonic() - self.started) * 1000)
+
+    def require(self, label: str, needed: float) -> None:
+        """Fail closed unless ``label`` can still run for its full declared timeout.
+
+        The remaining allowance never shortens a command.  A command truncated by the
+        budget would fail for an instrument reason while being recorded as a host-check
+        outcome, and that attribution ambiguity is not admissible evidence here.
+        """
+        left = self.remaining()
+        if left < needed:
+            raise RealProjectError(
+                "overall evaluation budget of %ds cannot admit %s at its declared %gs timeout: "
+                "%.3fs remaining"
+                % (self.total_seconds, label, needed, max(left, 0.0)),
+                kind="budget",
+            )
+
 
 @dataclass(frozen=True)
 class CommandResult:
@@ -143,7 +177,12 @@ def _validate_command(raw: Mapping[str, Any]) -> dict[str, Any]:
     argv = raw.get("argv")
     if not isinstance(argv, list) or not argv or not all(isinstance(item, str) and item for item in argv):
         raise RealProjectError(f"evaluation command {name!r} requires a non-empty string argv array")
-    timeout = int(raw.get("timeout_seconds", 0))
+    try:
+        timeout = int(raw.get("timeout_seconds", 0))
+    except (TypeError, ValueError) as problem:
+        raise RealProjectError(
+            f"evaluation command {name!r} timeout_seconds must be an integer number of seconds"
+        ) from problem
     if timeout < 1 or timeout > 3600:
         raise RealProjectError(f"evaluation command {name!r} timeout must be in [1, 3600]")
     cwd = str(raw.get("cwd") or ".")
@@ -167,6 +206,21 @@ def _validate_command(raw: Mapping[str, Any]) -> dict[str, Any]:
     }
 
 
+def _validate_identity(raw: Any, label: str) -> dict[str, str]:
+    """Require an explicit, fully string-typed identity binding for the run."""
+    if not isinstance(raw, Mapping) or not raw:
+        raise RealProjectError(f"manifest requires a non-empty {label} binding")
+    identity: dict[str, str] = {}
+    for key, item in raw.items():
+        if not isinstance(key, str) or not isinstance(item, str) or not key.strip() or not item.strip():
+            raise RealProjectError(f"{label} must map non-empty strings to non-empty strings")
+        identity[key] = item
+    for required in ("kind", "value"):
+        if not identity.get(required, "").strip():
+            raise RealProjectError(f"{label} requires a non-empty {required!r} field")
+    return identity
+
+
 def validate_manifest(raw: Mapping[str, Any]) -> dict[str, Any]:
     value = dict(raw)
     if value.get("schema") != MANIFEST_SCHEMA:
@@ -176,7 +230,18 @@ def validate_manifest(raw: Mapping[str, Any]) -> dict[str, Any]:
     if not writable:
         raise RealProjectError("manifest requires at least one writable_prefix")
     forbidden = tuple(_normal_relative_path(item) for item in value.get("forbidden_prefixes", ()))
+    if not forbidden:
+        raise RealProjectError(
+            "manifest requires at least one explicit forbidden_prefix; the host contract does not "
+            "admit an implicit empty exclusion set"
+        )
     authority = tuple(_normal_relative_path(item) for item in value.get("authority_paths", ()))
+    for prefix in writable:
+        for excluded in forbidden + authority:
+            if _prefix_match(prefix, excluded):
+                raise RealProjectError(
+                    f"writable prefix {prefix!r} lies at or under excluded prefix {excluded!r}"
+                )
 
     ignored_dirs = tuple(str(item) for item in value.get("ignored_directory_names", ()))
     if any(not item or "/" in item or "\\" in item for item in ignored_dirs):
@@ -236,6 +301,22 @@ def validate_manifest(raw: Mapping[str, Any]) -> dict[str, Any]:
     if not expected_host_tree:
         raise RealProjectError("manifest requires expected_host_tree_digest")
 
+    try:
+        budget = int(value.get("evaluation_budget_seconds", 0))
+    except (TypeError, ValueError) as problem:
+        raise RealProjectError("evaluation_budget_seconds must be an integer number of seconds") from problem
+    if budget < 1 or budget > 86400:
+        raise RealProjectError("manifest requires evaluation_budget_seconds in [1, 86400]")
+    single_pass = sum(int(item["timeout_seconds"]) for item in commands)
+    if budget < single_pass:
+        raise RealProjectError(
+            "evaluation_budget_seconds %d cannot admit one complete evaluation pass of %d s"
+            % (budget, single_pass)
+        )
+
+    genesis_identity = _validate_identity(value.get("genesis_identity"), "genesis_identity")
+    host_identity = _validate_identity(value.get("host_identity"), "host_identity")
+
     environment = value.get("environment", {})
     if not isinstance(environment, Mapping) or not all(
         isinstance(key, str) and isinstance(item, str) for key, item in environment.items()
@@ -255,11 +336,12 @@ def validate_manifest(raw: Mapping[str, Any]) -> dict[str, Any]:
         "ignored_directory_names": list(ignored_dirs),
         "ignored_globs": list(ignored_globs),
         "evaluation_commands": list(commands),
+        "evaluation_budget_seconds": budget,
         "candidates": normalized_candidates,
         "inherit_environment_keys": list(inherited),
         "environment": dict(environment),
-        "genesis_identity": dict(value.get("genesis_identity") or {}),
-        "host_identity": dict(value.get("host_identity") or {}),
+        "genesis_identity": genesis_identity,
+        "host_identity": host_identity,
     }
 
 
@@ -315,26 +397,29 @@ def _apply_candidate(workspace: Path, candidate: Mapping[str, Any], manifest: Ma
         raw_path = str(mutation["path"])
         problem = _path_policy_problem(raw_path, manifest)
         if problem:
-            raise RealProjectError(problem)
+            raise RealProjectError(problem, kind="path_policy")
         relative = _normal_relative_path(raw_path)
         if relative in seen:
-            raise RealProjectError(f"candidate mutates {relative!r} more than once")
+            raise RealProjectError(f"candidate mutates {relative!r} more than once", kind="duplicate_path")
         seen.add(relative)
         target = workspace / Path(relative)
         exists = target.exists()
         if mutation.get("expected_absent"):
             if exists:
-                raise RealProjectError(f"candidate expected {relative!r} to be absent")
+                raise RealProjectError(f"candidate expected {relative!r} to be absent", kind="base_state")
         else:
             expected = str(mutation.get("expected_sha256") or "")
             if not expected:
-                raise RealProjectError(f"candidate mutation {relative!r} has no expected_sha256")
+                raise RealProjectError(
+                    f"candidate mutation {relative!r} has no expected_sha256", kind="base_state"
+                )
             if not exists or not target.is_file():
-                raise RealProjectError(f"candidate expected existing file {relative!r}")
+                raise RealProjectError(f"candidate expected existing file {relative!r}", kind="base_state")
             actual = _sha256_file(target)
             if actual != expected:
                 raise RealProjectError(
-                    f"candidate base mismatch for {relative!r}: expected {expected}, got {actual}"
+                    f"candidate base mismatch for {relative!r}: expected {expected}, got {actual}",
+                    kind="base_state",
                 )
         target.parent.mkdir(parents=True, exist_ok=True)
         old_content = target.read_text(encoding="utf-8") if exists else ""
@@ -365,11 +450,18 @@ def _build_environment(manifest: Mapping[str, Any]) -> dict[str, str]:
     return environment
 
 
-def _run_command(workspace: Path, command: Mapping[str, Any], manifest: Mapping[str, Any]) -> CommandResult:
+def _run_command(
+    workspace: Path,
+    command: Mapping[str, Any],
+    manifest: Mapping[str, Any],
+    *,
+    budget: _Budget,
+) -> CommandResult:
     argv = _expanded_argv(command["argv"], workspace)
     cwd = workspace if command["cwd"] == "." else workspace / command["cwd"]
     if not cwd.is_dir():
         raise RealProjectError(f"evaluation cwd does not exist: {command['cwd']!r}")
+    budget.require(f"evaluation command {command['name']!r}", float(command["timeout_seconds"]))
     started = time.monotonic()
     timed_out = False
     exit_code: int | None
@@ -445,13 +537,16 @@ def _semantic_outcome(results: Sequence[CommandResult], *, tracked_source_stable
     }
 
 
-def _evaluate_workspace(workspace: Path, manifest: Mapping[str, Any]) -> dict[str, Any]:
+def _evaluate_workspace(workspace: Path, manifest: Mapping[str, Any], *, budget: _Budget) -> dict[str, Any]:
     before_files, before_digest = tree_inventory(
         workspace,
         ignored_directory_names=manifest["ignored_directory_names"],
         ignored_globs=manifest["ignored_globs"],
     )
-    results = [_run_command(workspace, item, manifest) for item in manifest["evaluation_commands"]]
+    results = [
+        _run_command(workspace, item, manifest, budget=budget)
+        for item in manifest["evaluation_commands"]
+    ]
     after_files, after_digest = tree_inventory(
         workspace,
         ignored_directory_names=manifest["ignored_directory_names"],
@@ -479,6 +574,7 @@ def _evaluate_candidate(
     manifest: Mapping[str, Any],
     *,
     temp_root: Path,
+    budget: _Budget,
 ) -> dict[str, Any]:
     record: dict[str, Any] = {
         "id": candidate["id"],
@@ -486,6 +582,7 @@ def _evaluate_candidate(
         "candidate_digest": _candidate_digest(candidate),
         "construction_refused": False,
         "construction_reason": None,
+        "construction_refusal_kind": None,
     }
     workspace = temp_root / f"candidate-{candidate['id']}"
     _copy_host(source_root, workspace, manifest)
@@ -494,6 +591,7 @@ def _evaluate_candidate(
     except RealProjectError as problem:
         record["construction_refused"] = True
         record["construction_reason"] = str(problem)
+        record["construction_refusal_kind"] = getattr(problem, "kind", "contract")
         record["accepted"] = False
         return record
     expected_files, expected_tree = tree_inventory(
@@ -501,7 +599,7 @@ def _evaluate_candidate(
         ignored_directory_names=manifest["ignored_directory_names"],
         ignored_globs=manifest["ignored_globs"],
     )
-    evaluation = _evaluate_workspace(workspace, manifest)
+    evaluation = _evaluate_workspace(workspace, manifest, budget=budget)
     record.update(
         {
             "mutation": mutation_record,
@@ -559,18 +657,28 @@ def run_gate(
         )
 
     manifest_digest = digest_of(manifest)
+    budget = _Budget(
+        total_seconds=int(manifest["evaluation_budget_seconds"]),
+        started=time.monotonic(),
+    )
     with tempfile.TemporaryDirectory(prefix="genesis-real-project-") as temp:
         temp_root = Path(temp)
         baseline_workspace = temp_root / "baseline"
         _copy_host(source_root, baseline_workspace, manifest)
-        baseline = _evaluate_workspace(baseline_workspace, manifest)
+        baseline = _evaluate_workspace(baseline_workspace, manifest, budget=budget)
         if not baseline["mandatory_pass"]:
             raise RealProjectError("unchanged host baseline fails one or more mandatory evaluations")
         if not baseline["tracked_source_stable"]:
             raise RealProjectError("host evaluator mutates tracked source even on the baseline")
 
         candidate_records = [
-            _evaluate_candidate(source_root, candidate, manifest, temp_root=temp_root)
+            _evaluate_candidate(
+                source_root,
+                candidate,
+                manifest,
+                temp_root=temp_root,
+                budget=budget,
+            )
             for candidate in manifest["candidates"]
         ]
         baseline_score = int(baseline["objective_pass_count"])
@@ -597,7 +705,7 @@ def run_gate(
             replay_workspace = temp_root / "winner-replay"
             _copy_host(source_root, replay_workspace, manifest)
             mutation = _apply_candidate(replay_workspace, winner_candidate, manifest)
-            replay_eval = _evaluate_workspace(replay_workspace, manifest)
+            replay_eval = _evaluate_workspace(replay_workspace, manifest, budget=budget)
             replay = {
                 "mutation": mutation,
                 "evaluation": replay_eval,
@@ -621,12 +729,40 @@ def run_gate(
     for item in candidate_records:
         item["accepted"] = item["id"] == selected_id
 
+    boundary_refused = [
+        item["id"]
+        for item in candidate_records
+        if item["construction_refused"] and item.get("construction_refusal_kind") == "path_policy"
+    ]
+    host_check_rejected = [
+        item["id"]
+        for item in candidate_records
+        if not item["construction_refused"]
+        and item["id"] != selected_id
+        and (
+            item.get("mandatory_pass") is False
+            or item.get("tracked_source_stable") is False
+            or int(item.get("objective_pass_count", -1)) <= baseline_score
+        )
+    ]
+    selected_paths = (
+        []
+        if winner_record is None
+        else [str(entry["path"]) for entry in winner_record["mutation"]["applied"]]
+    )
+    winner_diff_disjoint = bool(selected_paths) and all(
+        _path_policy_problem(path, manifest) is None for path in selected_paths
+    )
+
     checks = {
         "bound_exact_host_snapshot": source_tree_before == manifest["expected_host_tree_digest"],
         "baseline_mandatory_checks_pass": baseline["mandatory_pass"] is True,
         "baseline_evaluator_does_not_mutate_source": baseline["tracked_source_stable"] is True,
         "complete_candidate_accounting": len(candidate_records) == len(manifest["candidates"]),
+        "boundary_violating_arm_refused": bool(boundary_refused),
+        "host_check_failing_arm_rejected": bool(host_check_rejected),
         "unique_strict_improving_winner": winner_record is not None,
+        "winner_diff_disjoint_from_authority": winner_diff_disjoint,
         "winner_replays_semantically": replay is not None and replay["semantic_matches"] is True,
         "host_source_unchanged": host_unchanged,
     }
@@ -644,6 +780,13 @@ def run_gate(
         "baseline_objective_pass_count": baseline_score,
         "selected_candidate_id": selected_id,
         "selected_candidate_digest": None if winner_record is None else winner_record["candidate_digest"],
+        "selected_candidate_paths": selected_paths,
+        "safety_invariant_evidence": {
+            "boundary_refused_candidate_ids": boundary_refused,
+            "host_check_rejected_candidate_ids": host_check_rejected,
+        },
+        "evaluation_budget_seconds": int(manifest["evaluation_budget_seconds"]),
+        "evaluation_elapsed_ms": budget.consumed_ms(),
         "winner_replay": replay,
         "checks": checks,
         "passed": all(checks.values()),
