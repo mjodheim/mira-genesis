@@ -1,0 +1,59 @@
+{
+  "schema": "mira-free-v8-public-summary-v1",
+  "snapshot_date": "2026-09-20",
+  "status": "preregistered_seeded_before_attempt_001",
+  "policy_id": "GENESIS_FREE_METAMORPHOSIS_OPEN_RSI_V8_2026-09-20",
+  "control_head": "1537380f376e3edd863bf173d96607c410919b3d",
+  "prior_v7": {
+    "attempts_used": 24,
+    "attempts_max": 24,
+    "final_outcome": "3/4",
+    "missing_condition": "nonchampion stepping-stone caused champion promotion"
+  },
+  "budget": {
+    "used": 0,
+    "max": 48,
+    "remaining": 48
+  },
+  "external_evaluator_observations_spent": 0,
+  "evaluator_authority_unchanged_from_v7_3": true,
+  "open_archive": {
+    "initial_nodes": 1,
+    "neutral_depth_ceiling": null,
+    "nonzero_viable_node_selection_pressure": true,
+    "meta_profile_digest_excluded_from_novelty": true
+  },
+  "protected_archive_axes": [
+    "code_delegation",
+    "self_modify"
+  ],
+  "meta_period": 4,
+  "seed": {
+    "v7_final_state_sha256": "3d3a573760d3432816a5c5dc976605d83c9f36fd824e5b4a54ee3d2de2a5b3f5",
+    "state_sha256": "fe872c3583215bad1bcfbd535f2dfdb07ad325aa29985c39f699dca0613b3d72",
+    "state_digest": "d39686b864da5ed218a386b7b7e7fd06332bce80abe5a9de8eaedabddb303fa5",
+    "retained_tree_digest": "8c85b82d6dec7e29c029677f5cd7c6a9e0df466fb5cd831252cdb71b879b4cea",
+    "research_memory_digest": "f978a9c66dbc04fdffb061dbab0189d7358159902e985a8607fb23cdb87d2966",
+    "evolver_profile_digest": "602168edfe5783f5e6fc0e148fdeba7eb04d0e8f3eb071c222562369ba92d32d"
+  },
+  "next_attempt": {
+    "attempt": 1,
+    "bundle_sha256": "154ece396e0095c8adf3e8cf475b9fbe40ac631df25681f970a806e51b894863",
+    "context_digest": "f8c525d6e9daf38ddfcc888a0199bd1c7d1b4811ad495dcd2dacd7a889667655",
+    "prompt_sha256": "82ad7fe090fed360a43b96cd35a5a26c87c6ffe8a17da9482facf6df4410a96a",
+    "primary_parent_node_id": "v8-seed-champion",
+    "primary_parent_tree_digest": "8c85b82d6dec7e29c029677f5cd7c6a9e0df466fb5cd831252cdb71b879b4cea",
+    "reference_parent_node_id": null,
+    "inherited_evolver_profile_generation": 0,
+    "meta_attempt": false,
+    "candidate_count": 6,
+    "status": "ready_not_evaluated"
+  },
+  "success": {
+    "stepping_stone_success": false,
+    "recursive_process_success": false,
+    "strong_recursive_success": false,
+    "safety_criterion": true,
+    "confirmation_distinct_branch_promotion": false
+  }
+}
