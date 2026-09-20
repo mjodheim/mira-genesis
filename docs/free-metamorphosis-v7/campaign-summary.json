@@ -2,11 +2,11 @@
   "schema": "genesis-free-metamorphosis-v7-public-summary-v1",
   "snapshot_date": "2026-09-20",
   "policy_id": "GENESIS_FREE_METAMORPHOSIS_RECURSIVE_SEARCH_V7_2026-09-18",
-  "campaign_status": "active_after_attempt_022_before_attempt_023",
+  "campaign_status": "active_after_attempt_023_before_final_attempt_024",
   "attempt_budget": {
-    "used": 22,
+    "used": 23,
     "max": 24,
-    "remaining": 2
+    "remaining": 1
   },
   "retained_generation": 2,
   "retained_tree_digest": "8c85b82d6dec7e29c029677f5cd7c6a9e0df466fb5cd831252cdb71b879b4cea",
@@ -57,19 +57,19 @@
     "satisfied_count": 3,
     "total": 4
   },
-  "latest_completed_attempt": 22,
-  "latest_completed_verdict": "neutral_depth_2",
-  "next_attempt": 23,
-  "next_parent_kind": "champion",
-  "next_parent_depth": 0,
-  "next_parent_tree_digest": "8c85b82d6dec7e29c029677f5cd7c6a9e0df466fb5cd831252cdb71b879b4cea",
-  "next_context_digest": "ce2080121464b2bd78c46960bb1f5c50e8e0179ce4c3dacd8eea43f1c3694fe2",
-  "next_prompt_sha256": "8ca60329516e3d9aac364fe19fdd7f7f3b81ebcdda4a83a17e934049d6e9edbf",
+  "latest_completed_attempt": 23,
+  "latest_completed_verdict": "neutral_depth_1",
+  "next_attempt": 24,
+  "next_parent_kind": "neutral",
+  "next_parent_depth": 1,
+  "next_parent_tree_digest": "d624d7e4dac29fc78ea8bf51c55de83aafa39ae49e00537e45a7a3616966cbf3",
+  "next_context_digest": "7acd624f4b0caa452068ccd2e891589be4f0bd484a2b4d342b42a2675938d481",
+  "next_prompt_sha256": "b936e20c674db331c5b9ee82bed0a0fc1e408e2f314301d564318ae6e811bee7",
   "publication_boundary": "docs/free-metamorphosis-v7/PUBLICATION_BOUNDARY.md",
-  "latest_completed_child_tree_digest": "cff4df81aad8a778bedcab72b5524082c033cc1f04034f3c38d71719a5d33a2f",
-  "latest_completed_result_sha256": "734b54eb1356b00ae27c20b724f59d9ee7ae5339d88eb5bdab17c85ff031a381",
-  "next_bundle_sha256": "8179676ad6309920ae2f9ace4dfbd3a284c3efea571f4afe3ba51d138611b1ae",
-  "research_memory_digest": "6e7f066a5634a2a9696bd074dc9995494f091bb60ccb1faa0255553765d44604",
+  "latest_completed_child_tree_digest": "9eccf2c82efa4317b44aefe6c618e0480e48ca250f3b4e14899f8c7f63a8875c",
+  "latest_completed_result_sha256": "18c4a68c84e11c7d362d4b6fe508dc8b848a2dada47b995149d8dc48ade8bc2a",
+  "next_bundle_sha256": "222402d4cb98f9e6632a15871303ff92be4d9c68bee641f6a2d09c95ac4c39e9",
+  "research_memory_digest": "0f5e02172577475152d5fdae13bb93dc722ffdfd5966e8d7be863702c799d032",
   "research_strategy_digest": "426ce1aefd39522ef2e709fbc270117ef13edba3c650898bd143080ac188d70c",
   "research_strategy_generation": 15,
   "latest_pre_evaluation_event": {
@@ -137,10 +137,10 @@
       "repaired_prompt_sha256": "8ca60329516e3d9aac364fe19fdd7f7f3b81ebcdda4a83a17e934049d6e9edbf"
     }
   ],
-  "next_bundle_status": "canonical_a023_v7_3_ready",
+  "next_bundle_status": "canonical_final_a024_ready",
   "control_plane_erratum": {
     "id": "v7.1-tournament-rubric-disclosure",
-    "status": "applied_and_validated_through_a022",
+    "status": "applied_and_validated_through_a023",
     "path": "docs/free-metamorphosis-v7/ERRATUM_V7_1_TOURNAMENT_RUBRIC.md",
     "evaluator_observations_spent": 0,
     "attempts_used_after_erratum": 16,
@@ -252,14 +252,14 @@
     {
       "id": "v7.1-tournament-rubric-disclosure",
       "path": "docs/free-metamorphosis-v7/ERRATUM_V7_1_TOURNAMENT_RUBRIC.md",
-      "status": "applied_and_validated_through_a022",
+      "status": "applied_and_validated_through_a023",
       "changes_frozen_scorer": false,
       "changes_evaluator": false
     },
     {
       "id": "v7.2-history-window-sync",
       "path": "docs/free-metamorphosis-v7/ERRATUM_V7_2_HISTORY_WINDOW.md",
-      "status": "applied_and_validated_through_a022",
+      "status": "applied_and_validated_through_a023",
       "trigger": "aggregate research history crossed MAX_HISTORY=24",
       "external_evaluator_rerun": false,
       "canonical_a018_run_id": 35512801831,
@@ -276,7 +276,7 @@
     {
       "id": "v7.3-patch-format-disclosure",
       "path": "docs/free-metamorphosis-v7/ERRATUM_V7_3_PATCH_FORMAT.md",
-      "status": "applied_before_a023_retry",
+      "status": "applied_and_validated_through_a023",
       "trigger": "frozen parser requires diff --git headers while prior prompt said normal unified Git patch",
       "evaluator_observations_spent": 0,
       "attempts_used_after_erratum": 22,
@@ -470,5 +470,49 @@
     "campaign_state_sha256": "bb5d0f564a45f6c8ceadddc884e462857f7e3a44b7590261d76d78d570bf2f06",
     "evaluator_observations_spent": 1,
     "attempts_used_after_event": 22
+  },
+  "canonical_attempt_023": {
+    "parent_kind": "champion",
+    "parent_depth": 0,
+    "parent_tree_digest": "8c85b82d6dec7e29c029677f5cd7c6a9e0df466fb5cd831252cdb71b879b4cea",
+    "proposal_patch_sha256": "6bcc0419439c531f839cc0eacccee51481fc9889c54ffce644609a85efa4722e",
+    "transcript_sha256": "9ba583d8e2f72522a4e143d37711147a52c06693b523325013435db4693b40b1",
+    "deterministic_winner": "additional-context-production-contract",
+    "deterministic_winner_score": 200,
+    "deterministic_ranking": [
+      200,
+      197,
+      197,
+      191,
+      -23
+    ],
+    "external_evaluator_run_id": 35533825893,
+    "hard_pass": true,
+    "frozen_tests": {
+      "passed": 292,
+      "failed": 0,
+      "skipped": 1,
+      "total": 293
+    },
+    "warning_count": 7,
+    "capability_deltas": {
+      "code_delegation": 0,
+      "conversation": 0,
+      "execution_personal_read": 0,
+      "memory_media": 0,
+      "personal_read": 0,
+      "personal_write": 0,
+      "self_modify": 0,
+      "system_admin": 0
+    },
+    "verdict": "neutral_depth_1",
+    "child_tree_digest": "9eccf2c82efa4317b44aefe6c618e0480e48ca250f3b4e14899f8c7f63a8875c",
+    "neutral_id": "neutral-023-9eccf2c82efa",
+    "neutral_archive_sha256": "eb4d17bf1e44995020efade6a658462a931f2e23011ebd0dd9d2f3550332d9c7",
+    "observation_result_digest": "958c03c0166c515342d333b382b6e8a62a53990fa39902c616f39fd6e27a4aa7",
+    "canonical_result_sha256": "18c4a68c84e11c7d362d4b6fe508dc8b848a2dada47b995149d8dc48ade8bc2a",
+    "campaign_state_sha256": "27be49f31efaf6d68a52cb57aa0a337f0025d324c9bffd5dc8b0e2e2d1041a0e",
+    "evaluator_observations_spent": 1,
+    "attempts_used_after_event": 23
   }
 }
