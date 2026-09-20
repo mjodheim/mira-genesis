@@ -2,11 +2,11 @@
   "schema": "genesis-free-metamorphosis-v7-public-summary-v1",
   "snapshot_date": "2026-09-20",
   "policy_id": "GENESIS_FREE_METAMORPHOSIS_RECURSIVE_SEARCH_V7_2026-09-18",
-  "campaign_status": "active_after_attempt_019_before_attempt_020",
+  "campaign_status": "active_after_attempt_020_before_attempt_021",
   "attempt_budget": {
-    "used": 19,
+    "used": 20,
     "max": 24,
-    "remaining": 5
+    "remaining": 4
   },
   "retained_generation": 2,
   "retained_tree_digest": "8c85b82d6dec7e29c029677f5cd7c6a9e0df466fb5cd831252cdb71b879b4cea",
@@ -57,19 +57,19 @@
     "satisfied_count": 3,
     "total": 4
   },
-  "latest_completed_attempt": 19,
-  "latest_completed_verdict": "neutral_depth_1",
-  "next_attempt": 20,
-  "next_parent_kind": "neutral",
-  "next_parent_depth": 1,
-  "next_parent_tree_digest": "618dd6299e8ce962362588f57d9e8a5a27625200ab4fad8a370f90b6e8a3f812",
-  "next_context_digest": "21a38bacfbce6c8f5264765b2724a8b5497793f9b48d618504bc1c74b3ea6ef8",
-  "next_prompt_sha256": "89d6a19e43f75fcf57b351eb3cc5a473d19823f55f7e37f65605bebc4df3e362",
+  "latest_completed_attempt": 20,
+  "latest_completed_verdict": "neutral_depth_2",
+  "next_attempt": 21,
+  "next_parent_kind": "champion",
+  "next_parent_depth": 0,
+  "next_parent_tree_digest": "8c85b82d6dec7e29c029677f5cd7c6a9e0df466fb5cd831252cdb71b879b4cea",
+  "next_context_digest": "2acae9eae708d1b20a2ce8f34f9c39a570bb012f22a34727a692d468917050cf",
+  "next_prompt_sha256": "5b9f09717b2aae9fceca9633dbd4cb5c1330619ecca6474a4a736a7545c8a3d0",
   "publication_boundary": "docs/free-metamorphosis-v7/PUBLICATION_BOUNDARY.md",
-  "latest_completed_child_tree_digest": "4218fd8cee0a50d10ef6c710ed84a29f07044a044f41671b325d97ad13cf63ec",
-  "latest_completed_result_sha256": "784a7f759a51ee73ffdb396583667953a27aabb8333354349dfe618f592b8d3c",
-  "next_bundle_sha256": "027b509de4f762835a1c652f1d229376e5548d74bf2ca63c04d7f8777cdc0e36",
-  "research_memory_digest": "e53838487ec70470962ac5f507f0b9a45c02a4a1e9be748f4d61c18f0cac8d11",
+  "latest_completed_child_tree_digest": "3b18e36d9ef1f9a62bb37e3117e0e6c477383eaa5903b6120dd9824245194a20",
+  "latest_completed_result_sha256": "c0a3e2daac381758995dfd37d445dd397a06df2a56c1947d8f8bc2706757dc13",
+  "next_bundle_sha256": "1f467f61931704d6688f4c290847ee851963e8041fbccee223fbd068a25f2427",
+  "research_memory_digest": "d3a1e1a463348309cfcb3a54a5767dd2a9b97d36d5d92ac764665d5081bc7f32",
   "research_strategy_digest": "426ce1aefd39522ef2e709fbc270117ef13edba3c650898bd143080ac188d70c",
   "research_strategy_generation": 15,
   "latest_pre_evaluation_event": {
@@ -122,10 +122,10 @@
       "attempts_used_after_event": 16
     }
   ],
-  "next_bundle_status": "canonical_a020_ready",
+  "next_bundle_status": "canonical_a021_ready",
   "control_plane_erratum": {
     "id": "v7.1-tournament-rubric-disclosure",
-    "status": "applied_and_validated_through_a019",
+    "status": "applied_and_validated_through_a020",
     "path": "docs/free-metamorphosis-v7/ERRATUM_V7_1_TOURNAMENT_RUBRIC.md",
     "evaluator_observations_spent": 0,
     "attempts_used_after_erratum": 16,
@@ -237,14 +237,14 @@
     {
       "id": "v7.1-tournament-rubric-disclosure",
       "path": "docs/free-metamorphosis-v7/ERRATUM_V7_1_TOURNAMENT_RUBRIC.md",
-      "status": "applied_and_validated_through_a019",
+      "status": "applied_and_validated_through_a020",
       "changes_frozen_scorer": false,
       "changes_evaluator": false
     },
     {
       "id": "v7.2-history-window-sync",
       "path": "docs/free-metamorphosis-v7/ERRATUM_V7_2_HISTORY_WINDOW.md",
-      "status": "applied_and_validated_through_a019",
+      "status": "applied_and_validated_through_a020",
       "trigger": "aggregate research history crossed MAX_HISTORY=24",
       "external_evaluator_rerun": false,
       "canonical_a018_run_id": 35512801831,
@@ -310,5 +310,49 @@
     "campaign_state_sha256": "5cd64fd4dc23c796fd5e7b32fb6f0daae8652f7d7da2e8c4e74691222130fbe8",
     "evaluator_observations_spent": 1,
     "attempts_used_after_event": 19
+  },
+  "canonical_attempt_020": {
+    "parent_kind": "neutral",
+    "parent_depth": 1,
+    "parent_tree_digest": "618dd6299e8ce962362588f57d9e8a5a27625200ab4fad8a370f90b6e8a3f812",
+    "proposal_patch_sha256": "d8c912127ebc40bbb4c4adfa15b8a171a02297fe5d1a2a69deeef30c2c536071",
+    "transcript_sha256": "f0da5691e211bf2d96ce4da396c20bf44d2002465b2a69b402223fc706a68517",
+    "deterministic_winner": "c01-bus-side-effect-receipts",
+    "deterministic_winner_score": 340,
+    "deterministic_ranking": [
+      340,
+      189,
+      186,
+      83,
+      23
+    ],
+    "external_evaluator_run_id": 35517922677,
+    "hard_pass": true,
+    "frozen_tests": {
+      "passed": 292,
+      "failed": 0,
+      "skipped": 1,
+      "total": 293
+    },
+    "warning_count": 7,
+    "capability_deltas": {
+      "code_delegation": 0,
+      "conversation": 0,
+      "execution_personal_read": 0,
+      "memory_media": 0,
+      "personal_read": 0,
+      "personal_write": 0,
+      "self_modify": 0,
+      "system_admin": 0
+    },
+    "verdict": "neutral_depth_2",
+    "child_tree_digest": "3b18e36d9ef1f9a62bb37e3117e0e6c477383eaa5903b6120dd9824245194a20",
+    "neutral_id": "neutral-020-3b18e36d9ef1",
+    "neutral_archive_sha256": "56de9bd56b45a9b9be84ec68082821209b87614903efda0c7a8780eabc7520c6",
+    "observation_result_digest": "072e1a6e01e37e1ba6e1d35ffe0d15ed0170c5da4864ee4de9681c98d3ab7fe3",
+    "canonical_result_sha256": "c0a3e2daac381758995dfd37d445dd397a06df2a56c1947d8f8bc2706757dc13",
+    "campaign_state_sha256": "5999a837e2674c8ad7c8f4850f6aa96d3ea42560117c108b18f86b82dbd5ff78",
+    "evaluator_observations_spent": 1,
+    "attempts_used_after_event": 20
   }
 }
