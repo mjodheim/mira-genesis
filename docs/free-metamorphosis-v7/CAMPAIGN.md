@@ -339,13 +339,21 @@ The descendant **hard-passed with 292 passed, 0 failed, 1 skipped**, warning cou
 
 Because A022 did not promote, it does **not** satisfy the still-missing neutral-caused promotion condition.
 
-### A023 — next state
+### A023 — next state and v7.3 patch-format disclosure
 
 A023 is odd and therefore returns to the retained champion.
 
-- next bundle SHA-256: `3f9d1b30c59131ca3aac34a6c3f7de8efddf83c439fdde190494ee91aef70088`
-- next context digest: `ce2080121464b2bd78c46960bb1f5c50e8e0179ce4c3dacd8eea43f1c3694fe2`
-- next prompt SHA-256: `c2a75a482f3140d658d6a4056aabeae4469e4c490ab5fd29947b684a8ae69c71`
+The first A023 proposer output selected the deterministic tournament winner correctly, but its `proposal.patch` used a plain unified diff without the `diff --git a/<path> b/<path>` file header required by the frozen v7 patch parser. The parser rejected the output during transcript verification, before `launcher.attempt(...)` and before any external evaluator invocation. **No canonical observation was spent**; attempts used remain **22 / 24**.
+
+The v7.3 repair is disclosure-only: it makes that already-frozen parser requirement explicit in the generated prompt. Fitness, scorer, evaluator, parent selection, research memory, strategy and budgets are unchanged and byte-identity checks confirm the scientific runner/control files are unchanged from v7.2. Python 3.11 and 3.13 control matrices pass.
+
+- rejected patch SHA-256: `b5c973e2c8854427d4e11590cf1f7366a26fb4d8a44a64749ee497ab7090fae6`
+- rejected transcript SHA-256: `f310970c8af77de27ccb104be8b7db86ffe8685077a6272dbe23f3f1b218b3d3`
+- evaluator observations spent by rejected output: **0**
+- repaired control head: `0d210c8ddfe0a42bcade819eed43c9fe079805a0`
+- repaired bundle SHA-256: `8179676ad6309920ae2f9ace4dfbd3a284c3efea571f4afe3ba51d138611b1ae`
+- repaired context digest: `ce2080121464b2bd78c46960bb1f5c50e8e0179ce4c3dacd8eea43f1c3694fe2`
+- repaired prompt SHA-256: `8ca60329516e3d9aac364fe19fdd7f7f3b81ebcdda4a83a17e934049d6e9edbf`
 - parent kind: champion, depth 0
 - parent tree: `8c85b82d6dec7e29c029677f5cd7c6a9e0df466fb5cd831252cdb71b879b4cea`
 - attempts remaining: **2**
