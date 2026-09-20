@@ -2,7 +2,7 @@
   "schema": "genesis-free-metamorphosis-v7-public-summary-v1",
   "snapshot_date": "2026-09-20",
   "policy_id": "GENESIS_FREE_METAMORPHOSIS_RECURSIVE_SEARCH_V7_2026-09-18",
-  "campaign_status": "active_before_attempt_017",
+  "campaign_status": "active_before_attempt_017_retry",
   "attempt_budget": {
     "used": 16,
     "max": 24,
@@ -115,5 +115,25 @@
       "evaluator_observations_spent": 0,
       "attempts_used_after_event": 16
     }
-  ]
+  ],
+  "next_bundle_status": "historical_rejected_pre_evaluator_bundle_do_not_reuse",
+  "control_plane_erratum": {
+    "id": "v7.1-tournament-rubric-disclosure",
+    "status": "prospective_before_a017_retry",
+    "path": "docs/free-metamorphosis-v7/ERRATUM_V7_1_TOURNAMENT_RUBRIC.md",
+    "evaluator_observations_spent": 0,
+    "attempts_used_after_erratum": 16,
+    "changes_frozen_scorer": false,
+    "changes_strategy_weights": false,
+    "changes_research_memory": false,
+    "changes_evaluator": false,
+    "changes_attempt_budget": false,
+    "a017_reconstruction_scores": [
+      240,
+      226,
+      220,
+      200,
+      180
+    ]
+  }
 }
