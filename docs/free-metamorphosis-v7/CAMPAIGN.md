@@ -1,8 +1,8 @@
 # Genesis Free Metamorphosis v7 — public campaign chronology
 
-**Snapshot:** 20 September 2026, after canonical Attempt 021 and before canonical Attempt 022  
+**Snapshot:** 20 September 2026, after canonical Attempt 022 and before canonical Attempt 023  
 **Policy:** `GENESIS_FREE_METAMORPHOSIS_RECURSIVE_SEARCH_V7_2026-09-18`  
-**Canonical observations used:** 21 / 24  
+**Canonical observations used:** 22 / 24  
 **Retained generation:** 2  
 **Strong cumulative criterion:** 3 / 4 conditions satisfied
 
@@ -34,7 +34,8 @@ pre-v7 retained champion
          |      +-- A018 neutral depth 2 (from A011)
          +-- A019 neutral depth 1\n         |      +-- A020 neutral depth 2 (from A011)
          +-- A021 neutral depth 1
-         +-- A022 next: A013 neutral depth 1
+         |      +-- A022 neutral depth 2 (from A013)
+         +-- A023 next: champion
 ```
 
 ## Aggregate retained champion after A009
@@ -71,7 +72,8 @@ Warning count: **7**. Remaining aggregate headroom is concentrated in `conversat
 | 018 | A011 neutral | neutral depth 2 | no aggregate delta |
 | 019 | champion | neutral depth 1 | no aggregate delta |\n| 020 | A011 neutral | neutral depth 2 | no aggregate delta |
 | 021 | champion | neutral depth 1 | no aggregate delta |
-| 022 | A013 neutral | next | even-attempt deterministic neutral selection |
+| 022 | A013 neutral | neutral depth 2 | no aggregate delta |
+| 023 | champion | next | odd-attempt champion selection |
 
 ### A007 — first v7 promotion
 
@@ -318,18 +320,37 @@ The descendant **hard-passed with 292 passed, 0 failed, 1 skipped**, warning cou
 
 A021 does not change the retained champion and therefore does not satisfy the missing neutral-caused promotion condition.
 
-### A022 — next state
+### A022 — neutral depth 2
 
-A022 is even and traverses the bounded neutral frontier. The deterministic selector chooses the A013 depth-1 neutral.
+A022 traversed the A013 depth-1 neutral and selected `A-role-preserving-chat-context` as the deterministic tournament winner with score **226**. The proposal separated system/task context from role-aware conversation history in the production AgentHub path, forwarding structured history to chat-native providers while retaining flattened history for CLI providers.
 
-- next bundle SHA-256: `7c6bef7cf18d1f527fcad5253c6fd7ba525ea9b11e1e3b1b3d892fa0b38630f1`
-- next context digest: `760fc0fa50c863b0c9eb85ae11141f69fd91190114e5726e9ae84af04e0958df`
-- next prompt SHA-256: `9b0044e076a1fc6174fc6d7ad4458f09c1227dc4477bb2f57eaf9e224debb334`
-- parent kind: neutral, depth 1
+The descendant **hard-passed with 292 passed, 0 failed, 1 skipped**, warning count 7, and no aggregate capability delta. It was admitted as a depth-2 neutral, not promoted.
+
+- proposal patch SHA-256: `450c4df1a3a4c4b72ab0ecf6e04840780bd200f9d81aa87e0a7c2cf210dbeb29`
+- transcript SHA-256: `bd7fe5a448c41ce92bfeef748b26927dc9259b253f4921f96fea3fe0481c3088`
+- deterministic tournament ranking: `226 / 63 / 52 / 20 / -14`
 - parent tree: `6f9f55b7e4b241054e35d57f4971b2aae4e30b5f2fa4262041f38391f22ea72e`
-- attempts remaining: **3**
+- child tree: `cff4df81aad8a778bedcab72b5524082c033cc1f04034f3c38d71719a5d33a2f`
+- neutral id: `neutral-022-cff4df81aad8`
+- neutral archive SHA-256: `cb7ff6520b8a45f8fb031e471917d0a9a812ec94319258a10645986f22754299`
+- observation result digest: `3b5cabbe7f7ef083901663c76f6e572afd13a7c683a8b57f393e27b3cc26e4e2`
+- canonical published result SHA-256: `734b54eb1356b00ae27c20b724f59d9ee7ae5339d88eb5bdab17c85ff031a381`
+- campaign state SHA-256 after A022: `bb5d0f564a45f6c8ceadddc884e462857f7e3a44b7590261d76d78d570bf2f06`
 
-## Strong cumulative criterion after A021
+Because A022 did not promote, it does **not** satisfy the still-missing neutral-caused promotion condition.
+
+### A023 — next state
+
+A023 is odd and therefore returns to the retained champion.
+
+- next bundle SHA-256: `3f9d1b30c59131ca3aac34a6c3f7de8efddf83c439fdde190494ee91aef70088`
+- next context digest: `ce2080121464b2bd78c46960bb1f5c50e8e0179ce4c3dacd8eea43f1c3694fe2`
+- next prompt SHA-256: `c2a75a482f3140d658d6a4056aabeae4469e4c490ab5fd29947b684a8ae69c71`
+- parent kind: champion, depth 0
+- parent tree: `8c85b82d6dec7e29c029677f5cd7c6a9e0df466fb5cd831252cdb71b879b4cea`
+- attempts remaining: **2**
+
+## Strong cumulative criterion after A022
 
 | Condition | Status |
 | --- | --- |
@@ -338,4 +359,4 @@ A022 is even and traverses the bounded neutral frontier. The deterministic selec
 | post-bootstrap proposal selected under a strategy descendant generated from new v7 evidence | **satisfied** |
 | later bundle inherits promoted champion | **satisfied** |
 
-Correct reading after A021: **3/4**, not completion. Three canonical observations remain. A022 is neutral-parent and can satisfy the remaining causal condition only if it produces a qualifying promotion.
+Correct reading after A022: **3/4**, not completion. Two canonical observations remain. A023 returns to the champion; if the criterion is still missing afterward, A024 is the final neutral-parent opportunity in the bounded campaign.
