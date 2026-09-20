@@ -1,8 +1,8 @@
 # Genesis Free Metamorphosis v7 — public campaign chronology
 
-**Snapshot:** 20 September 2026, after canonical Attempt 015 and before canonical Attempt 016  
+**Snapshot:** 20 September 2026, after canonical Attempt 016 and before canonical Attempt 017  
 **Policy:** `GENESIS_FREE_METAMORPHOSIS_RECURSIVE_SEARCH_V7_2026-09-18`  
-**Canonical observations used:** 15 / 24  
+**Canonical observations used:** 16 / 24  
 **Retained generation:** 2  
 **Strong cumulative criterion:** 3 / 4 conditions satisfied
 
@@ -29,7 +29,8 @@ pre-v7 retained champion
          +-- A013 neutral depth 1
          |      +-- A014 neutral depth 2
          +-- A015 hard-boundary reject
-         +-- A016 next: selected from A013 neutral
+         +-- A016 neutral depth 2 (from A013)
+         +-- A017 next: champion
 ```
 
 ## Aggregate retained champion after A009
@@ -61,7 +62,8 @@ Warning count: **7**. Remaining aggregate headroom is concentrated in `conversat
 | 013 | champion | neutral depth 1 | no aggregate delta |
 | 014 | A013 neutral | neutral depth 2 | no aggregate delta |
 | 015 | champion | hard-boundary reject | frozen API test boundary failed |
-| 016 | A013 neutral | pending | event-identity conversation hypothesis |
+| 016 | A013 neutral | neutral depth 2 | no aggregate delta |
+| 017 | champion | next | generated after A016 |
 
 ### A007 — first v7 promotion
 
@@ -113,20 +115,33 @@ The descendant failed the frozen hard boundary: **276 tests passed, 13 failed, 1
 - rejected descendant tree: `88fdc0cae45e8bfd5fc9e2b1467d023e68f2a92e8f7824278923c28b792e3713`
 - canonical result: `48ab3c79dc4e80d4f1c4511c6da39d175621347817de7800875e8c9bf2999031`
 
-### A016 — pre-evaluation state
+### A016 — neutral depth 2
 
-A016 is selected from the A013 neutral at depth 1. Its sanitized hypothesis is to preserve legitimate repeated conversation turns by distinguishing the current channel event by event identity rather than deleting historical turns merely because their text matches the current message.
+A016 was selected from the A013 neutral at depth 1. Its sanitized hypothesis was to preserve legitimate repeated conversation turns by distinguishing the current channel event by event identity rather than deleting historical turns merely because their text matches the current message.
+
+The descendant hard-passed with **292 tests passed, 0 failed, 1 skipped**, warning count 7, and no aggregate capability delta. It was admitted as a depth-2 neutral, not promoted.
 
 - patch: `7a9403f38ef1615bdbe2894fdfb0296dad69d114e193c086c22c4562d3807cd8`
 - transcript: `cf18f80559572cfdaa7ae5fbc7d53041c19305cddaf6999679f27f2380bf8432`
-- context: `25bc01451cbbd004c211977119de9560ff02077db5b396bc1b608dc5f7e0f213`
-- prompt: `1e9b0cae278444648439bbd3021a02738ee4b53feeef9fc5a24bb75db1ed7f1c`
 - parent tree: `6f9f55b7e4b241054e35d57f4971b2aae4e30b5f2fa4262041f38391f22ea72e`
+- canonical descendant tree: `b49c6f24e0c7624cdf14d098eee004288f2d501b46e4057a7ec0d9010ebd2582`
+- neutral id: `neutral-016-b49c6f24e0c7`
+- canonical result SHA-256: `d610e7ecdcc8ef2b2b998907601ac02978c9fad9410ee41b2a34b49af4353eb2`
 - deterministic tournament score: **206**
 
-No A016 result is claimed in this snapshot.
+This is the third clean neutral-parent traversal in the line and again does **not** satisfy the missing causal-neutral promotion condition.
 
-## Strong cumulative criterion after A015
+### A017 — next state
+
+A017 is odd and returns to the retained champion.
+
+- next bundle SHA-256: `82f0597d1aa66662d63c19e91a955223a66b578787aa4ade718a62a55bd1a03b`
+- next context digest: `a30f2d6822aa5d1b5232b517fd98cf3d988befc0fa689903b15914074d948fc8`
+- next prompt SHA-256: `1a701223279a1098833d6ecd4918f3dab1b119d2f04fda7e244a961aad3ed6da`
+- parent kind: champion
+- parent tree: `8c85b82d6dec7e29c029677f5cd7c6a9e0df466fb5cd831252cdb71b879b4cea`
+
+## Strong cumulative criterion after A016
 
 | Condition | Status |
 | --- | --- |
@@ -135,4 +150,4 @@ No A016 result is claimed in this snapshot.
 | post-bootstrap proposal selected under a strategy descendant generated from new v7 evidence | **satisfied** |
 | later bundle inherits promoted champion | **satisfied** |
 
-Correct reading: **3/4**, not completion.
+Correct reading after A016: **3/4**, not completion.
