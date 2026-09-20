@@ -26,6 +26,12 @@ Parent selection is frozen for causal isolation: odd attempts use the current ch
 
 A descendant becomes champion only if it improves at least one positive capability axis and regresses none relative to the current champion. Champion-equivalent hard-pass descendants may enter the bounded neutral frontier. Hard-boundary failures are rejected. Wall time is observational only.
 
+## v7.1 proposer-information erratum
+
+Before the next canonical A017 proposer run, the proposer-side information boundary must disclose the exact already-frozen deterministic tournament rubric. This is an information-completeness repair only: it changes no scorer, weight, memory, evaluator, parent rule, budget or prior measurement.
+
+The exact rubric and A017 reconstruction check are recorded in [ERRATUM_V7_1_TOURNAMENT_RUBRIC.md](ERRATUM_V7_1_TOURNAMENT_RUBRIC.md). The laboratory continues to recompute the tournament independently before any external evaluation is spent.
+
 ## Strong cumulative criterion
 
 Within the frozen budget:
