@@ -1,10 +1,10 @@
 # Genesis Free Metamorphosis v7 — public campaign chronology
 
-**Snapshot:** 20 September 2026, after canonical Attempt 022 and before canonical Attempt 023  
+**Snapshot:** 20 September 2026, final state after canonical Attempt 024  
 **Policy:** `GENESIS_FREE_METAMORPHOSIS_RECURSIVE_SEARCH_V7_2026-09-18`  
-**Canonical observations used:** 22 / 24  
+**Canonical observations used:** 24 / 24 — campaign closed  
 **Retained generation:** 2  
-**Strong cumulative criterion:** 3 / 4 conditions satisfied
+**Strong cumulative criterion:** 3 / 4 conditions satisfied — final
 
 This chronology is sanitized. Private source, patches, evaluator cases and operational artifacts remain outside this repository.
 
@@ -32,10 +32,12 @@ pre-v7 retained champion
          +-- A016 neutral depth 2 (from A013)
          +-- A017 neutral depth 1
          |      +-- A018 neutral depth 2 (from A011)
-         +-- A019 neutral depth 1\n         |      +-- A020 neutral depth 2 (from A011)
+         +-- A019 neutral depth 1
+         |      +-- A020 neutral depth 2 (from A011)
          +-- A021 neutral depth 1
          |      +-- A022 neutral depth 2 (from A013)
-         +-- A023 next: champion
+         +-- A023 neutral depth 1
+         |      +-- A024 neutral depth 2 (from A017) — FINAL
 ```
 
 ## Aggregate retained champion after A009
@@ -70,10 +72,12 @@ Warning count: **7**. Remaining aggregate headroom is concentrated in `conversat
 | 016 | A013 neutral | neutral depth 2 | no aggregate delta |
 | 017 | champion | neutral depth 1 | no aggregate delta |
 | 018 | A011 neutral | neutral depth 2 | no aggregate delta |
-| 019 | champion | neutral depth 1 | no aggregate delta |\n| 020 | A011 neutral | neutral depth 2 | no aggregate delta |
+| 019 | champion | neutral depth 1 | no aggregate delta |
+| 020 | A011 neutral | neutral depth 2 | no aggregate delta |
 | 021 | champion | neutral depth 1 | no aggregate delta |
 | 022 | A013 neutral | neutral depth 2 | no aggregate delta |
-| 023 | champion | next | odd-attempt champion selection |
+| 023 | champion | neutral depth 1 | no aggregate delta |
+| 024 | A017 neutral | neutral depth 2 — FINAL | no aggregate delta |
 
 ### A007 — first v7 promotion
 
@@ -358,7 +362,48 @@ The v7.3 repair is disclosure-only: it makes that already-frozen parser requirem
 - parent tree: `8c85b82d6dec7e29c029677f5cd7c6a9e0df466fb5cd831252cdb71b879b4cea`
 - attempts remaining: **2**
 
-## Strong cumulative criterion after A022
+### A023 — neutral depth 1 under v7.3
+
+After the disclosure-only v7.3 patch-format repair, a fresh A023 proposer selected `additional-context-production-contract` as the deterministic tournament winner with score **200**, ahead of `197 / 197 / 191 / -23`. The proposal propagated `AgentRequest.AdditionalContext` through the non-streaming production system-context path without changing routing or tool authority.
+
+The descendant **hard-passed with 292 passed, 0 failed, 1 skipped**, warning count 7, and no aggregate capability delta. It was admitted as a depth-1 neutral, not promoted.
+
+- proposal patch SHA-256: `6bcc0419439c531f839cc0eacccee51481fc9889c54ffce644609a85efa4722e`
+- transcript SHA-256: `9ba583d8e2f72522a4e143d37711147a52c06693b523325013435db4693b40b1`
+- parent tree: `8c85b82d6dec7e29c029677f5cd7c6a9e0df466fb5cd831252cdb71b879b4cea`
+- child tree: `9eccf2c82efa4317b44aefe6c618e0480e48ca250f3b4e14899f8c7f63a8875c`
+- neutral id: `neutral-023-9eccf2c82efa`
+- neutral archive SHA-256: `eb4d17bf1e44995020efade6a658462a931f2e23011ebd0dd9d2f3550332d9c7`
+- observation result digest: `958c03c0166c515342d333b382b6e8a62a53990fa39902c616f39fd6e27a4aa7`
+- canonical published result SHA-256: `18c4a68c84e11c7d362d4b6fe508dc8b848a2dada47b995149d8dc48ade8bc2a`
+- campaign state SHA-256 after A023: `27be49f31efaf6d68a52cb57aa0a337f0025d324c9bffd5dc8b0e2e2d1041a0e`
+- canonical evaluator run: `35533825893`
+
+A023 does not satisfy the still-missing neutral-caused promotion condition.
+
+### A024 — FINAL neutral depth 2
+
+A024 was the 24th and final canonical observation. It descended from the admitted A017 depth-1 neutral and selected `C1-contextual-profile-parity` as the deterministic tournament winner with score **244**, ahead of `226 / 206 / 64`.
+
+The proposal completed the selected neutral parent's contextual personal-write mechanism across both production and streaming pipelines by routing production profile selection through the existing `ContextualToolProfileResolver`.
+
+The descendant **hard-passed with 292 passed, 0 failed, 1 skipped**, warning count 7, and no aggregate capability delta. It was admitted as a depth-2 neutral, not promoted.
+
+- proposal patch SHA-256: `50924f8e9dad6d8e25686c2e4edcfab92f736b622b2aa15f9e81730fba1fb8bc`
+- transcript SHA-256: `72d03cb9ef2606ba8dc5e184c2a191c133fa9b2389a6292310e3206ed6e4782d`
+- parent tree: `d624d7e4dac29fc78ea8bf51c55de83aafa39ae49e00537e45a7a3616966cbf3`
+- child tree: `dfe73e08bf75eefc3885004b6aee7fe36db7c8f348193e704352a3c997cd70cd`
+- neutral id: `neutral-024-dfe73e08bf75`
+- neutral archive SHA-256: `87ddab55c5de7164cd8fccc20c03905df16a37f71e1a48ca48ccb87b4af598d4`
+- observation result digest: `9449e63a28ad300cd9157f269dcbbdfdbb1880d377e0454951146adedc6e1228`
+- canonical published result SHA-256: `82a302849e1f49f2c32c322488cff374632c67105adeb71624c15156a8a83015`
+- final campaign state SHA-256: `3d3a573760d3432816a5c5dc976605d83c9f36fd824e5b4a54ee3d2de2a5b3f5`
+- final state digest: `75fac8b32a9bce04c53033ea1097695a431f7b41ce6164ee6c9444c572b473ba`
+- canonical evaluator run: `35534705144`
+
+A024 therefore does **not** establish the missing neutral-caused promotion condition. The preregistered v7 campaign is closed at **3/4** after the full **24/24** observation budget.
+
+## Final strong cumulative criterion after A024
 
 | Condition | Status |
 | --- | --- |
@@ -367,4 +412,4 @@ The v7.3 repair is disclosure-only: it makes that already-frozen parser requirem
 | post-bootstrap proposal selected under a strategy descendant generated from new v7 evidence | **satisfied** |
 | later bundle inherits promoted champion | **satisfied** |
 
-Correct reading after A022: **3/4**, not completion. Two canonical observations remain. A023 returns to the champion; if the criterion is still missing afterward, A024 is the final neutral-parent opportunity in the bounded campaign.
+Final reading after A024: **3/4**. The 24-observation budget is exhausted and the campaign is closed. The missing condition — a champion promotion causally descended from an admitted neutral stepping stone — was not demonstrated in v7.
