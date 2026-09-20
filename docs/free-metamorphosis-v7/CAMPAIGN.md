@@ -1,8 +1,8 @@
 # Genesis Free Metamorphosis v7 — public campaign chronology
 
-**Snapshot:** 20 September 2026, after canonical Attempt 019 and before canonical Attempt 020  
+**Snapshot:** 20 September 2026, after canonical Attempt 020 and before canonical Attempt 021  
 **Policy:** `GENESIS_FREE_METAMORPHOSIS_RECURSIVE_SEARCH_V7_2026-09-18`  
-**Canonical observations used:** 19 / 24  
+**Canonical observations used:** 20 / 24  
 **Retained generation:** 2  
 **Strong cumulative criterion:** 3 / 4 conditions satisfied
 
@@ -32,7 +32,8 @@ pre-v7 retained champion
          +-- A016 neutral depth 2 (from A013)
          +-- A017 neutral depth 1
          |      +-- A018 neutral depth 2 (from A011)
-         +-- A019 neutral depth 1\n         +-- A020 next: A011 neutral depth 1
+         +-- A019 neutral depth 1\n         |      +-- A020 neutral depth 2 (from A011)
+         +-- A021 next: champion
 ```
 
 ## Aggregate retained champion after A009
@@ -67,7 +68,8 @@ Warning count: **7**. Remaining aggregate headroom is concentrated in `conversat
 | 016 | A013 neutral | neutral depth 2 | no aggregate delta |
 | 017 | champion | neutral depth 1 | no aggregate delta |
 | 018 | A011 neutral | neutral depth 2 | no aggregate delta |
-| 019 | champion | neutral depth 1 | no aggregate delta |\n| 020 | A011 neutral | next | even-attempt deterministic neutral selection |
+| 019 | champion | neutral depth 1 | no aggregate delta |\n| 020 | A011 neutral | neutral depth 2 | no aggregate delta |
+| 021 | champion | next | odd-attempt champion selection |
 
 ### A007 — first v7 promotion
 
@@ -277,18 +279,36 @@ The descendant **hard-passed with 292 passed, 0 failed, 1 skipped**, warning cou
 
 A019 does not change the retained champion and therefore does not satisfy the missing neutral-caused promotion condition.
 
-### A020 — next state
+### A020 — neutral depth 2
 
-A020 is even and therefore traverses the bounded neutral frontier. The deterministic selector chooses the A011 depth-1 neutral.
+A020 traversed the A011 depth-1 neutral and selected `c01-bus-side-effect-receipts` as the deterministic tournament winner with score **340**. The proposal introduced request/reply completion receipts for interactive Gmail and Matrix writes while preserving the existing one-way notification subjects and authorization boundaries.
 
-- next bundle SHA-256: `027b509de4f762835a1c652f1d229376e5548d74bf2ca63c04d7f8777cdc0e36`
-- next context digest: `21a38bacfbce6c8f5264765b2724a8b5497793f9b48d618504bc1c74b3ea6ef8`
-- next prompt SHA-256: `89d6a19e43f75fcf57b351eb3cc5a473d19823f55f7e37f65605bebc4df3e362`
-- parent kind: neutral, depth 1
+The descendant **hard-passed with 292 passed, 0 failed, 1 skipped**, warning count 7, and no aggregate capability delta. It was admitted as a depth-2 neutral, not promoted.
+
+- proposal patch SHA-256: `d8c912127ebc40bbb4c4adfa15b8a171a02297fe5d1a2a69deeef30c2c536071`
+- transcript SHA-256: `f0da5691e211bf2d96ce4da396c20bf44d2002465b2a69b402223fc706a68517`
 - parent tree: `618dd6299e8ce962362588f57d9e8a5a27625200ab4fad8a370f90b6e8a3f812`
-- attempts remaining: **5**
+- child tree: `3b18e36d9ef1f9a62bb37e3117e0e6c477383eaa5903b6120dd9824245194a20`
+- neutral id: `neutral-020-3b18e36d9ef1`
+- neutral archive SHA-256: `56de9bd56b45a9b9be84ec68082821209b87614903efda0c7a8780eabc7520c6`
+- observation result digest: `072e1a6e01e37e1ba6e1d35ffe0d15ed0170c5da4864ee4de9681c98d3ab7fe3`
+- canonical published result SHA-256: `c0a3e2daac381758995dfd37d445dd397a06df2a56c1947d8f8bc2706757dc13`
+- campaign state SHA-256 after A020: `5999a837e2674c8ad7c8f4850f6aa96d3ea42560117c108b18f86b82dbd5ff78`
 
-## Strong cumulative criterion after A019
+Because A020 did not promote, it does **not** satisfy the still-missing neutral-caused promotion condition.
+
+### A021 — next state
+
+A021 is odd and therefore returns to the retained champion.
+
+- next bundle SHA-256: `1f467f61931704d6688f4c290847ee851963e8041fbccee223fbd068a25f2427`
+- next context digest: `2acae9eae708d1b20a2ce8f34f9c39a570bb012f22a34727a692d468917050cf`
+- next prompt SHA-256: `5b9f09717b2aae9fceca9633dbd4cb5c1330619ecca6474a4a736a7545c8a3d0`
+- parent kind: champion, depth 0
+- parent tree: `8c85b82d6dec7e29c029677f5cd7c6a9e0df466fb5cd831252cdb71b879b4cea`
+- attempts remaining: **4**
+
+## Strong cumulative criterion after A020
 
 | Condition | Status |
 | --- | --- |
@@ -297,4 +317,4 @@ A020 is even and therefore traverses the bounded neutral frontier. The determini
 | post-bootstrap proposal selected under a strategy descendant generated from new v7 evidence | **satisfied** |
 | later bundle inherits promoted champion | **satisfied** |
 
-Correct reading after A019: **3/4**, not completion. A020 is a neutral-parent attempt and can satisfy the remaining causal condition only if it produces a qualifying champion promotion.
+Correct reading after A020: **3/4**, not completion. Four canonical observations remain.
