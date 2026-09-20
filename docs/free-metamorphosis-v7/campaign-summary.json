@@ -1,0 +1,75 @@
+{
+  "schema": "genesis-free-metamorphosis-v7-public-summary-v1",
+  "snapshot_date": "2026-09-20",
+  "policy_id": "GENESIS_FREE_METAMORPHOSIS_RECURSIVE_SEARCH_V7_2026-09-18",
+  "campaign_status": "active_before_attempt_017",
+  "attempt_budget": {
+    "used": 16,
+    "max": 24,
+    "remaining": 8
+  },
+  "retained_generation": 2,
+  "retained_tree_digest": "8c85b82d6dec7e29c029677f5cd7c6a9e0df466fb5cd831252cdb71b879b4cea",
+  "warning_count": 7,
+  "aggregate_scores": {
+    "code_delegation": [
+      25,
+      25
+    ],
+    "conversation": [
+      15,
+      20
+    ],
+    "execution_personal_read": [
+      2,
+      2
+    ],
+    "memory_media": [
+      15,
+      15
+    ],
+    "personal_read": [
+      20,
+      20
+    ],
+    "personal_write": [
+      35,
+      40
+    ],
+    "self_modify": [
+      20,
+      20
+    ],
+    "system_admin": [
+      20,
+      20
+    ]
+  },
+  "champion_promotions": [
+    7,
+    9
+  ],
+  "strong_cumulative": {
+    "two_promotions": true,
+    "neutral_causal_promotion": false,
+    "post_bootstrap_strategy_descendant": true,
+    "later_bundle_inherits_promoted_champion": true,
+    "satisfied_count": 3,
+    "total": 4
+  },
+  "latest_completed_attempt": 16,
+  "latest_completed_verdict": "neutral_depth_2",
+  "next_attempt": 17,
+  "next_parent_kind": "champion",
+  "next_parent_depth": 0,
+  "next_parent_tree_digest": "8c85b82d6dec7e29c029677f5cd7c6a9e0df466fb5cd831252cdb71b879b4cea",
+  "next_context_digest": "a30f2d6822aa5d1b5232b517fd98cf3d988befc0fa689903b15914074d948fc8",
+  "next_prompt_sha256": "1a701223279a1098833d6ecd4918f3dab1b119d2f04fda7e244a961aad3ed6da",
+  "publication_boundary": "docs/free-metamorphosis-v7/PUBLICATION_BOUNDARY.md",
+  "latest_completed_child_tree_digest": "b49c6f24e0c7624cdf14d098eee004288f2d501b46e4057a7ec0d9010ebd2582",
+  "latest_completed_result_sha256": "d610e7ecdcc8ef2b2b998907601ac02978c9fad9410ee41b2a34b49af4353eb2",
+  "next_bundle_sha256": "82f0597d1aa66662d63c19e91a955223a66b578787aa4ade718a62a55bd1a03b",
+  "research_memory_digest": "ead5a8a52fce6c939c50c9d4faaa4485dfb9c4052bc4fd79a62a2ce007a3f292",
+  "research_strategy_digest": "426ce1aefd39522ef2e709fbc270117ef13edba3c650898bd143080ac188d70c",
+  "research_strategy_generation": 15
+}
