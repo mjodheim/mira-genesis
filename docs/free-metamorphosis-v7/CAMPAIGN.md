@@ -1,10 +1,10 @@
 # Genesis Free Metamorphosis v7 — public campaign chronology
 
-**Snapshot:** 20 September 2026, after canonical Attempt 023 and before final canonical Attempt 024  
+**Snapshot:** 20 September 2026, final state after canonical Attempt 024  
 **Policy:** `GENESIS_FREE_METAMORPHOSIS_RECURSIVE_SEARCH_V7_2026-09-18`  
-**Canonical observations used:** 23 / 24  
+**Canonical observations used:** 24 / 24 — campaign closed  
 **Retained generation:** 2  
-**Strong cumulative criterion:** 3 / 4 conditions satisfied
+**Strong cumulative criterion:** 3 / 4 conditions satisfied — final
 
 This chronology is sanitized. Private source, patches, evaluator cases and operational artifacts remain outside this repository.
 
@@ -32,11 +32,12 @@ pre-v7 retained champion
          +-- A016 neutral depth 2 (from A013)
          +-- A017 neutral depth 1
          |      +-- A018 neutral depth 2 (from A011)
-         +-- A019 neutral depth 1\n         |      +-- A020 neutral depth 2 (from A011)
+         +-- A019 neutral depth 1
+         |      +-- A020 neutral depth 2 (from A011)
          +-- A021 neutral depth 1
          |      +-- A022 neutral depth 2 (from A013)
          +-- A023 neutral depth 1
-         +-- A024 final: A017 neutral depth 1
+         |      +-- A024 neutral depth 2 (from A017) — FINAL
 ```
 
 ## Aggregate retained champion after A009
@@ -71,11 +72,12 @@ Warning count: **7**. Remaining aggregate headroom is concentrated in `conversat
 | 016 | A013 neutral | neutral depth 2 | no aggregate delta |
 | 017 | champion | neutral depth 1 | no aggregate delta |
 | 018 | A011 neutral | neutral depth 2 | no aggregate delta |
-| 019 | champion | neutral depth 1 | no aggregate delta |\n| 020 | A011 neutral | neutral depth 2 | no aggregate delta |
+| 019 | champion | neutral depth 1 | no aggregate delta |
+| 020 | A011 neutral | neutral depth 2 | no aggregate delta |
 | 021 | champion | neutral depth 1 | no aggregate delta |
 | 022 | A013 neutral | neutral depth 2 | no aggregate delta |
 | 023 | champion | neutral depth 1 | no aggregate delta |
-| 024 | A017 neutral | final next | even-attempt deterministic neutral selection |
+| 024 | A017 neutral | neutral depth 2 — FINAL | no aggregate delta |
 
 ### A007 — first v7 promotion
 
@@ -379,21 +381,29 @@ The descendant **hard-passed with 292 passed, 0 failed, 1 skipped**, warning cou
 
 A023 does not satisfy the still-missing neutral-caused promotion condition.
 
-### A024 — final state before evaluation
+### A024 — FINAL neutral depth 2
 
-A024 is the **final canonical observation** in the 24-attempt budget. The deterministic selector chooses the admitted A017 depth-1 neutral.
+A024 was the 24th and final canonical observation. It descended from the admitted A017 depth-1 neutral and selected `C1-contextual-profile-parity` as the deterministic tournament winner with score **244**, ahead of `226 / 206 / 64`.
 
-- final bundle SHA-256: `222402d4cb98f9e6632a15871303ff92be4d9c68bee641f6a2d09c95ac4c39e9`
-- final context digest: `7acd624f4b0caa452068ccd2e891589be4f0bd484a2b4d342b42a2675938d481`
-- final prompt SHA-256: `b936e20c674db331c5b9ee82bed0a0fc1e408e2f314301d564318ae6e811bee7`
-- parent kind: neutral, depth 1
+The proposal completed the selected neutral parent's contextual personal-write mechanism across both production and streaming pipelines by routing production profile selection through the existing `ContextualToolProfileResolver`.
+
+The descendant **hard-passed with 292 passed, 0 failed, 1 skipped**, warning count 7, and no aggregate capability delta. It was admitted as a depth-2 neutral, not promoted.
+
+- proposal patch SHA-256: `50924f8e9dad6d8e25686c2e4edcfab92f736b622b2aa15f9e81730fba1fb8bc`
+- transcript SHA-256: `72d03cb9ef2606ba8dc5e184c2a191c133fa9b2389a6292310e3206ed6e4782d`
 - parent tree: `d624d7e4dac29fc78ea8bf51c55de83aafa39ae49e00537e45a7a3616966cbf3`
-- parent archive SHA-256: `726dfa253506287fcf21e5d431f6710e366f9161736eb7740869f3af2cfae376`
-- attempts remaining: **1**
+- child tree: `dfe73e08bf75eefc3885004b6aee7fe36db7c8f348193e704352a3c997cd70cd`
+- neutral id: `neutral-024-dfe73e08bf75`
+- neutral archive SHA-256: `87ddab55c5de7164cd8fccc20c03905df16a37f71e1a48ca48ccb87b4af598d4`
+- observation result digest: `9449e63a28ad300cd9157f269dcbbdfdbb1880d377e0454951146adedc6e1228`
+- canonical published result SHA-256: `82a302849e1f49f2c32c322488cff374632c67105adeb71624c15156a8a83015`
+- final campaign state SHA-256: `3d3a573760d3432816a5c5dc976605d83c9f36fd824e5b4a54ee3d2de2a5b3f5`
+- final state digest: `75fac8b32a9bce04c53033ea1097695a431f7b41ce6164ee6c9444c572b473ba`
+- canonical evaluator run: `35534705144`
 
-This is the last neutral-parent opportunity in v7. If A024 produces a qualifying champion promotion with no protected regression, the preregistered strong cumulative criterion becomes **4/4**. Otherwise v7 closes at **3/4**.
+A024 therefore does **not** establish the missing neutral-caused promotion condition. The preregistered v7 campaign is closed at **3/4** after the full **24/24** observation budget.
 
-## Strong cumulative criterion after A023
+## Final strong cumulative criterion after A024
 
 | Condition | Status |
 | --- | --- |
@@ -402,4 +412,4 @@ This is the last neutral-parent opportunity in v7. If A024 produces a qualifying
 | post-bootstrap proposal selected under a strategy descendant generated from new v7 evidence | **satisfied** |
 | later bundle inherits promoted champion | **satisfied** |
 
-Correct reading after A023: **3/4**, not completion. Exactly one canonical observation remains: A024, from an admitted depth-1 neutral.
+Final reading after A024: **3/4**. The 24-observation budget is exhausted and the campaign is closed. The missing condition — a champion promotion causally descended from an admitted neutral stepping stone — was not demonstrated in v7.
