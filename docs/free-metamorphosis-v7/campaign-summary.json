@@ -63,12 +63,12 @@
   "next_parent_kind": "champion",
   "next_parent_depth": 0,
   "next_parent_tree_digest": "8c85b82d6dec7e29c029677f5cd7c6a9e0df466fb5cd831252cdb71b879b4cea",
-  "next_context_digest": "a30f2d6822aa5d1b5232b517fd98cf3d988befc0fa689903b15914074d948fc8",
-  "next_prompt_sha256": "1a701223279a1098833d6ecd4918f3dab1b119d2f04fda7e244a961aad3ed6da",
+  "next_context_digest": "e3219bb8d190a1378e8d8c0eadaa6d5d15b4384c4d08c0be6227b5d1ee51ed67",
+  "next_prompt_sha256": "31abdb630d8428a0a3d2bdc1c6ba72bd2dabd63f80caba2e539073f15e741153",
   "publication_boundary": "docs/free-metamorphosis-v7/PUBLICATION_BOUNDARY.md",
   "latest_completed_child_tree_digest": "b49c6f24e0c7624cdf14d098eee004288f2d501b46e4057a7ec0d9010ebd2582",
   "latest_completed_result_sha256": "d610e7ecdcc8ef2b2b998907601ac02978c9fad9410ee41b2a34b49af4353eb2",
-  "next_bundle_sha256": "82f0597d1aa66662d63c19e91a955223a66b578787aa4ade718a62a55bd1a03b",
+  "next_bundle_sha256": "09d182e9516eae303f1d14bd0f92aba6df42edef6af5b6d5ddc913366b6bf96e",
   "research_memory_digest": "ead5a8a52fce6c939c50c9d4faaa4485dfb9c4052bc4fd79a62a2ce007a3f292",
   "research_strategy_digest": "426ce1aefd39522ef2e709fbc270117ef13edba3c650898bd143080ac188d70c",
   "research_strategy_generation": 15,
@@ -116,7 +116,7 @@
       "attempts_used_after_event": 16
     }
   ],
-  "next_bundle_status": "historical_rejected_pre_evaluator_bundle_do_not_reuse",
+  "next_bundle_status": "rubric_complete_ready_for_fresh_proposer_run",
   "control_plane_erratum": {
     "id": "v7.1-tournament-rubric-disclosure",
     "status": "prospective_before_a017_retry",
@@ -134,6 +134,15 @@
       220,
       200,
       180
-    ]
-  }
+    ],
+    "repaired_control_head": "547a9fd4487556c978b43946e1b48c11f928d127",
+    "frozen_scorer_blob_sha": "fc9bdfac7171a18dde275ac1d3b9d01e9650571c",
+    "frozen_scorer_changed": false,
+    "repaired_bundle_sha256": "09d182e9516eae303f1d14bd0f92aba6df42edef6af5b6d5ddc913366b6bf96e",
+    "repaired_context_digest": "e3219bb8d190a1378e8d8c0eadaa6d5d15b4384c4d08c0be6227b5d1ee51ed67",
+    "repaired_prompt_sha256": "31abdb630d8428a0a3d2bdc1c6ba72bd2dabd63f80caba2e539073f15e741153"
+  },
+  "original_a017_bundle_sha256": "82f0597d1aa66662d63c19e91a955223a66b578787aa4ade718a62a55bd1a03b",
+  "original_a017_context_digest": "a30f2d6822aa5d1b5232b517fd98cf3d988befc0fa689903b15914074d948fc8",
+  "original_a017_prompt_sha256": "1a701223279a1098833d6ecd4918f3dab1b119d2f04fda7e244a961aad3ed6da"
 }
