@@ -1,8 +1,8 @@
 # Genesis Free Metamorphosis v7 — public campaign chronology
 
-**Snapshot:** 20 September 2026, after canonical Attempt 022 and before canonical Attempt 023  
+**Snapshot:** 20 September 2026, after canonical Attempt 023 and before final canonical Attempt 024  
 **Policy:** `GENESIS_FREE_METAMORPHOSIS_RECURSIVE_SEARCH_V7_2026-09-18`  
-**Canonical observations used:** 22 / 24  
+**Canonical observations used:** 23 / 24  
 **Retained generation:** 2  
 **Strong cumulative criterion:** 3 / 4 conditions satisfied
 
@@ -35,7 +35,8 @@ pre-v7 retained champion
          +-- A019 neutral depth 1\n         |      +-- A020 neutral depth 2 (from A011)
          +-- A021 neutral depth 1
          |      +-- A022 neutral depth 2 (from A013)
-         +-- A023 next: champion
+         +-- A023 neutral depth 1
+         +-- A024 final: A017 neutral depth 1
 ```
 
 ## Aggregate retained champion after A009
@@ -73,7 +74,8 @@ Warning count: **7**. Remaining aggregate headroom is concentrated in `conversat
 | 019 | champion | neutral depth 1 | no aggregate delta |\n| 020 | A011 neutral | neutral depth 2 | no aggregate delta |
 | 021 | champion | neutral depth 1 | no aggregate delta |
 | 022 | A013 neutral | neutral depth 2 | no aggregate delta |
-| 023 | champion | next | odd-attempt champion selection |
+| 023 | champion | neutral depth 1 | no aggregate delta |
+| 024 | A017 neutral | final next | even-attempt deterministic neutral selection |
 
 ### A007 — first v7 promotion
 
@@ -358,7 +360,40 @@ The v7.3 repair is disclosure-only: it makes that already-frozen parser requirem
 - parent tree: `8c85b82d6dec7e29c029677f5cd7c6a9e0df466fb5cd831252cdb71b879b4cea`
 - attempts remaining: **2**
 
-## Strong cumulative criterion after A022
+### A023 — neutral depth 1 under v7.3
+
+After the disclosure-only v7.3 patch-format repair, a fresh A023 proposer selected `additional-context-production-contract` as the deterministic tournament winner with score **200**, ahead of `197 / 197 / 191 / -23`. The proposal propagated `AgentRequest.AdditionalContext` through the non-streaming production system-context path without changing routing or tool authority.
+
+The descendant **hard-passed with 292 passed, 0 failed, 1 skipped**, warning count 7, and no aggregate capability delta. It was admitted as a depth-1 neutral, not promoted.
+
+- proposal patch SHA-256: `6bcc0419439c531f839cc0eacccee51481fc9889c54ffce644609a85efa4722e`
+- transcript SHA-256: `9ba583d8e2f72522a4e143d37711147a52c06693b523325013435db4693b40b1`
+- parent tree: `8c85b82d6dec7e29c029677f5cd7c6a9e0df466fb5cd831252cdb71b879b4cea`
+- child tree: `9eccf2c82efa4317b44aefe6c618e0480e48ca250f3b4e14899f8c7f63a8875c`
+- neutral id: `neutral-023-9eccf2c82efa`
+- neutral archive SHA-256: `eb4d17bf1e44995020efade6a658462a931f2e23011ebd0dd9d2f3550332d9c7`
+- observation result digest: `958c03c0166c515342d333b382b6e8a62a53990fa39902c616f39fd6e27a4aa7`
+- canonical published result SHA-256: `18c4a68c84e11c7d362d4b6fe508dc8b848a2dada47b995149d8dc48ade8bc2a`
+- campaign state SHA-256 after A023: `27be49f31efaf6d68a52cb57aa0a337f0025d324c9bffd5dc8b0e2e2d1041a0e`
+- canonical evaluator run: `35533825893`
+
+A023 does not satisfy the still-missing neutral-caused promotion condition.
+
+### A024 — final state before evaluation
+
+A024 is the **final canonical observation** in the 24-attempt budget. The deterministic selector chooses the admitted A017 depth-1 neutral.
+
+- final bundle SHA-256: `222402d4cb98f9e6632a15871303ff92be4d9c68bee641f6a2d09c95ac4c39e9`
+- final context digest: `7acd624f4b0caa452068ccd2e891589be4f0bd484a2b4d342b42a2675938d481`
+- final prompt SHA-256: `b936e20c674db331c5b9ee82bed0a0fc1e408e2f314301d564318ae6e811bee7`
+- parent kind: neutral, depth 1
+- parent tree: `d624d7e4dac29fc78ea8bf51c55de83aafa39ae49e00537e45a7a3616966cbf3`
+- parent archive SHA-256: `726dfa253506287fcf21e5d431f6710e366f9161736eb7740869f3af2cfae376`
+- attempts remaining: **1**
+
+This is the last neutral-parent opportunity in v7. If A024 produces a qualifying champion promotion with no protected regression, the preregistered strong cumulative criterion becomes **4/4**. Otherwise v7 closes at **3/4**.
+
+## Strong cumulative criterion after A023
 
 | Condition | Status |
 | --- | --- |
@@ -367,4 +402,4 @@ The v7.3 repair is disclosure-only: it makes that already-frozen parser requirem
 | post-bootstrap proposal selected under a strategy descendant generated from new v7 evidence | **satisfied** |
 | later bundle inherits promoted champion | **satisfied** |
 
-Correct reading after A022: **3/4**, not completion. Two canonical observations remain. A023 returns to the champion; if the criterion is still missing afterward, A024 is the final neutral-parent opportunity in the bounded campaign.
+Correct reading after A023: **3/4**, not completion. Exactly one canonical observation remains: A024, from an admitted depth-1 neutral.
