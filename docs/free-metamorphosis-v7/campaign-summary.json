@@ -71,5 +71,14 @@
   "next_bundle_sha256": "82f0597d1aa66662d63c19e91a955223a66b578787aa4ade718a62a55bd1a03b",
   "research_memory_digest": "ead5a8a52fce6c939c50c9d4faaa4485dfb9c4052bc4fd79a62a2ce007a3f292",
   "research_strategy_digest": "426ce1aefd39522ef2e709fbc270117ef13edba3c650898bd143080ac188d70c",
-  "research_strategy_generation": 15
+  "research_strategy_generation": 15,
+  "latest_pre_evaluation_event": {
+    "attempt": 17,
+    "status": "rejected_before_evaluator",
+    "reason": "declared selected candidate was not deterministic tournament winner",
+    "transcript_sha256": "59f86a7d03f37624dad5134b960b7d4e66b0eeb312b5ae329ab4a028aaa4ff10",
+    "declared_patch_sha256": "2ca4fc117985c4f1a30d12703c47ebef04b461b3e6ea9a5339c295c958f46284",
+    "evaluator_observations_spent": 0,
+    "attempts_used_after_event": 16
+  }
 }

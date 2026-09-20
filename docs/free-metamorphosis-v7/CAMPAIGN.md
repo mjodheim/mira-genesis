@@ -141,6 +141,19 @@ A017 is odd and returns to the retained champion.
 - parent kind: champion
 - parent tree: `8c85b82d6dec7e29c029677f5cd7c6a9e0df466fb5cd831252cdb71b879b4cea`
 
+#### First A017 proposer output rejected pre-evaluator
+
+The first received A017 transcript was rejected before any external observation because its declared selected candidate was not the deterministic tournament winner under the frozen v7 scoring procedure.
+
+- transcript SHA-256: `59f86a7d03f37624dad5134b960b7d4e66b0eeb312b5ae329ab4a028aaa4ff10`
+- declared proposal patch SHA-256: `2ca4fc117985c4f1a30d12703c47ebef04b461b3e6ea9a5339c295c958f46284`
+- declared selected candidate: `c01-self-eval-original-turn`
+- recomputed ranking: `c03-conversation-long-horizon-summary = 197`, `c02-nats-publish-failure-contract = 183`, `c04-stream-conversation-id-early = 183`, `c01-self-eval-original-turn = 172`
+- evaluator observations spent by this output: **0**
+- campaign attempts used remain: **16 / 24**
+
+The output is not an A017 scientific result and is not eligible for repair by editing the transcript after the fact. A fresh proposer output must satisfy the same frozen A017 prompt and tournament contract.
+
 ## Strong cumulative criterion after A016
 
 | Condition | Status |
