@@ -188,6 +188,21 @@ The third A017 output restored the exact frozen external transcript v3 schema an
 
 Because the patch implements c01 rather than the deterministic winner c05, the laboratory cannot repair the transcript or substitute a different winner after the fact. A fresh proposer run under the unchanged canonical A017 prompt is required.
 
+
+#### v7.1 control-plane repair before A017 retry
+
+The three pre-evaluation A017 failures exposed a proposer-information defect: the prompt required the exact deterministic tournament rubric to be read from `proposal-context.json`, but the distributed context serialized the research memory and weights without serializing the scoring formula itself.
+
+The laboratory scorer, strategy weights, research memory, evaluator and budget remain frozen. The repair is disclosure-only and consumes **0** observations. The exact scorer has been reconstructed against the third rejected A017 tournament and reproduces the frozen ranking bit-for-bit at the integer-score level: `240, 226, 220, 200, 180`.
+
+- erratum: `ERRATUM_V7_1_TOURNAMENT_RUBRIC.md`
+- canonical observations remain: **16 / 24**
+- A017 parent remains: retained A009 champion
+- prior A017 bundle: retained as historical evidence, not to be reused for a fresh proposer run
+- next action: regenerate the A017 proposer bundle with the exact frozen scoring rubric inside the supplied information boundary, then rerun the proposer from scratch
+
+No rejected A017 transcript or patch is repaired in place.
+
 ## Strong cumulative criterion after A016
 
 | Condition | Status |
