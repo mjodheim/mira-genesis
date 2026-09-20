@@ -2,11 +2,11 @@
   "schema": "genesis-free-metamorphosis-v7-public-summary-v1",
   "snapshot_date": "2026-09-20",
   "policy_id": "GENESIS_FREE_METAMORPHOSIS_RECURSIVE_SEARCH_V7_2026-09-18",
-  "campaign_status": "active_after_attempt_018_before_attempt_019",
+  "campaign_status": "active_after_attempt_019_before_attempt_020",
   "attempt_budget": {
-    "used": 18,
+    "used": 19,
     "max": 24,
-    "remaining": 6
+    "remaining": 5
   },
   "retained_generation": 2,
   "retained_tree_digest": "8c85b82d6dec7e29c029677f5cd7c6a9e0df466fb5cd831252cdb71b879b4cea",
@@ -57,19 +57,19 @@
     "satisfied_count": 3,
     "total": 4
   },
-  "latest_completed_attempt": 18,
-  "latest_completed_verdict": "neutral_depth_2",
-  "next_attempt": 19,
-  "next_parent_kind": "champion",
-  "next_parent_depth": 0,
-  "next_parent_tree_digest": "8c85b82d6dec7e29c029677f5cd7c6a9e0df466fb5cd831252cdb71b879b4cea",
-  "next_context_digest": "9eb13791f89ab4de693869e917c1a03448016a2926eed28fd82e311d9a933c6c",
-  "next_prompt_sha256": "18f2cb31d9ea4362376852804e2159d9411294b4eb63daedbaebe19da265b3f6",
+  "latest_completed_attempt": 19,
+  "latest_completed_verdict": "neutral_depth_1",
+  "next_attempt": 20,
+  "next_parent_kind": "neutral",
+  "next_parent_depth": 1,
+  "next_parent_tree_digest": "618dd6299e8ce962362588f57d9e8a5a27625200ab4fad8a370f90b6e8a3f812",
+  "next_context_digest": "21a38bacfbce6c8f5264765b2724a8b5497793f9b48d618504bc1c74b3ea6ef8",
+  "next_prompt_sha256": "89d6a19e43f75fcf57b351eb3cc5a473d19823f55f7e37f65605bebc4df3e362",
   "publication_boundary": "docs/free-metamorphosis-v7/PUBLICATION_BOUNDARY.md",
-  "latest_completed_child_tree_digest": "42d818da1221e26cf0ceb1af016d57bbedf03ff662ef5d805bb67e9dd60f5bec",
-  "latest_completed_result_sha256": "8ed8c6e397aa5025daf2d06a41c703f30d4037b5e49627822268bbca86fe2405",
-  "next_bundle_sha256": "6579275a9603c858598b573166653795c65eef22cecdb47e30a02a7f6c44c30b",
-  "research_memory_digest": "85b22913eeef9c3a3835718036bc904d3fbfe3d9e6b9c882f51b3c343cb1294e",
+  "latest_completed_child_tree_digest": "4218fd8cee0a50d10ef6c710ed84a29f07044a044f41671b325d97ad13cf63ec",
+  "latest_completed_result_sha256": "784a7f759a51ee73ffdb396583667953a27aabb8333354349dfe618f592b8d3c",
+  "next_bundle_sha256": "027b509de4f762835a1c652f1d229376e5548d74bf2ca63c04d7f8777cdc0e36",
+  "research_memory_digest": "e53838487ec70470962ac5f507f0b9a45c02a4a1e9be748f4d61c18f0cac8d11",
   "research_strategy_digest": "426ce1aefd39522ef2e709fbc270117ef13edba3c650898bd143080ac188d70c",
   "research_strategy_generation": 15,
   "latest_pre_evaluation_event": {
@@ -122,10 +122,10 @@
       "attempts_used_after_event": 16
     }
   ],
-  "next_bundle_status": "canonical_a019_ready",
+  "next_bundle_status": "canonical_a020_ready",
   "control_plane_erratum": {
     "id": "v7.1-tournament-rubric-disclosure",
-    "status": "applied_and_validated_through_a018",
+    "status": "applied_and_validated_through_a019",
     "path": "docs/free-metamorphosis-v7/ERRATUM_V7_1_TOURNAMENT_RUBRIC.md",
     "evaluator_observations_spent": 0,
     "attempts_used_after_erratum": 16,
@@ -237,14 +237,14 @@
     {
       "id": "v7.1-tournament-rubric-disclosure",
       "path": "docs/free-metamorphosis-v7/ERRATUM_V7_1_TOURNAMENT_RUBRIC.md",
-      "status": "applied_and_validated_through_a018",
+      "status": "applied_and_validated_through_a019",
       "changes_frozen_scorer": false,
       "changes_evaluator": false
     },
     {
       "id": "v7.2-history-window-sync",
       "path": "docs/free-metamorphosis-v7/ERRATUM_V7_2_HISTORY_WINDOW.md",
-      "status": "applied_after_a018_before_a019",
+      "status": "applied_and_validated_through_a019",
       "trigger": "aggregate research history crossed MAX_HISTORY=24",
       "external_evaluator_rerun": false,
       "canonical_a018_run_id": 35512801831,
@@ -266,5 +266,49 @@
     "external_evaluator_rerun": false,
     "evaluator_observations_spent": 0,
     "attempts_used_after_event": 18
+  },
+  "canonical_attempt_019": {
+    "parent_kind": "champion",
+    "parent_depth": 0,
+    "parent_tree_digest": "8c85b82d6dec7e29c029677f5cd7c6a9e0df466fb5cd831252cdb71b879b4cea",
+    "proposal_patch_sha256": "a3c3ddf3672bdb1dec341ea6acfd3d3f567dde662fec4873239c6096e7a8c819",
+    "transcript_sha256": "0ef918225837be461b5b197b340e27cb8fe1412080a6743babb5bb7d378ce5d8",
+    "deterministic_winner": "c01-postgres-conversation-title-parity",
+    "deterministic_winner_score": 226,
+    "deterministic_ranking": [
+      226,
+      220,
+      220,
+      80,
+      51
+    ],
+    "external_evaluator_run_id": 35515914838,
+    "hard_pass": true,
+    "frozen_tests": {
+      "passed": 292,
+      "failed": 0,
+      "skipped": 1,
+      "total": 293
+    },
+    "warning_count": 7,
+    "capability_deltas": {
+      "code_delegation": 0,
+      "conversation": 0,
+      "execution_personal_read": 0,
+      "memory_media": 0,
+      "personal_read": 0,
+      "personal_write": 0,
+      "self_modify": 0,
+      "system_admin": 0
+    },
+    "verdict": "neutral_depth_1",
+    "child_tree_digest": "4218fd8cee0a50d10ef6c710ed84a29f07044a044f41671b325d97ad13cf63ec",
+    "neutral_id": "neutral-019-4218fd8cee0a",
+    "neutral_archive_sha256": "bc4da5dfee81744fcd83acc9158e3d07c0c122379a4ec2e58f129857751a5d92",
+    "observation_result_digest": "e2118b58d04ed44697d6ec31994549cfadfe5a08e931fab4f101fa5052b19c0f",
+    "canonical_result_sha256": "784a7f759a51ee73ffdb396583667953a27aabb8333354349dfe618f592b8d3c",
+    "campaign_state_sha256": "5cd64fd4dc23c796fd5e7b32fb6f0daae8652f7d7da2e8c4e74691222130fbe8",
+    "evaluator_observations_spent": 1,
+    "attempts_used_after_event": 19
   }
 }
