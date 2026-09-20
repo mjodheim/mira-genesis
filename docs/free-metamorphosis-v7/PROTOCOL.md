@@ -32,6 +32,12 @@ Before the next canonical A017 proposer run, the proposer-side information bound
 
 The exact rubric and A017 reconstruction check are recorded in [ERRATUM_V7_1_TOURNAMENT_RUBRIC.md](ERRATUM_V7_1_TOURNAMENT_RUBRIC.md). The laboratory continues to recompute the tournament independently before any external evaluation is spent.
 
+## v7.2 research-history synchronization erratum
+
+After canonical A018 completed its single frozen external evaluation, the laboratory discovered that the post-observation research refresh used unbounded aggregate history while the proposer context already enforced the frozen `MAX_HISTORY = 24` window. Crossing that boundary caused next-context generation to fail closed.
+
+v7.2 synchronizes those two control-plane paths to the same 24-item history window. The A018 external evaluator was not rerun; scorer, fitness, strategy weights, parent selection and budgets remain unchanged. The full recovery boundary is recorded in [ERRATUM_V7_2_HISTORY_WINDOW.md](ERRATUM_V7_2_HISTORY_WINDOW.md).
+
 ## Strong cumulative criterion
 
 Within the frozen budget:
