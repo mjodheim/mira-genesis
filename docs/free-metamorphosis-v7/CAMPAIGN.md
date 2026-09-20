@@ -1,8 +1,8 @@
 # Genesis Free Metamorphosis v7 — public campaign chronology
 
-**Snapshot:** 20 September 2026, after canonical Attempt 016 and before canonical Attempt 017  
+**Snapshot:** 20 September 2026, after canonical Attempt 017 and before canonical Attempt 018  
 **Policy:** `GENESIS_FREE_METAMORPHOSIS_RECURSIVE_SEARCH_V7_2026-09-18`  
-**Canonical observations used:** 16 / 24  
+**Canonical observations used:** 17 / 24  
 **Retained generation:** 2  
 **Strong cumulative criterion:** 3 / 4 conditions satisfied
 
@@ -30,7 +30,8 @@ pre-v7 retained champion
          |      +-- A014 neutral depth 2
          +-- A015 hard-boundary reject
          +-- A016 neutral depth 2 (from A013)
-         +-- A017 next: champion
+         +-- A017 neutral depth 1
+         +-- A018 next: A011 neutral depth 1
 ```
 
 ## Aggregate retained champion after A009
@@ -63,7 +64,8 @@ Warning count: **7**. Remaining aggregate headroom is concentrated in `conversat
 | 014 | A013 neutral | neutral depth 2 | no aggregate delta |
 | 015 | champion | hard-boundary reject | frozen API test boundary failed |
 | 016 | A013 neutral | neutral depth 2 | no aggregate delta |
-| 017 | champion | next | generated after A016 |
+| 017 | champion | neutral depth 1 | no aggregate delta |
+| 018 | A011 neutral | next | deterministic neutral-frontier selection |
 
 ### A007 — first v7 promotion
 
@@ -131,7 +133,7 @@ The descendant hard-passed with **292 tests passed, 0 failed, 1 skipped**, warni
 
 This is the third clean neutral-parent traversal in the line and again does **not** satisfy the missing causal-neutral promotion condition.
 
-### A017 — next state
+### A017 — proposer preflight, v7.1 repair, and canonical result
 
 A017 is odd and returns to the retained champion.
 
@@ -208,7 +210,39 @@ The laboratory scorer, strategy weights, research memory, evaluator and budget r
 
 No rejected A017 transcript or patch is repaired in place.
 
-## Strong cumulative criterion after A016
+
+#### Canonical A017 result — neutral depth 1
+
+A fresh proposer run against the rubric-complete v7.1 bundle selected `c01-contextual-action-resolution` as the deterministic tournament winner with score **272**. The proposal added a bounded contextual resolver for explicit anaphoric personal-write follow-ups while leaving existing channel-specific write profiles and allow-lists unchanged.
+
+The exact proposer artifacts passed the v7.1 preflight. During laboratory staging, earlier launch attempts were refused before evaluator entry by lab-side control/byte-identity guards; the original proposer files were not rewritten and no external observation was spent by those refused launches. The final canonical run evaluated the exact patch SHA-256 `f5a346150db1bd9bf0e782e88f99cdb16e6f85eed359c5af6e6416d9893a02b1` and transcript SHA-256 `a52b76e1ea93830f37997b7574e9724b46d3c15591e0296925ce957641865dca`.
+
+The descendant **hard-passed**, retained warning count 7, and produced **no aggregate capability delta**. It was therefore admitted as a depth-1 neutral rather than promoted.
+
+- deterministic tournament ranking: `272 / 234 / 234 / 112 / 80`
+- parent: retained champion `8c85b82d6dec7e29c029677f5cd7c6a9e0df466fb5cd831252cdb71b879b4cea`
+- child tree: `d624d7e4dac29fc78ea8bf51c55de83aafa39ae49e00537e45a7a3616966cbf3`
+- neutral id: `neutral-017-d624d7e4dac2`
+- neutral archive SHA-256: `726dfa253506287fcf21e5d431f6710e366f9161736eb7740869f3af2cfae376`
+- canonical result SHA-256: `adc848bf0231bf05433314984d3868c0f92ae34fb2fdf3ca560791b0de685f88`
+- campaign state SHA-256 after A017: `cd32d872bb4a2f28493b83a67c5edc35a42513bfe283568e507c98dca080c4e5`
+- research memory after A017: `a3d9377036fbe865195b738300e26096b311c1275f2a46277ca22a85d5774aa7`
+- research strategy remains generation **15**, digest `426ce1aefd39522ef2e709fbc270117ef13edba3c650898bd143080ac188d70c`
+
+A017 does not change the retained champion and does not satisfy the still-missing neutral-caused promotion condition.
+
+### A018 — next state
+
+A018 is even and the frozen parent-selection rule returns to the bounded neutral frontier. The deterministic selector chooses the A011 depth-1 neutral, not the newly admitted A017 neutral.
+
+- next bundle SHA-256: `f0a40778b86f4482f1ad4bb9dd35f2d850e8d4ba2e929d39b5b1ff082ca1eff7`
+- next context digest: `3639c13d5b0871edccbc3fbfea544dce5aece1f2b9ede17c1e32b107f5433de7`
+- next prompt SHA-256: `b46a3ccf09d1a40f03eb5bf7a4b77c0e9a76f65e1c81a63cf11271c54787bcbe`
+- parent kind: neutral, depth 1
+- parent tree: `618dd6299e8ce962362588f57d9e8a5a27625200ab4fad8a370f90b6e8a3f812`
+- attempts remaining: **7**
+
+## Strong cumulative criterion after A017
 
 | Condition | Status |
 | --- | --- |
@@ -217,4 +251,4 @@ No rejected A017 transcript or patch is repaired in place.
 | post-bootstrap proposal selected under a strategy descendant generated from new v7 evidence | **satisfied** |
 | later bundle inherits promoted champion | **satisfied** |
 
-Correct reading after A016: **3/4**, not completion.
+Correct reading after A017: **3/4**, not completion.
