@@ -154,6 +154,21 @@ The first received A017 transcript was rejected before any external observation 
 
 The output is not an A017 scientific result and is not eligible for repair by editing the transcript after the fact. A fresh proposer output must satisfy the same frozen A017 prompt and tournament contract.
 
+
+#### Second A017 proposer output rejected pre-evaluator
+
+The second received A017 output supplied a matching patch, but the transcript again changed the frozen v7 transcript/tournament contract. It used `mira-free-metamorphosis-proposer-transcript-v7` with proposer-defined `tournament`, custom per-candidate score fields and candidate fields that do not match the frozen `research_tournament` schema. The laboratory therefore rejected it before deterministic tournament verification or external evaluation.
+
+- transcript SHA-256: `7f242b7c21b6160515bfc3ecf0ab1d43685683724979462bdfb27ad025d73dd2`
+- proposal patch SHA-256: `942bf77ebc3608623baecbb47917cdf7251eb2a0bdc7d33f480b7a219ba09b01`
+- patch bytes: **2185**
+- transcript bytes: **11294**
+- declared hypothesis: expose the existing Drive folder-creation side effect as a bounded personal-write tool
+- evaluator observations spent by this output: **0**
+- campaign attempts used remain: **16 / 24**
+
+The patch is not eligible for canonical evaluation without a fresh proposer transcript produced under the exact frozen A017 contract; the laboratory does not rewrite malformed proposer output into compliance after the fact.
+
 ## Strong cumulative criterion after A016
 
 | Condition | Status |

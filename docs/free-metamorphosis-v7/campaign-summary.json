@@ -75,10 +75,30 @@
   "latest_pre_evaluation_event": {
     "attempt": 17,
     "status": "rejected_before_evaluator",
-    "reason": "declared selected candidate was not deterministic tournament winner",
-    "transcript_sha256": "59f86a7d03f37624dad5134b960b7d4e66b0eeb312b5ae329ab4a028aaa4ff10",
-    "declared_patch_sha256": "2ca4fc117985c4f1a30d12703c47ebef04b461b3e6ea9a5339c295c958f46284",
+    "reason": "transcript changed frozen v7 schema and tournament contract",
+    "transcript_sha256": "7f242b7c21b6160515bfc3ecf0ab1d43685683724979462bdfb27ad025d73dd2",
+    "proposal_patch_sha256": "942bf77ebc3608623baecbb47917cdf7251eb2a0bdc7d33f480b7a219ba09b01",
     "evaluator_observations_spent": 0,
     "attempts_used_after_event": 16
-  }
+  },
+  "pre_evaluation_events": [
+    {
+      "attempt": 17,
+      "status": "rejected_before_evaluator",
+      "reason": "declared selected candidate was not deterministic tournament winner",
+      "transcript_sha256": "59f86a7d03f37624dad5134b960b7d4e66b0eeb312b5ae329ab4a028aaa4ff10",
+      "declared_patch_sha256": "2ca4fc117985c4f1a30d12703c47ebef04b461b3e6ea9a5339c295c958f46284",
+      "evaluator_observations_spent": 0,
+      "attempts_used_after_event": 16
+    },
+    {
+      "attempt": 17,
+      "status": "rejected_before_evaluator",
+      "reason": "transcript changed frozen v7 schema and tournament contract",
+      "transcript_sha256": "7f242b7c21b6160515bfc3ecf0ab1d43685683724979462bdfb27ad025d73dd2",
+      "proposal_patch_sha256": "942bf77ebc3608623baecbb47917cdf7251eb2a0bdc7d33f480b7a219ba09b01",
+      "evaluator_observations_spent": 0,
+      "attempts_used_after_event": 16
+    }
+  ]
 }
