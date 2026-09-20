@@ -1,8 +1,8 @@
 # Genesis Free Metamorphosis v7 — public campaign chronology
 
-**Snapshot:** 20 September 2026, after canonical Attempt 017 and before canonical Attempt 018  
+**Snapshot:** 20 September 2026, after canonical Attempt 018 and before canonical Attempt 019  
 **Policy:** `GENESIS_FREE_METAMORPHOSIS_RECURSIVE_SEARCH_V7_2026-09-18`  
-**Canonical observations used:** 17 / 24  
+**Canonical observations used:** 18 / 24  
 **Retained generation:** 2  
 **Strong cumulative criterion:** 3 / 4 conditions satisfied
 
@@ -31,7 +31,8 @@ pre-v7 retained champion
          +-- A015 hard-boundary reject
          +-- A016 neutral depth 2 (from A013)
          +-- A017 neutral depth 1
-         +-- A018 next: A011 neutral depth 1
+         |      +-- A018 neutral depth 2 (from A011)
+         +-- A019 next: champion
 ```
 
 ## Aggregate retained champion after A009
@@ -65,7 +66,8 @@ Warning count: **7**. Remaining aggregate headroom is concentrated in `conversat
 | 015 | champion | hard-boundary reject | frozen API test boundary failed |
 | 016 | A013 neutral | neutral depth 2 | no aggregate delta |
 | 017 | champion | neutral depth 1 | no aggregate delta |
-| 018 | A011 neutral | next | deterministic neutral-frontier selection |
+| 018 | A011 neutral | neutral depth 2 | no aggregate delta |
+| 019 | champion | next | odd-attempt champion selection |
 
 ### A007 — first v7 promotion
 
@@ -231,18 +233,44 @@ The descendant **hard-passed**, retained warning count 7, and produced **no aggr
 
 A017 does not change the retained champion and does not satisfy the still-missing neutral-caused promotion condition.
 
-### A018 — next state
+### A018 — neutral depth 2 and v7.2 control-plane synchronization
 
-A018 is even and the frozen parent-selection rule returns to the bounded neutral frontier. The deterministic selector chooses the A011 depth-1 neutral, not the newly admitted A017 neutral.
+A018 was proposed from the deterministic A011 depth-1 neutral. The exact external proposer selected `018-A` with the independently recomputed tournament ranking **266 / 223 / 223 / 103 / 43**. Its high-level mechanism added a thread-aware Gmail reply primitive inside the already-authorized personal-email-write surface.
 
-- next bundle SHA-256: `f0a40778b86f4482f1ad4bb9dd35f2d850e8d4ba2e929d39b5b1ff082ca1eff7`
-- next context digest: `3639c13d5b0871edccbc3fbfea544dce5aece1f2b9ede17c1e32b107f5433de7`
-- next prompt SHA-256: `b46a3ccf09d1a40f03eb5bf7a4b77c0e9a76f65e1c81a63cf11271c54787bcbe`
-- parent kind: neutral, depth 1
+The frozen external evaluation ran exactly once, in canonical run `35512801831`. The descendant **hard-passed with 292 passed, 0 failed, 1 skipped**, warning count 7, and no aggregate capability delta. It was admitted as a depth-2 neutral, not promoted.
+
+- proposal patch SHA-256: `94e1ce0a6e2ab9b1f555f388fcbdc5169555e8088ee12589df562f13620eaf2b`
+- transcript SHA-256: `ad6e9ba3c8fdd0371b8a099878b9e81e7f714b563ecc1f7afcbbdd1e7618034c`
 - parent tree: `618dd6299e8ce962362588f57d9e8a5a27625200ab4fad8a370f90b6e8a3f812`
-- attempts remaining: **7**
+- child tree: `42d818da1221e26cf0ceb1af016d57bbedf03ff662ef5d805bb67e9dd60f5bec`
+- neutral id: `neutral-018-42d818da1221`
+- observation result digest: `e6316aa96937d702d8c62037e096000f4b5d6dc18d3ff4ad8d72ec59c7dc9ed6`
+- canonical published result SHA-256: `8ed8c6e397aa5025daf2d06a41c703f30d4037b5e49627822268bbca86fe2405`
 
-## Strong cumulative criterion after A017
+After the external observation completed, next-context generation failed closed because the post-observation research refresh still used unbounded aggregate history while the proposer context already enforced `MAX_HISTORY = 24`. This boundary was crossed for the first time after A018.
+
+The v7.2 repair synchronizes those two paths to the same 24-item window. The external evaluator was **not rerun** during recovery. The scorer, fitness policy, strategy weights, parent-selection rule and budgets remain unchanged; both Python 3.11 and 3.13 control matrices pass.
+
+- v7.2 erratum: `ERRATUM_V7_2_HISTORY_WINDOW.md`
+- v7.2 control head: `395e240a25c5e4ec30d9ac57d62a9ebbfff201b4`
+- original post-observation memory digest: `e425268898125b726c17e094933510bb52c5f6a63279881b73f2999fbd1167e3`
+- synchronized 24-item memory digest: `85b22913eeef9c3a3835718036bc904d3fbfe3d9e6b9c882f51b3c343cb1294e`
+- repaired campaign state SHA-256: `d5e4e7ca805f567f012007aa0363ddf7278c2865596e445563ac28ee1dca0064`
+
+A018 is another valid neutral-parent traversal, but because it did not promote, it still does **not** satisfy the missing neutral-caused promotion condition.
+
+### A019 — next state
+
+A019 is odd and therefore returns to the retained champion.
+
+- next bundle SHA-256: `6579275a9603c858598b573166653795c65eef22cecdb47e30a02a7f6c44c30b`
+- next context digest: `9eb13791f89ab4de693869e917c1a03448016a2926eed28fd82e311d9a933c6c`
+- next prompt SHA-256: `18f2cb31d9ea4362376852804e2159d9411294b4eb63daedbaebe19da265b3f6`
+- parent kind: champion, depth 0
+- parent tree: `8c85b82d6dec7e29c029677f5cd7c6a9e0df466fb5cd831252cdb71b879b4cea`
+- attempts remaining: **6**
+
+## Strong cumulative criterion after A018
 
 | Condition | Status |
 | --- | --- |
@@ -251,4 +279,4 @@ A018 is even and the frozen parent-selection rule returns to the bounded neutral
 | post-bootstrap proposal selected under a strategy descendant generated from new v7 evidence | **satisfied** |
 | later bundle inherits promoted champion | **satisfied** |
 
-Correct reading after A017: **3/4**, not completion.
+Correct reading after A018: **3/4**, not completion.
