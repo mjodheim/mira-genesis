@@ -125,7 +125,7 @@
   "next_bundle_status": "canonical_a019_ready",
   "control_plane_erratum": {
     "id": "v7.1-tournament-rubric-disclosure",
-    "status": "applied_and_validated_through_a017",
+    "status": "applied_and_validated_through_a018",
     "path": "docs/free-metamorphosis-v7/ERRATUM_V7_1_TOURNAMENT_RUBRIC.md",
     "evaluator_observations_spent": 0,
     "attempts_used_after_erratum": 16,
