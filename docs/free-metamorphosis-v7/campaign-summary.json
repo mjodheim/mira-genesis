@@ -1,0 +1,70 @@
+{
+  "schema": "genesis-free-metamorphosis-v7-public-summary-v1",
+  "snapshot_date": "2026-09-20",
+  "policy_id": "GENESIS_FREE_METAMORPHOSIS_RECURSIVE_SEARCH_V7_2026-09-18",
+  "campaign_status": "active_before_attempt_016",
+  "attempt_budget": {
+    "used": 15,
+    "max": 24,
+    "remaining": 9
+  },
+  "retained_generation": 2,
+  "retained_tree_digest": "8c85b82d6dec7e29c029677f5cd7c6a9e0df466fb5cd831252cdb71b879b4cea",
+  "warning_count": 7,
+  "aggregate_scores": {
+    "code_delegation": [
+      25,
+      25
+    ],
+    "conversation": [
+      15,
+      20
+    ],
+    "execution_personal_read": [
+      2,
+      2
+    ],
+    "memory_media": [
+      15,
+      15
+    ],
+    "personal_read": [
+      20,
+      20
+    ],
+    "personal_write": [
+      35,
+      40
+    ],
+    "self_modify": [
+      20,
+      20
+    ],
+    "system_admin": [
+      20,
+      20
+    ]
+  },
+  "champion_promotions": [
+    7,
+    9
+  ],
+  "strong_cumulative": {
+    "two_promotions": true,
+    "neutral_causal_promotion": false,
+    "post_bootstrap_strategy_descendant": true,
+    "later_bundle_inherits_promoted_champion": true,
+    "satisfied_count": 3,
+    "total": 4
+  },
+  "latest_completed_attempt": 15,
+  "latest_completed_verdict": "hard_boundary_reject",
+  "next_attempt": 16,
+  "next_parent_kind": "neutral",
+  "next_parent_depth": 1,
+  "next_parent_tree_digest": "6f9f55b7e4b241054e35d57f4971b2aae4e30b5f2fa4262041f38391f22ea72e",
+  "next_context_digest": "25bc01451cbbd004c211977119de9560ff02077db5b396bc1b608dc5f7e0f213",
+  "next_prompt_sha256": "1e9b0cae278444648439bbd3021a02738ee4b53feeef9fc5a24bb75db1ed7f1c",
+  "next_patch_sha256": "7a9403f38ef1615bdbe2894fdfb0296dad69d114e193c086c22c4562d3807cd8",
+  "publication_boundary": "docs/free-metamorphosis-v7/PUBLICATION_BOUNDARY.md"
+}
