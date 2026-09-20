@@ -75,9 +75,12 @@
   "latest_pre_evaluation_event": {
     "attempt": 17,
     "status": "rejected_before_evaluator",
-    "reason": "transcript changed frozen v7 schema and tournament contract",
-    "transcript_sha256": "7f242b7c21b6160515bfc3ecf0ab1d43685683724979462bdfb27ad025d73dd2",
-    "proposal_patch_sha256": "942bf77ebc3608623baecbb47917cdf7251eb2a0bdc7d33f480b7a219ba09b01",
+    "reason": "selected candidate was not deterministic tournament winner under frozen scorer",
+    "transcript_sha256": "f26520ee67df6aeb49e0b3654caf64ce58d39eb58404a0cedc7b1dea7351de63",
+    "proposal_patch_sha256": "1de7cdf9f055fb82d55985dff67c5809aaa0ae5be7ad0a60d2ebf11b97a52fed",
+    "selected_candidate_id": "c01-conversation-memory-commit",
+    "frozen_winner_candidate_id": "c05-personal-write-delivery-receipt",
+    "frozen_winner_score": 240,
     "evaluator_observations_spent": 0,
     "attempts_used_after_event": 16
   },
@@ -97,6 +100,18 @@
       "reason": "transcript changed frozen v7 schema and tournament contract",
       "transcript_sha256": "7f242b7c21b6160515bfc3ecf0ab1d43685683724979462bdfb27ad025d73dd2",
       "proposal_patch_sha256": "942bf77ebc3608623baecbb47917cdf7251eb2a0bdc7d33f480b7a219ba09b01",
+      "evaluator_observations_spent": 0,
+      "attempts_used_after_event": 16
+    },
+    {
+      "attempt": 17,
+      "status": "rejected_before_evaluator",
+      "reason": "selected candidate was not deterministic tournament winner under frozen scorer",
+      "transcript_sha256": "f26520ee67df6aeb49e0b3654caf64ce58d39eb58404a0cedc7b1dea7351de63",
+      "proposal_patch_sha256": "1de7cdf9f055fb82d55985dff67c5809aaa0ae5be7ad0a60d2ebf11b97a52fed",
+      "selected_candidate_id": "c01-conversation-memory-commit",
+      "frozen_winner_candidate_id": "c05-personal-write-delivery-receipt",
+      "frozen_winner_score": 240,
       "evaluator_observations_spent": 0,
       "attempts_used_after_event": 16
     }

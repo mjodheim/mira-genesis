@@ -169,6 +169,25 @@ The second received A017 output supplied a matching patch, but the transcript ag
 
 The patch is not eligible for canonical evaluation without a fresh proposer transcript produced under the exact frozen A017 contract; the laboratory does not rewrite malformed proposer output into compliance after the fact.
 
+
+#### Third A017 proposer output rejected pre-evaluator
+
+The third A017 output restored the exact frozen external transcript v3 schema and supplied a matching patch, but failed deterministic tournament selection. The frozen scorer ranks a different candidate first.
+
+- transcript SHA-256: `f26520ee67df6aeb49e0b3654caf64ce58d39eb58404a0cedc7b1dea7351de63`
+- proposal patch SHA-256: `1de7cdf9f055fb82d55985dff67c5809aaa0ae5be7ad0a60d2ebf11b97a52fed`
+- declared selected candidate: `c01-conversation-memory-commit`
+- frozen recomputed ranking:
+  1. `c05-personal-write-delivery-receipt = 240`
+  2. `c02-conversation-postgres-title-parity = 226`
+  3. `c01-conversation-memory-commit = 220`
+  4. `c04-personal-write-drive-upsert = 200`
+  5. `c03-conversation-stream-turn-commit = 180`
+- evaluator observations spent by this output: **0**
+- campaign attempts used remain: **16 / 24**
+
+Because the patch implements c01 rather than the deterministic winner c05, the laboratory cannot repair the transcript or substitute a different winner after the fact. A fresh proposer run under the unchanged canonical A017 prompt is required.
+
 ## Strong cumulative criterion after A016
 
 | Condition | Status |
