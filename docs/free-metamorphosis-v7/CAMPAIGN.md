@@ -199,7 +199,12 @@ The laboratory scorer, strategy weights, research memory, evaluator and budget r
 - canonical observations remain: **16 / 24**
 - A017 parent remains: retained A009 champion
 - prior A017 bundle: retained as historical evidence, not to be reused for a fresh proposer run
-- next action: regenerate the A017 proposer bundle with the exact frozen scoring rubric inside the supplied information boundary, then rerun the proposer from scratch
+- repaired control head: `547a9fd4487556c978b43946e1b48c11f928d127`
+- frozen scorer blob remains byte-identical: `fc9bdfac7171a18dde275ac1d3b9d01e9650571c`
+- repaired A017 context digest: `e3219bb8d190a1378e8d8c0eadaa6d5d15b4384c4d08c0be6227b5d1ee51ed67`
+- repaired A017 prompt SHA-256: `31abdb630d8428a0a3d2bdc1c6ba72bd2dabd63f80caba2e539073f15e741153`
+- repaired A017 bundle SHA-256: `09d182e9516eae303f1d14bd0f92aba6df42edef6af5b6d5ddc913366b6bf96e`
+- next action: run a fresh external proposer against the repaired bundle; do not reuse any prior A017 patch/transcript
 
 No rejected A017 transcript or patch is repaired in place.
 
