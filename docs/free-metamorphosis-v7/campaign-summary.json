@@ -2,11 +2,11 @@
   "schema": "genesis-free-metamorphosis-v7-public-summary-v1",
   "snapshot_date": "2026-09-20",
   "policy_id": "GENESIS_FREE_METAMORPHOSIS_RECURSIVE_SEARCH_V7_2026-09-18",
-  "campaign_status": "active_after_attempt_023_before_final_attempt_024",
+  "campaign_status": "closed_after_attempt_024",
   "attempt_budget": {
-    "used": 23,
+    "used": 24,
     "max": 24,
-    "remaining": 1
+    "remaining": 0
   },
   "retained_generation": 2,
   "retained_tree_digest": "8c85b82d6dec7e29c029677f5cd7c6a9e0df466fb5cd831252cdb71b879b4cea",
@@ -55,21 +55,22 @@
     "post_bootstrap_strategy_descendant": true,
     "later_bundle_inherits_promoted_champion": true,
     "satisfied_count": 3,
-    "total": 4
+    "total": 4,
+    "final": true
   },
-  "latest_completed_attempt": 23,
-  "latest_completed_verdict": "neutral_depth_1",
-  "next_attempt": 24,
-  "next_parent_kind": "neutral",
-  "next_parent_depth": 1,
-  "next_parent_tree_digest": "d624d7e4dac29fc78ea8bf51c55de83aafa39ae49e00537e45a7a3616966cbf3",
-  "next_context_digest": "7acd624f4b0caa452068ccd2e891589be4f0bd484a2b4d342b42a2675938d481",
-  "next_prompt_sha256": "b936e20c674db331c5b9ee82bed0a0fc1e408e2f314301d564318ae6e811bee7",
+  "latest_completed_attempt": 24,
+  "latest_completed_verdict": "neutral_depth_2",
+  "next_attempt": null,
+  "next_parent_kind": null,
+  "next_parent_depth": null,
+  "next_parent_tree_digest": null,
+  "next_context_digest": null,
+  "next_prompt_sha256": null,
   "publication_boundary": "docs/free-metamorphosis-v7/PUBLICATION_BOUNDARY.md",
-  "latest_completed_child_tree_digest": "9eccf2c82efa4317b44aefe6c618e0480e48ca250f3b4e14899f8c7f63a8875c",
-  "latest_completed_result_sha256": "18c4a68c84e11c7d362d4b6fe508dc8b848a2dada47b995149d8dc48ade8bc2a",
-  "next_bundle_sha256": "222402d4cb98f9e6632a15871303ff92be4d9c68bee641f6a2d09c95ac4c39e9",
-  "research_memory_digest": "0f5e02172577475152d5fdae13bb93dc722ffdfd5966e8d7be863702c799d032",
+  "latest_completed_child_tree_digest": "dfe73e08bf75eefc3885004b6aee7fe36db7c8f348193e704352a3c997cd70cd",
+  "latest_completed_result_sha256": "82a302849e1f49f2c32c322488cff374632c67105adeb71624c15156a8a83015",
+  "next_bundle_sha256": null,
+  "research_memory_digest": "a52103dc35400f2370ddfc320691a1aa4ef9c3a4905e680645c0b2c0ac2f6807",
   "research_strategy_digest": "426ce1aefd39522ef2e709fbc270117ef13edba3c650898bd143080ac188d70c",
   "research_strategy_generation": 15,
   "latest_pre_evaluation_event": {
@@ -137,10 +138,10 @@
       "repaired_prompt_sha256": "8ca60329516e3d9aac364fe19fdd7f7f3b81ebcdda4a83a17e934049d6e9edbf"
     }
   ],
-  "next_bundle_status": "canonical_final_a024_ready",
+  "next_bundle_status": "none_campaign_closed",
   "control_plane_erratum": {
     "id": "v7.1-tournament-rubric-disclosure",
-    "status": "applied_and_validated_through_a023",
+    "status": "applied_and_validated_through_a024_final",
     "path": "docs/free-metamorphosis-v7/ERRATUM_V7_1_TOURNAMENT_RUBRIC.md",
     "evaluator_observations_spent": 0,
     "attempts_used_after_erratum": 16,
@@ -252,14 +253,14 @@
     {
       "id": "v7.1-tournament-rubric-disclosure",
       "path": "docs/free-metamorphosis-v7/ERRATUM_V7_1_TOURNAMENT_RUBRIC.md",
-      "status": "applied_and_validated_through_a023",
+      "status": "applied_and_validated_through_a024_final",
       "changes_frozen_scorer": false,
       "changes_evaluator": false
     },
     {
       "id": "v7.2-history-window-sync",
       "path": "docs/free-metamorphosis-v7/ERRATUM_V7_2_HISTORY_WINDOW.md",
-      "status": "applied_and_validated_through_a023",
+      "status": "applied_and_validated_through_a024_final",
       "trigger": "aggregate research history crossed MAX_HISTORY=24",
       "external_evaluator_rerun": false,
       "canonical_a018_run_id": 35512801831,
@@ -276,7 +277,7 @@
     {
       "id": "v7.3-patch-format-disclosure",
       "path": "docs/free-metamorphosis-v7/ERRATUM_V7_3_PATCH_FORMAT.md",
-      "status": "applied_and_validated_through_a023",
+      "status": "applied_and_validated_through_a024_final",
       "trigger": "frozen parser requires diff --git headers while prior prompt said normal unified Git patch",
       "evaluator_observations_spent": 0,
       "attempts_used_after_erratum": 22,
@@ -514,5 +515,53 @@
     "campaign_state_sha256": "27be49f31efaf6d68a52cb57aa0a337f0025d324c9bffd5dc8b0e2e2d1041a0e",
     "evaluator_observations_spent": 1,
     "attempts_used_after_event": 23
+  },
+  "final_outcome": "3/4",
+  "final_campaign_state_sha256": "3d3a573760d3432816a5c5dc976605d83c9f36fd824e5b4a54ee3d2de2a5b3f5",
+  "final_state_digest": "75fac8b32a9bce04c53033ea1097695a431f7b41ce6164ee6c9444c572b473ba",
+  "final_release_tag": "genesis-free-v7-after-attempt-024-final",
+  "canonical_attempt_024": {
+    "parent_kind": "neutral",
+    "parent_depth": 1,
+    "parent_tree_digest": "d624d7e4dac29fc78ea8bf51c55de83aafa39ae49e00537e45a7a3616966cbf3",
+    "proposal_patch_sha256": "50924f8e9dad6d8e25686c2e4edcfab92f736b622b2aa15f9e81730fba1fb8bc",
+    "transcript_sha256": "72d03cb9ef2606ba8dc5e184c2a191c133fa9b2389a6292310e3206ed6e4782d",
+    "deterministic_winner": "C1-contextual-profile-parity",
+    "deterministic_winner_score": 244,
+    "deterministic_ranking": [
+      244,
+      226,
+      206,
+      64
+    ],
+    "external_evaluator_run_id": 35534705144,
+    "hard_pass": true,
+    "frozen_tests": {
+      "passed": 292,
+      "failed": 0,
+      "skipped": 1,
+      "total": 293
+    },
+    "warning_count": 7,
+    "capability_deltas": {
+      "code_delegation": 0,
+      "conversation": 0,
+      "execution_personal_read": 0,
+      "memory_media": 0,
+      "personal_read": 0,
+      "personal_write": 0,
+      "self_modify": 0,
+      "system_admin": 0
+    },
+    "verdict": "neutral_depth_2",
+    "child_tree_digest": "dfe73e08bf75eefc3885004b6aee7fe36db7c8f348193e704352a3c997cd70cd",
+    "neutral_id": "neutral-024-dfe73e08bf75",
+    "neutral_archive_sha256": "87ddab55c5de7164cd8fccc20c03905df16a37f71e1a48ca48ccb87b4af598d4",
+    "observation_result_digest": "9449e63a28ad300cd9157f269dcbbdfdbb1880d377e0454951146adedc6e1228",
+    "canonical_result_sha256": "82a302849e1f49f2c32c322488cff374632c67105adeb71624c15156a8a83015",
+    "campaign_state_sha256": "3d3a573760d3432816a5c5dc976605d83c9f36fd824e5b4a54ee3d2de2a5b3f5",
+    "final_state_digest": "75fac8b32a9bce04c53033ea1097695a431f7b41ce6164ee6c9444c572b473ba",
+    "evaluator_observations_spent": 1,
+    "attempts_used_after_event": 24
   }
 }
