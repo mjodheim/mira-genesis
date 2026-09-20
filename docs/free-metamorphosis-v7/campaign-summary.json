@@ -2,11 +2,11 @@
   "schema": "genesis-free-metamorphosis-v7-public-summary-v1",
   "snapshot_date": "2026-09-20",
   "policy_id": "GENESIS_FREE_METAMORPHOSIS_RECURSIVE_SEARCH_V7_2026-09-18",
-  "campaign_status": "active_after_attempt_017_before_attempt_018",
+  "campaign_status": "active_after_attempt_018_before_attempt_019",
   "attempt_budget": {
-    "used": 17,
+    "used": 18,
     "max": 24,
-    "remaining": 7
+    "remaining": 6
   },
   "retained_generation": 2,
   "retained_tree_digest": "8c85b82d6dec7e29c029677f5cd7c6a9e0df466fb5cd831252cdb71b879b4cea",
@@ -57,19 +57,19 @@
     "satisfied_count": 3,
     "total": 4
   },
-  "latest_completed_attempt": 17,
-  "latest_completed_verdict": "neutral_depth_1",
-  "next_attempt": 18,
-  "next_parent_kind": "neutral",
-  "next_parent_depth": 1,
-  "next_parent_tree_digest": "618dd6299e8ce962362588f57d9e8a5a27625200ab4fad8a370f90b6e8a3f812",
-  "next_context_digest": "3639c13d5b0871edccbc3fbfea544dce5aece1f2b9ede17c1e32b107f5433de7",
-  "next_prompt_sha256": "b46a3ccf09d1a40f03eb5bf7a4b77c0e9a76f65e1c81a63cf11271c54787bcbe",
+  "latest_completed_attempt": 18,
+  "latest_completed_verdict": "neutral_depth_2",
+  "next_attempt": 19,
+  "next_parent_kind": "champion",
+  "next_parent_depth": 0,
+  "next_parent_tree_digest": "8c85b82d6dec7e29c029677f5cd7c6a9e0df466fb5cd831252cdb71b879b4cea",
+  "next_context_digest": "9eb13791f89ab4de693869e917c1a03448016a2926eed28fd82e311d9a933c6c",
+  "next_prompt_sha256": "18f2cb31d9ea4362376852804e2159d9411294b4eb63daedbaebe19da265b3f6",
   "publication_boundary": "docs/free-metamorphosis-v7/PUBLICATION_BOUNDARY.md",
-  "latest_completed_child_tree_digest": "d624d7e4dac29fc78ea8bf51c55de83aafa39ae49e00537e45a7a3616966cbf3",
-  "latest_completed_result_sha256": "adc848bf0231bf05433314984d3868c0f92ae34fb2fdf3ca560791b0de685f88",
-  "next_bundle_sha256": "f0a40778b86f4482f1ad4bb9dd35f2d850e8d4ba2e929d39b5b1ff082ca1eff7",
-  "research_memory_digest": "a3d9377036fbe865195b738300e26096b311c1275f2a46277ca22a85d5774aa7",
+  "latest_completed_child_tree_digest": "42d818da1221e26cf0ceb1af016d57bbedf03ff662ef5d805bb67e9dd60f5bec",
+  "latest_completed_result_sha256": "8ed8c6e397aa5025daf2d06a41c703f30d4037b5e49627822268bbca86fe2405",
+  "next_bundle_sha256": "6579275a9603c858598b573166653795c65eef22cecdb47e30a02a7f6c44c30b",
+  "research_memory_digest": "85b22913eeef9c3a3835718036bc904d3fbfe3d9e6b9c882f51b3c343cb1294e",
   "research_strategy_digest": "426ce1aefd39522ef2e709fbc270117ef13edba3c650898bd143080ac188d70c",
   "research_strategy_generation": 15,
   "latest_pre_evaluation_event": {
@@ -122,7 +122,7 @@
       "attempts_used_after_event": 16
     }
   ],
-  "next_bundle_status": "canonical_a018_ready",
+  "next_bundle_status": "canonical_a019_ready",
   "control_plane_erratum": {
     "id": "v7.1-tournament-rubric-disclosure",
     "status": "applied_and_validated_through_a017",
@@ -187,5 +187,84 @@
     "campaign_state_sha256": "cd32d872bb4a2f28493b83a67c5edc35a42513bfe283568e507c98dca080c4e5",
     "evaluator_observations_spent": 1,
     "attempts_used_after_event": 17
+  },
+  "canonical_attempt_018": {
+    "parent_kind": "neutral",
+    "parent_depth": 1,
+    "parent_tree_digest": "618dd6299e8ce962362588f57d9e8a5a27625200ab4fad8a370f90b6e8a3f812",
+    "proposal_patch_sha256": "94e1ce0a6e2ab9b1f555f388fcbdc5169555e8088ee12589df562f13620eaf2b",
+    "transcript_sha256": "ad6e9ba3c8fdd0371b8a099878b9e81e7f714b563ecc1f7afcbbdd1e7618034c",
+    "deterministic_winner": "018-A",
+    "deterministic_winner_score": 266,
+    "deterministic_ranking": [
+      266,
+      223,
+      223,
+      103,
+      43
+    ],
+    "external_evaluator_run_id": 35512801831,
+    "external_evaluator_rerun": false,
+    "hard_pass": true,
+    "frozen_tests": {
+      "passed": 292,
+      "failed": 0,
+      "skipped": 1,
+      "total": 293
+    },
+    "warning_count": 7,
+    "capability_deltas": {
+      "code_delegation": 0,
+      "conversation": 0,
+      "execution_personal_read": 0,
+      "memory_media": 0,
+      "personal_read": 0,
+      "personal_write": 0,
+      "self_modify": 0,
+      "system_admin": 0
+    },
+    "verdict": "neutral_depth_2",
+    "child_tree_digest": "42d818da1221e26cf0ceb1af016d57bbedf03ff662ef5d805bb67e9dd60f5bec",
+    "neutral_id": "neutral-018-42d818da1221",
+    "neutral_archive_sha256": "36272a19de4a55bd96bf51e7886c088ab00b750ae40b7e0142fe0f67dcf61384",
+    "observation_result_digest": "e6316aa96937d702d8c62037e096000f4b5d6dc18d3ff4ad8d72ec59c7dc9ed6",
+    "canonical_result_sha256": "8ed8c6e397aa5025daf2d06a41c703f30d4037b5e49627822268bbca86fe2405",
+    "campaign_state_sha256": "d5e4e7ca805f567f012007aa0363ddf7278c2865596e445563ac28ee1dca0064",
+    "evaluator_observations_spent": 1,
+    "attempts_used_after_event": 18
+  },
+  "control_plane_errata": [
+    {
+      "id": "v7.1-tournament-rubric-disclosure",
+      "path": "docs/free-metamorphosis-v7/ERRATUM_V7_1_TOURNAMENT_RUBRIC.md",
+      "status": "applied_and_validated_through_a018",
+      "changes_frozen_scorer": false,
+      "changes_evaluator": false
+    },
+    {
+      "id": "v7.2-history-window-sync",
+      "path": "docs/free-metamorphosis-v7/ERRATUM_V7_2_HISTORY_WINDOW.md",
+      "status": "applied_after_a018_before_a019",
+      "trigger": "aggregate research history crossed MAX_HISTORY=24",
+      "external_evaluator_rerun": false,
+      "canonical_a018_run_id": 35512801831,
+      "max_history": 24,
+      "original_unbounded_memory_digest": "e425268898125b726c17e094933510bb52c5f6a63279881b73f2999fbd1167e3",
+      "repaired_bounded_memory_digest": "85b22913eeef9c3a3835718036bc904d3fbfe3d9e6b9c882f51b3c343cb1294e",
+      "repaired_state_digest": "e7bf454e34bd769575897411ba59317f6f4f6daa05ed654e95ae559832fcf01a",
+      "repaired_control_head": "395e240a25c5e4ec30d9ac57d62a9ebbfff201b4",
+      "changes_frozen_scorer": false,
+      "changes_fitness_policy": false,
+      "changes_evaluator": false,
+      "changes_attempt_budget": false
+    }
+  ],
+  "latest_control_plane_event": {
+    "attempt": 18,
+    "status": "post_observation_repair",
+    "reason": "post-observation refresh and proposal context used different aggregate-history windows after MAX_HISTORY was crossed",
+    "external_evaluator_rerun": false,
+    "evaluator_observations_spent": 0,
+    "attempts_used_after_event": 18
   }
 }
