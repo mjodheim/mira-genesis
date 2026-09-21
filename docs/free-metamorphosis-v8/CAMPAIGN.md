@@ -138,6 +138,30 @@ A001 starts from the imported v7 champion because the open archive initially con
 
 There is no A001 scientific verdict yet.
 
+### A001 proposer response #1 — rejected before evaluator
+
+The first external proposer response for A001 was rejected by the frozen zero-spend preflight and therefore is **not** a canonical v8 observation.
+
+Exact submitted artifacts:
+
+- response ZIP SHA-256: `75aea66d76555a810195efe3210fc2e95234db97688ba0f79174c7768205352d`
+- `proposal.patch` SHA-256: `190dcd3c77544ba2810dad205c3d0d36410bede40826bf7e11f7f630ab3d4aa1`
+- `evolver.patch` SHA-256: `7258cfb3749de202b4688794b6d6ca71e57caf1abec9536cb8d69516d5884e5c`
+- `transcript.json` SHA-256: `73e4a1e121083f8c6d3c134f5be552b0459fa90f36cbf1e4bda1ea2d78ea2f36`
+
+The non-meta `evolver.patch` sentinel was correct. The response nevertheless failed multiple already-preregistered proposer-contract requirements before `launcher.attempt(...)`:
+
+- `proposal.patch` lacked the required `diff --git a/<path> b/<path>` header;
+- the transcript used the wrong schema;
+- required top-level patch/prompt/evolver hashes and parent/profile identities were absent;
+- the required information-boundary object was absent;
+- the tournament field/schema did not match the frozen v8 contract.
+
+Because the frozen bundle already stated these requirements explicitly, this is treated as proposer-output nonconformance, not a control defect. **No prompt, control, budget, parent, archive or evaluator rule changes.**
+
+A001 remains pending with the exact same canonical bundle and the campaign remains at **0 / 48**.
+
+
 ## External methodological basis
 
 The v8 design was informed by external work including Darwin Gödel Machine, Group-Evolving Agents, Mendel Gödel Machine, MetaSkill-Evolve, STOP, Gödel Agent, AgentBreeder, AlphaEvolve and quality-diversity/novelty-search literature.
