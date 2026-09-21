@@ -1,7 +1,7 @@
 {
   "schema": "mira-free-v8-public-summary-v1",
   "snapshot_date": "2026-09-20",
-  "status": "preregistered_seeded_before_attempt_001",
+  "status": "attempt_001_pending_after_pre_evaluator_rejection_001",
   "policy_id": "GENESIS_FREE_METAMORPHOSIS_OPEN_RSI_V8_2026-09-20",
   "control_head": "1537380f376e3edd863bf173d96607c410919b3d",
   "prior_v7": {
@@ -47,7 +47,7 @@
     "inherited_evolver_profile_generation": 0,
     "meta_attempt": false,
     "candidate_count": 6,
-    "status": "ready_not_evaluated"
+    "status": "retry_same_bundle_after_zero_spend_rejection"
   },
   "success": {
     "stepping_stone_success": false,
@@ -55,5 +55,20 @@
     "strong_recursive_success": false,
     "safety_criterion": true,
     "confirmation_distinct_branch_promotion": false
-  }
+  },
+  "pre_evaluator_rejections": [
+    {
+      "attempt": 1,
+      "rejection_index": 1,
+      "response_zip_sha256": "75aea66d76555a810195efe3210fc2e95234db97688ba0f79174c7768205352d",
+      "proposal_patch_sha256": "190dcd3c77544ba2810dad205c3d0d36410bede40826bf7e11f7f630ab3d4aa1",
+      "evolver_patch_sha256": "7258cfb3749de202b4688794b6d6ca71e57caf1abec9536cb8d69516d5884e5c",
+      "transcript_sha256": "73e4a1e121083f8c6d3c134f5be552b0459fa90f36cbf1e4bda1ea2d78ea2f36",
+      "evaluator_entrypoint_reached": false,
+      "external_evaluator_observations_spent": 0,
+      "attempts_used_after_rejection": 0,
+      "classification": "proposer_output_nonconformance",
+      "protocol_changed": false
+    }
+  ]
 }
