@@ -1,7 +1,6 @@
 # Mira Genesis — Adaptive Embodiment roadmap
 
-Mira Genesis has seven completed bounded construction phases, an active adaptive-embodiment phase
-and one parallel measurement track.
+Mira Genesis has seven completed bounded construction phases, an integrated adaptive-embodiment/runtime line, an active RSI transfer and recursive-meta-improvement line, and separate measurement/general-validation tracks.
 
 ## Current priority — RSI transfer and recursive meta-improvement
 
