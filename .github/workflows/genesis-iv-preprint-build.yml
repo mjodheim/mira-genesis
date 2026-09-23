@@ -4,11 +4,10 @@ on:
   push:
     branches: [publication/genesis-iv-preprint]
     paths:
-      - "papers/genesis-iv-preprint/**"
+      - "papers/genesis-iv-preprint/paper.tex"
+      - "papers/genesis-iv-preprint/references.bib"
+      - "papers/genesis-iv-preprint/manuscript/**"
       - ".github/workflows/genesis-iv-preprint-build.yml"
-    paths-ignore:
-      - "papers/genesis-iv-preprint/paper.pdf"
-      - "papers/genesis-iv-preprint/BUILD_LOG.txt"
   workflow_dispatch:
 
 permissions:
