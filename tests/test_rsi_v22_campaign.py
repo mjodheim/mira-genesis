@@ -1,10 +1,11 @@
 from __future__ import annotations
-import sys
+import importlib.util
 from pathlib import Path
 
 V22=Path(__file__).resolve().parents[1]/"experiment"/"rsi_v22"
-sys.path.insert(0,str(V22))
-import campaign  # noqa: E402
+spec=importlib.util.spec_from_file_location("v22_campaign_test",V22/"campaign.py")
+if spec is None or spec.loader is None: raise RuntimeError("cannot load V22 campaign")
+campaign=importlib.util.module_from_spec(spec); spec.loader.exec_module(campaign)
 
 def state():
     return campaign.init_state(task_id="demo",allowed_source_path="src/Demo.java",
