@@ -1,0 +1,38 @@
+\section{V19: stratified development and prospective G2 generalization}
+
+V19 keeps executable policy code as the editable target but changes the development gate before any new proposer output. The public development corpus becomes stratified:
+\begin{itemize}
+  \item 13 chronological real A016-prefix replay worlds;
+  \item 188 synthetic worlds drawn from previously public calibration, prospective and negative sequences.
+\end{itemize}
+The total development corpus is 201 worlds. Direct access to \code{view["world\_id"]} is forbidden so that a policy cannot branch on training-world identity.
+
+A candidate is eligible only if it preserves the real stratum with no paired losses while strictly improving the synthetic stratum without increasing represented requests. This prospective condition makes the V18 plateau-only shortcut insufficient.
+
+Four independent GPT-5.6 Sol / High isolated proposer attempts are returned before laboratory feedback. All four pass the mechanical contract and are decision-equivalent across all 201 development worlds:
+\begin{itemize}
+  \item real stratum: 13 wins, 0 losses, mean core 953 versus 943, requests 0 versus 1;
+  \item synthetic stratum: 188 wins, 0 losses, mean core 750.7074 versus 673.1596, requests 2.7074 versus 3.9574.
+\end{itemize}
+Because their behavior is identical, the frozen lexical source-hash tie break selects one canonical child, SHA-256 \code{69d0d725...5fdf}. The child source is committed before the holdout wrapper is created.
+
+\subsection{Fresh 24-world holdout}
+
+The one-shot holdout seed is derived from a future GitHub Actions run ID, the frozen child source hash, and the source-freeze commit. The seed is prospectively unavailable at source freeze; it is not claimed to be a cryptographic randomness beacon.
+
+On the 24 fresh worlds, G2 strictly beats G1 on every world:
+\begin{center}
+\begin{tabular}{@{}lrrr@{}}
+\toprule
+Metric & G1 & G2 & Delta \\
+\midrule
+Mean core replay value & 677.0833 & 752.3333 & +75.25 \\
+Mean represented requests & 3.6667 & 2.6250 & -1.0417 \\
+Mean quality gain & 48.4167 & 102.9583 & +54.5416 \\
+Champion hits & 12 & 24 & +12 \\
+\bottomrule
+\end{tabular}
+\end{center}
+Paired outcome: 24 wins, 0 losses, 0 ties.
+
+The holdout passes the frozen offline gate and admits G2 with generation digest \code{d2e2b990...c6bd}. This is stronger evidence than V18 because the child generalizes beyond the public stratified corpus. It still does not establish the real-organism G1$\rightarrow$G2 transition.

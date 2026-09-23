@@ -1,0 +1,46 @@
+\section{V20: second real-organism transition}
+
+V20 freezes the real G1$\rightarrow$G2 comparison after V19 passes and before any V20 proposer output or hidden-organism observation. Both policies are applied to the same reconstructed A016 public state, whose retained champion quality is 953.
+
+\subsection{First-wave policy decisions}
+
+The policies make different prospectively frozen decisions:
+\begin{itemize}
+  \item G1 selects two parents, \code{v8-node-015-913198e1c00a} and \code{v8-node-014-2334b1dcc01a};
+  \item G2 returns an empty parent batch and stops before hidden evaluation.
+\end{itemize}
+
+The empty batch is explicitly allowed by the V20 protocol. The laboratory is forbidden to force G2 to spend an observation merely to equalize budget.
+
+For each requested G1 slot, three fresh isolated proposer attempts are generated. All six attempts are valid. The fixed first-valid rule accepts attempt 1 in each slot, so no later content is selected based on evaluator outcome.
+
+\subsection{Two physical G1 observations}
+
+Each accepted proposal is evaluated exactly once from an independent exact A016 copy using the same hidden evaluator authority. Both results are identical on the facts relevant to terminal utility:
+\begin{itemize}
+  \item hard pass: true;
+  \item archive viable: true;
+  \item quality: 953;
+  \item improvements: none;
+  \item regressions: none;
+  \item champion promotion: false.
+\end{itemize}
+
+Under \code{stall\_rounds=1}, G1 terminates after this neutral first wave. Terminal utilities are
+\[
+U(G1)=(0,0,-2), \qquad U(G2)=(0,0,0).
+\]
+G2 is therefore strictly better under the frozen lexicographic utility.
+
+\subsection{\lthreep verdict}
+
+The project-defined \lthreep condition requires:
+\begin{enumerate}
+  \item an established G0$\rightarrow$G1 real-process improvement;
+  \item a G1-lineage G2 that passes a separately frozen prospective generalization gate;
+  \item an established G1$\rightarrow$G2 real-process improvement.
+\end{enumerate}
+
+V15.4, V19 and V20 satisfy these three conditions respectively. The resulting chain is therefore recorded as \textbf{\lthreep PASS}.
+
+The result should be read literally. G2 is a better search process for the measured state because it avoids evaluations that G1 performs without benefit. The real-organism champion remains 953. No recursive increase in champion quality has been shown.

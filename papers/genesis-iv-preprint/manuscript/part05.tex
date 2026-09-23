@@ -1,0 +1,15 @@
+\section{V15.4: first real-organism process improvement}
+
+V15.2 defines the real-process comparison between G0 and G1, and V15.3/V15.4 instantiate the proposer runtime and second G0 round. Both arms begin from the same A012 state with champion quality 953. Round one uses the same two parent nodes and the same accepted proposals for both arms, but each proposal is physically evaluated separately per arm.
+
+The paired public projections are bit-identical. One proposal raises conversation behavior but introduces regressions and is not archive-viable; the other is archive-viable but neutral at quality 953. After the deterministic round merge, both arms therefore remain at the same champion and quality.
+
+The policies now diverge only through their frozen stopping rule. G1 has \code{stall\_rounds=1} and stops after the neutral first round, consuming two observations. G0 has \code{stall\_rounds=3} and continues. Its round-two parent plan is frozen from public evidence before later proposals and hidden evaluations. Two further physical evaluations are both neutral at quality 953.
+
+The terminal states are
+\[
+U(G0)=(0,0,-4), \qquad U(G1)=(0,0,-2).
+\]
+Because the first two utility components tie, G1 is strictly better on scientific-observation cost. V15.4 therefore establishes the project's L2 process-improvement criterion for G0$\rightarrow$G1.
+
+This is an efficiency result. G1 has not discovered a better organism than G0. Its improvement is that the inherited stopping policy avoids two evaluations that, in this realized state, would not improve the champion. A reviewer who requires equal evaluation budgets or a higher final task score should not count V15.4 as recursive quality improvement. We agree with that distinction and preserve it throughout the paper.

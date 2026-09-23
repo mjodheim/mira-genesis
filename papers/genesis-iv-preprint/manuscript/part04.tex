@@ -1,0 +1,17 @@
+\section{V14: creating G1 by prospective offline meta-improvement}
+
+The lineage used in the later real-organism experiments originates in V14. Its protocol is frozen before the prospective benchmark seed exists. The meta-search operates over a bounded parameterized family of exploration policies and includes the incumbent among candidates.
+
+Across 24 prospectively generated replay worlds, V14 records one strict future meta-policy win, no future losses, 21 ties, and one adopted transition. The adopted transition improves future core replay value from 681 to 691. The resulting task policy changes one operational parameter that later becomes scientifically important: \code{stall\_rounds} falls from 3 in G0 to 1 in G1.
+
+The content-addressed generations are:
+\begin{itemize}
+  \item G0 generation digest \code{52a928eb...c81c}, with \code{stall\_rounds=3};
+  \item G1 generation digest \code{8e6b591f...e4e8b}, with \code{stall\_rounds=1}.
+\end{itemize}
+
+V14 establishes only L1. It does not yet show that the shorter stall rule improves the real organism search process. The protocol explicitly reserves that question for a later hidden-evaluator comparison.
+
+This point is methodologically important. A meta-policy can look better under replay while failing online because historical trees cover only realized edges. The project therefore treats replay as a development and policy-selection instrument rather than a substitute for real-organism evaluation.
+
+The V14 result also does not show multi-step offline recursion: the recorded recursive-offline diagnostic is negative. We retain that fact rather than treating the later real result as if V14 had already demonstrated a recursive chain.
