@@ -64,14 +64,25 @@ def evaluate(bundle: Path,proposal: Path,transcript: Path)->dict[str,Any]:
         parent=td/"parent"; parent.mkdir(); safe_extract_tar(capsule/"parent.tar.gz",parent)
         if tree_digest(parent)!=tm["parent_tree_digest"]:
             result["mechanical_valid"]=False; result["mechanical_error"]="extracted parent tree digest mismatch"; return result
-        preflight=run(["./mvnw","-q","-DskipTests","compile"],cwd=parent)
+
+        # Compile an untouched copy so Maven-generated target/ files never enter
+        # the content-addressed candidate tree.
+        preflight_parent=td/"preflight-parent"; shutil.copytree(parent,preflight_parent)
+        preflight=run(["./mvnw","-q","-DskipTests","compile"],cwd=preflight_parent)
         result["infrastructure_preflight"]=preflight
         if preflight["returncode"]!=0:
             result["infrastructure_error"]="exact parent failed Maven compile preflight"; return result
         result["infrastructure_preflight_pass"]=True
+
         applied=run(["git","apply",str(proposal.resolve())],cwd=parent); result["patch_apply"]=applied
         if applied["returncode"]!=0:
             result["mechanical_valid"]=False; result["mechanical_error"]="patch failed after verifier acceptance"; return result
+
+        # Bind the candidate identity before adding any lab-only evaluator source
+        # or running Maven tests.
+        candidate_tree_digest=tree_digest(parent)
+        candidate_source_sha256=sha256_file(parent/tm["allowed_source_path"])
+
         evaluator_source=EVALUATOR_DIR/next(p.name for p in EVALUATOR_DIR.glob("*.java") if p.stem==task["reserved_test"])
         commitment=sha256_file(evaluator_source); result["evaluator_commitment_sha256"]=commitment
         if commitment!=tm["evaluator_commitment_sha256"]:
@@ -83,8 +94,8 @@ def evaluate(bundle: Path,proposal: Path,transcript: Path)->dict[str,Any]:
         result["reserved_objective_pass"]=reserved["returncode"]==0
         result["represented_observation"]=True
         result["quality_milli"]=1000 if result["public_guard_pass"] and result["reserved_objective_pass"] else 0
-        result["tree_digest"]=tree_digest(parent)
-        result["source_sha256"]=sha256_file(parent/tm["allowed_source_path"])
+        result["tree_digest"]=candidate_tree_digest
+        result["source_sha256"]=candidate_source_sha256
         return result
 
 def main()->None:
