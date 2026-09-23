@@ -51,6 +51,14 @@ and whether that relation survives fresh transfer, ablation and repeated generat
 > whether G3 beats G2 on fresh holdout tasks, and whether ablating the G2-acquired mechanism weakens
 > that successor transition. The broader path is recorded in
 > `docs/RSI_GENERAL_SUCCESSOR_MAP_2026-09-23.md`.
+>
+> The repository already contains a **DEVELOPMENT recursive substrate** below that scientific target:
+> retained MetaPolicy descent has exercised `M0→M1→M2`, search-policy descent `P0→P1→P2`, and
+> body descent `B0→B1→B2` in one persistent fixture campaign, while
+> `genesis.recursive_research_strategy` can retain evidence-backed strategy generations such as
+> `S0→S1→S2`. Those mechanisms are useful apparatus, not V23 evidence: their objectives, structural
+> edits and adaptation rules remain project-authored and the MetaPolicy certificate explicitly does
+> not establish the counterfactual machinery ablation V23 requires.
 
 
 For the detailed current snapshot, see
