@@ -1,0 +1,11 @@
+--- a/src/main/java/be/mjodheim/brewstead/service/ProgressionService.java
++++ b/src/main/java/be/mjodheim/brewstead/service/ProgressionService.java
+@@ -122,7 +122,7 @@
+     @Transactional
+     public int npcCoinReward(Long playerId, int base) {
+         return getOrCreate(playerId).getSpecialization() == Specialization.MARCHAND
+-                ? Math.round(base * 1.10f) : base;
++                ? base : base;
+     }
+ 
+     private PlayerProgress getOrCreate(Long playerId) {
