@@ -14,6 +14,8 @@ import json
 from pathlib import Path
 from typing import Any
 
+from genesis import recursive_research_strategy as research
+
 SCHEMA = "mira-genesis-rsi-v23-v22-research-bridge-v1"
 FAMILY = "real-project-search-policy-transfer"
 TARGET_AXES = (
@@ -84,23 +86,7 @@ def bridge(adjudication: dict[str, Any]) -> dict[str, Any]:
         if g2round > g1round:
             regressions.append("g2_more_rounds")
 
-        payload = {
-            "attempt": attempt,
-            "task_id": str(row["task_id"]),
-            "family": FAMILY,
-            "target_axes": list(TARGET_AXES),
-            "mechanisms": list(MECHANISMS),
-            "changed_regions": list(CHANGED_REGIONS),
-            "hard_pass": g2q == 1000,
-            "capability_deltas": deltas,
-            "improvements": improvements,
-            "regressions": regressions,
-            "parent_kind": "champion",
-            "parent_lineage_depth": 0,
-            "parent_digest": G1_POLICY_SHA256,
-            "child_digest": G2_POLICY_SHA256,
-        }
-        payload["source_digest"] = _digest(
+        source_digest = _digest(
             {
                 "task_id": row["task_id"],
                 "g1_best_quality_milli": g1q,
@@ -112,7 +98,23 @@ def bridge(adjudication: dict[str, Any]) -> dict[str, Any]:
                 "g2_strictly_better": process_win,
             }
         )
-        events.append(payload)
+        outcome = research.create_outcome(
+            attempt=attempt,
+            family=FAMILY,
+            target_axes=TARGET_AXES,
+            mechanisms=MECHANISMS,
+            changed_regions=CHANGED_REGIONS,
+            hard_pass=g2q == 1000,
+            capability_deltas=deltas,
+            improvements=improvements,
+            regressions=regressions,
+            parent_kind="champion",
+            parent_lineage_depth=0,
+            parent_digest=G1_POLICY_SHA256,
+            child_digest=G2_POLICY_SHA256,
+            source_digest=source_digest,
+        )
+        events.append({"task_id": str(row["task_id"]), "outcome": outcome})
 
     summary = {
         "schema": SCHEMA,
