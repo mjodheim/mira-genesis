@@ -23,23 +23,28 @@ REPLAY_SCHEMA = "mira-genesis-rsi-v23-exact-replay-v1"
 def sha256_file(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
-def load_policy(path: Path):
-    name = "rsi_v23_policy_" + sha256_file(path)[:12]
-    spec = importlib.util.spec_from_file_location(name, path)
+def load_sandbox():
+    path=Path(__file__).resolve().parent/"sandbox_policy.py"
+    spec=importlib.util.spec_from_file_location("v23_replay_sandbox",path)
     if spec is None or spec.loader is None:
-        raise ValueError(f"cannot load policy: {path}")
-    module = importlib.util.module_from_spec(spec)
-    sys.modules[name] = module
+        raise ValueError(f"cannot load sandbox: {path}")
+    module=importlib.util.module_from_spec(spec)
+    sys.modules[spec.name]=module
     spec.loader.exec_module(module)
-    metadata = tuple(module.policy_metadata())
-    if len(metadata) != 10 or any(type(x) is not int for x in metadata):
-        raise ValueError("policy_metadata() must return exactly ten integers")
-    names = (
-        "parent_quality", "parent_novelty", "depth", "profile_generation",
-        "champion_parent", "recovery", "root_opening", "parallelism",
-        "max_rounds", "stall_rounds",
+    return module
+
+def policy_metadata(path:Path,forbidden_tokens:list[str])->tuple[object,dict[str,int],list[int]]:
+    sandbox=load_sandbox()
+    result=sandbox.metadata(path,forbidden_tokens)
+    if not result.get("accepted"):
+        raise ValueError(f"policy metadata rejected: {result}")
+    raw=list(result["metadata"])
+    names=(
+        "parent_quality","parent_novelty","depth","profile_generation",
+        "champion_parent","recovery","root_opening","parallelism",
+        "max_rounds","stall_rounds",
     )
-    return module, dict(zip(names, metadata, strict=True))
+    return sandbox,dict(zip(names,raw,strict=True)),raw
 
 def _row(node: dict[str, Any]) -> dict[str, Any]:
     return {
@@ -65,8 +70,9 @@ def expansion_queues(state: dict[str, Any]) -> dict[str, deque[str]]:
             queues[parent].append(child)
     return dict(queues)
 
-def replay_state(state: dict[str, Any], policy_path: Path) -> dict[str, Any]:
-    module, metadata = load_policy(policy_path)
+def replay_state(state: dict[str, Any], policy_path: Path, forbidden_tokens: list[str] | None = None) -> dict[str, Any]:
+    forbidden_tokens=list(forbidden_tokens or [])
+    sandbox,metadata,metadata_raw=policy_metadata(policy_path,forbidden_tokens)
     root = state["root_node_id"]
     nodes = state["nodes"]
     if root not in nodes:
@@ -95,7 +101,12 @@ def replay_state(state: dict[str, Any], policy_path: Path) -> dict[str, Any]:
             "revealed_nodes": [_row(nodes[node_id]) for node_id in revealed],
             "eligible_parent_ids": sorted(revealed),
         }
-        selected = list(module.select_parent_batch(view, metadata["parallelism"]))
+        call=sandbox.execute(policy_path,view,metadata["parallelism"],forbidden_tokens)
+        if not call.get("accepted"):
+            raise ValueError(f"policy selection rejected: {call}")
+        if list(call["metadata"]) != metadata_raw:
+            raise ValueError("policy metadata changed between isolated calls")
+        selected=list(call["selected_parent_ids"])
         if len(selected) != len(set(selected)):
             raise ValueError("candidate policy selected duplicate parents")
         if len(selected) > metadata["parallelism"]:
