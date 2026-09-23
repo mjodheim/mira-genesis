@@ -25,7 +25,7 @@ public node fields used by the online policy ABI:
 - scored outcome fields;
 - lineage depth.
 
-The runner enforces the candidate's declared parallelism, maximum rounds and stall-round count. Candidate metadata and parent selection are evaluated through the bounded policy subprocess; replay never imports candidate code into the laboratory process.
+The runner validates the candidate's declared parallelism, maximum rounds and stall-round count. Candidate metadata and parent selection are evaluated through the bounded policy subprocess; replay never imports candidate code into the laboratory process. The caller may additionally impose external caps on represented requests, rounds and parallelism. Those caps can only reduce the candidate's declared budget and are intended to make equal-budget arm comparisons enforceable by the laboratory rather than self-reported by the candidate.
 
 When a selected parent has a recorded unused child, replay consumes the next historical expansion,
 charges one represented request and reveals that child.
