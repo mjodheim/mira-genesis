@@ -25,7 +25,7 @@ public node fields used by the online policy ABI:
 - scored outcome fields;
 - lineage depth.
 
-The runner enforces the candidate's declared parallelism, maximum rounds and stall-round count.
+The runner enforces the candidate's declared parallelism, maximum rounds and stall-round count. Candidate metadata and parent selection are evaluated through the bounded policy subprocess; replay never imports candidate code into the laboratory process.
 
 When a selected parent has a recorded unused child, replay consumes the next historical expansion,
 charges one represented request and reveals that child.
@@ -63,4 +63,4 @@ V23's canonical:
 
 must be frozen only after V22's measured cost scale is known and before any V23 proposer call.
 
-This file therefore defines replay **semantics**, not the final V23 success threshold.
+Development identity tokens may be supplied to the sandbox guard so task IDs, node IDs and source paths from the replay pool cannot appear literally in candidate code. This is an anti-memorization guard, not a substitute for fresh holdout evaluation.\n\nThis file therefore defines replay **semantics**, not the final V23 success threshold.\n
