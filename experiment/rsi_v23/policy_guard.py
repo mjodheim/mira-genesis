@@ -91,8 +91,8 @@ def guard_source(source:str,forbidden_tokens:Iterable[str]=())->list[str]:
                 problems.append(f"forbidden call {node.func.id!r} at line {node.lineno}")
         elif isinstance(node,ast.Constant) and isinstance(node.value,(str,bytes)):
             raw=node.value.decode("utf-8","ignore") if isinstance(node.value,bytes) else node.value
-            if raw.startswith("__") and raw.endswith("__") and len(raw) >= 4:
-                problems.append(f"dunder literal {raw!r} is forbidden at line {node.lineno}")
+            if "__" in raw:
+                problems.append(f"dunder-like literal {raw!r} is forbidden at line {node.lineno}")
             for token in forbidden_tokens:
                 if token and token in raw:
                     problems.append(f"forbidden development token appears in a literal at line {node.lineno}: {token!r}")
