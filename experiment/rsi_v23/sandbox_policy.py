@@ -12,16 +12,12 @@ def load_guard():
     if spec is None or spec.loader is None: raise RuntimeError("cannot load policy guard")
     m=importlib.util.module_from_spec(spec); spec.loader.exec_module(m); return m
 
-def execute(policy:Path,view:dict,max_parallelism:int,forbidden_tokens:list[str],timeout_seconds:float=3.0)->dict:
-    guard=load_guard(); problems=guard.guard_source(policy.read_text(encoding="utf-8"),forbidden_tokens)
-    if problems:
-        return {"accepted":False,"phase":"static_guard","problems":problems}
-    payload=json.dumps({"view":view,"max_parallelism":int(max_parallelism)},sort_keys=True)
+def _run_worker(policy:Path,payload:dict,timeout_seconds:float)->dict:
     with tempfile.TemporaryDirectory(prefix="v23-policy-sandbox-") as td:
         env={"PYTHONHASHSEED":"0","LC_ALL":"C","LANG":"C"}
         try:
             p=subprocess.run([sys.executable,"-S",str(WORKER),str(policy.resolve())],
-                input=payload,text=True,capture_output=True,cwd=td,env=env,timeout=timeout_seconds)
+                input=json.dumps(payload,sort_keys=True),text=True,capture_output=True,cwd=td,env=env,timeout=timeout_seconds)
         except subprocess.TimeoutExpired:
             return {"accepted":False,"phase":"runtime","error":"timeout"}
     if p.returncode:
@@ -30,6 +26,26 @@ def execute(policy:Path,view:dict,max_parallelism:int,forbidden_tokens:list[str]
         out=json.loads(p.stdout)
     except json.JSONDecodeError:
         return {"accepted":False,"phase":"runtime","error":"non_json_output","stdout_tail":p.stdout[-2000:]}
+    return {"accepted":True,"phase":"worker_complete","output":out}
+
+def metadata(policy:Path,forbidden_tokens:list[str],timeout_seconds:float=3.0)->dict:
+    guard=load_guard(); problems=guard.guard_source(policy.read_text(encoding="utf-8"),forbidden_tokens)
+    if problems:
+        return {"accepted":False,"phase":"static_guard","problems":problems}
+    raw=_run_worker(policy,{"mode":"metadata"},timeout_seconds)
+    if not raw["accepted"]: return raw
+    values=raw["output"].get("metadata")
+    if not isinstance(values,list) or len(values)!=10 or any(type(x) is not int for x in values):
+        return {"accepted":False,"phase":"runtime","error":"invalid_metadata"}
+    return {"accepted":True,"phase":"complete","metadata":values}
+
+def execute(policy:Path,view:dict,max_parallelism:int,forbidden_tokens:list[str],timeout_seconds:float=3.0)->dict:
+    guard=load_guard(); problems=guard.guard_source(policy.read_text(encoding="utf-8"),forbidden_tokens)
+    if problems:
+        return {"accepted":False,"phase":"static_guard","problems":problems}
+    raw=_run_worker(policy,{"mode":"select","view":view,"max_parallelism":int(max_parallelism)},timeout_seconds)
+    if not raw["accepted"]: return raw
+    out=raw["output"]
     selected=out.get("selected_parent_ids")
     if not isinstance(selected,list) or any(not isinstance(x,str) for x in selected):
         return {"accepted":False,"phase":"runtime","error":"invalid_selected_parent_ids"}
