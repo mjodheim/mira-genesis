@@ -169,6 +169,8 @@ def replay_state(
 
     return {
         "schema": REPLAY_SCHEMA,
+        "replay_semantics": "recorded_realized_expansion_tape",
+        "counterfactual_generation_claim": False,
         "task_id": state["task_id"],
         "policy_sha256": sha256_file(policy_path),
         "declared_policy_metadata": metadata,
