@@ -1,0 +1,28 @@
+section{Experimental architecture}
+
+subsection{Persistent discovery archive}
+
+Genesis stores evaluated organism variants in a persistent content-addressed archive. A node records its parent, lineage depth, public quality, whether it was ever champion, a research signature describing the mutation family and mechanisms, and the source archive needed for exact replay. Non-champion but viable nodes remain available as stepping stones.
+
+The archive design draws on open-ended evolutionary systems such as the Darwin G"odel Machine, which preserve multiple branches rather than greedily replacing a single incumbent cite{zhang2025dgm}. Genesis adds a stricter separation between archive viability and champion promotion. A child can remain useful for future exploration without displacing the current champion.
+
+subsection{Replay worlds}
+
+A replay world exposes only the portion of a previously recorded discovery tree that a policy could have known at each step. Selecting a historical parent either reveals its recorded child or consumes a represented request when no continuation was recorded. The policy never receives an oracle for unexecuted mutations. Replay therefore simulates allocation decisions over observed history rather than predicting counterfactual organism outcomes.
+
+This matches the central Dream-RSI insight: historical discovery trees can provide low-cost feedback for alternative exploration policies because realized outcomes are already known cite{zheng2026dreamrsi}. Genesis uses that idea conservatively. Replay may select a search policy for later deployment, but real organism retention is still decided by the external evaluator.
+
+subsection{External organism evaluator}
+
+The hidden evaluator is fixed for the real-organism epoch. It executes candidate software in a sandbox, checks hard safeguards and behavior contracts, computes capability scores and quality, and decides whether a candidate is archive-viable or champion-eligible. Its implementation and hidden cases are outside the editable organism and policy surfaces.
+
+subsection{Prospective protocol discipline}
+
+The experiments use four recurring controls:
+egin{enumerate}
+  item 	extbf{freeze before observation}: success rules, policies, hashes and seed construction are committed before the relevant hidden or holdout result exists;
+  item 	extbf{one-shot evaluation}: a completed scientific result cannot be rerolled under the same protocol;
+  item 	extbf{negative evidence retention}: failed attempts remain in the evidence register and may motivate a new protocol but cannot be reclassified;
+  item 	extbf{content addressing}: policies, proposal patches, manifests and result records are bound by SHA-256 digests.
+end{enumerate}
+These controls do not make the project independent of its author, but they reduce the space for post-hoc selection within the recorded experimental line.

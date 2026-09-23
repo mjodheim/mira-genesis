@@ -1,0 +1,32 @@
+section{Terminology and claim levels}
+
+The phrase recursive self-improvement is overloaded. Recent surveys distinguish self-refinement, training-time self-improvement, evaluator improvement, and broader research-process improvement cite{chen2026rsisurvey}. We therefore use operational labels tied to observable gates rather than treating RSI as a binary property.
+
+subsection{Organism, search policy, and mutation operator}
+
+The emph{organism} is the software system whose behavior is tested by the external evaluator. A emph{search policy} observes a public archive of past organism variants and selects parents for new proposals. A emph{mutation operator} produces candidate source-code edits for the selected parent. In V18--V20 that operator is an external LLM proposer running in isolated chats. The search policy does not edit the evaluator and cannot read hidden evaluator cases.
+
+This distinction matters for authorship. The repository records G1 and G2 as parent-authored lineage generations because the parent generation supplies the inherited search state, admissible evidence, and selection context. However, the actual source edit is proposed by an external model. We therefore describe the process as emph{lineage-mediated system-level self-modification}, not literal model-only self-authorship.
+
+subsection{Frozen process utility}
+
+The real-organism process experiments use the prospectively frozen lexicographic utility
+[
+U = left(P,; Q-953,; -Night),
+]
+where $P$ is the number of retained champion promotions, $Q$ is best retained public quality, and $N$ is the number of completed hidden-evaluator observations. Promotions dominate quality gain, which dominates evaluation efficiency. Thus fewer observations matter only when the higher-priority outcomes tie.
+
+This ordering prevents a policy from winning merely by doing nothing when a competing policy discovers a genuinely better champion. It also makes the present result easy to interpret: both successful transitions occur because promotion and quality tie and the child spends fewer hidden observations.
+
+subsection{Project levels}
+
+The evidence ledger uses the following project-specific hierarchy:
+egin{itemize}
+  item 	extbf{L0}: reproducible organism evaluation infrastructure;
+  item 	extbf{L1}: prospective offline improvement of the search/meta-search process;
+  item 	extbf{L2}: prospective real-organism process improvement for one parent-child transition;
+  item 	extbf{lthreep}: two successive process-improvement transitions, with a separately validated G2 authored from G1 lineage state;
+  item 	extbf{L4}: transfer to a materially new evaluator, organism family, or domain.
+end{itemize}
+
+The suffix P is intentional. lthreep is emph{process} recursion. It is not presented as a community-standard RSI level and is not equivalent to equal-budget recursive quality uplift.

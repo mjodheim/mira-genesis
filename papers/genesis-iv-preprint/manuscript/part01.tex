@@ -1,0 +1,20 @@
+section{Introduction}
+
+Self-improving AI systems now routinely modify prompts, tools, memory, control flow, code, and other parts of their surrounding harness. Several recent systems explicitly frame this as recursive self-improvement or open-ended evolution: the Darwin G"odel Machine maintains an archive of self-modified coding agents cite{zhang2025dgm}; G"odel Agent exposes agent logic to self-referential modification cite{yin2024godelagent}; Group-Evolving Agents shares experience across branches cite{weng2026gea}; Mendel G"odel Machine introduces comparative cross-lineage mutation cite{liu2026mgm}; and RRSI regularizes harness evolution to reduce benchmark-specific overfitting cite{xia2026rrsi}. Dream-RSI makes the exploration policy itself the recursive target and reuses accumulated discovery trees as replay simulators cite{zheng2026dreamrsi}.
+
+These systems motivate an important measurement question. When a later generation is better, what exactly improved? It may solve more tasks, use less evaluation compute, explore more efficiently, produce better descendants, or simply fit the development benchmark more closely. These outcomes are scientifically different. A recursive process can improve without increasing the best observed task score; conversely, a score increase need not show that the machinery producing future improvements has improved.
+
+This paper isolates one narrower phenomenon: emph{bounded recursive process improvement}. The target is the policy that decides which previously discovered organism state to expand, how many expansions to request, and when to stop. The task-level mutation operator is external and fixed. A hidden evaluator remains outside the editable search policy. The central test asks whether a later generation can preserve the same best retained organism outcome while consuming fewer expensive hidden-evaluator observations, and whether that process-level improvement can itself recur across a second lineage transition.
+
+The result is deliberately weaker than an intelligence-explosion narrative. G0 and G1 both retain quality 953 in the first real-organism comparison, while G1 spends fewer observations. G2 later passes a fresh 24-world replay holdout, then stops before requesting any hidden evaluation on the real A016 state; G1 spends two evaluations and finds nothing better. The improvement is therefore in emph{search allocation and stopping}, not in a higher real-organism champion score.
+
+The main contributions are:
+egin{enumerate}
+  item a prospectively frozen, content-addressed G0$ightarrow$G1$ightarrow$G2 lineage in which the search policy is an executable artifact rather than a post-hoc description;
+  item a replay-to-online protocol that uses public historical discovery trees for policy development while reserving fresh holdout worlds and a fixed external evaluator for validation;
+  item retained negative evidence showing two distinct failure modes before the successful second transition: search-space saturation and replay overfitting;
+  item a two-stage validation of G2: strict prospective replay generalization followed by a real-organism process comparison;
+  item an explicit claim boundary separating process efficiency from recursive task-quality uplift, transfer, autonomous model-only authorship, and open-ended RSI.
+end{enumerate}
+
+The design is influenced directly by Dream-RSI's observation that a completed discovery tree can function as an exact replay simulator over the search that actually occurred cite{zheng2026dreamrsi}. Genesis differs in emphasis: the goal here is not to maximize discovery benchmark performance, but to construct a conservative evidence chain in which failed recursive attempts remain part of the scientific record and later protocol changes cannot retroactively upgrade them.
