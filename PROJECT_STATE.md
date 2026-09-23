@@ -28,6 +28,10 @@ the September carrier-readiness line.
   opens the stronger question `G2 -> better meta-search -> G3 -> fresh holdout gain`, with matched
   G1-meta, G2-ablation and no-meta controls. A negative V22 instead requires a successor targeted at
   the measured failure. See `docs/RSI_GENERAL_SUCCESSOR_MAP_2026-09-23.md`.
+- **Existing DEVELOPMENT recursive apparatus:** current `main` already contains persistent
+  search-policy and MetaPolicy evolution, a two-transition retained MetaPolicy descent fixture, and
+  an evidence-adaptive recursive research strategy. This reduces the engineering gap to V23 but does
+  not replace V23's causal ablation, matched-control or fresh-holdout requirements.
 
 No V21/V22 statement here changes a generality gate, establishes AGI or establishes open-ended RSI.
 The intended progression is to test increasingly general **causal recursive improvement** while
