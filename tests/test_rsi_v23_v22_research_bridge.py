@@ -40,17 +40,20 @@ def test_mapping_is_fixed_and_uses_only_adjudication_aggregates():
     assert result["family"]=="real-project-search-policy-transfer"
     assert len(result["events"])==3
     first=result["events"][0]
-    assert first["mechanisms"]==["parent_selection","continuation_and_stopping"]
-    assert first["changed_regions"]==["search_policy"]
-    assert first["capability_deltas"]=={
+    assert first["task_id"]=="task-0"
+    outcome=first["outcome"]
+    assert outcome["schema"]=="genesis-recursive-research-outcome-v1"
+    assert outcome["mechanisms"]==["continuation_and_stopping","parent_selection"]
+    assert outcome["changed_regions"]==["search_policy"]
+    assert outcome["capability_deltas"]=={
         "repair_best_quality":0,
         "represented_request_efficiency":2,
         "round_efficiency":1,
     }
-    assert first["improvements"]==["g2_strict_process_utility_win"]
-    assert first["regressions"]==[]
-    assert first["parent_digest"]==m.G1_POLICY_SHA256
-    assert first["child_digest"]==m.G2_POLICY_SHA256
+    assert outcome["improvements"]==["g2_strict_process_utility_win"]
+    assert outcome["regressions"]==[]
+    assert outcome["parent_digest"]==m.G1_POLICY_SHA256
+    assert outcome["child_digest"]==m.G2_POLICY_SHA256
 
 
 def test_mapping_does_not_turn_lower_quality_into_a_promotion_only():
@@ -58,7 +61,7 @@ def test_mapping_does_not_turn_lower_quality_into_a_promotion_only():
     a["tasks"][0]["g2_best_quality_milli"]=0
     a["tasks"][0]["g2_strictly_better"]=False
     result=m.bridge(a)
-    row=next(x for x in result["events"] if x["task_id"]=="task-0")
+    row=next(x for x in result["events"] if x["task_id"]=="task-0")["outcome"]
     assert row["hard_pass"] is False
     assert row["capability_deltas"]["repair_best_quality"]==-1000
     assert "g2_lower_best_quality" in row["regressions"]
