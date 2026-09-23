@@ -27,6 +27,12 @@ def main()->None:
     module=importlib.util.module_from_spec(spec); sys.modules[name]=module; spec.loader.exec_module(module)
     metadata=tuple(module.policy_metadata())
     if len(metadata)!=10 or any(type(x) is not int for x in metadata): raise ValueError("invalid policy metadata")
+    mode=payload.get("mode","select")
+    if mode=="metadata":
+        sys.stdout.write(json.dumps({"metadata":metadata},sort_keys=True)+"\n")
+        return
+    if mode!="select":
+        raise ValueError("unknown worker mode")
     selected=list(module.select_parent_batch(payload["view"],int(payload["max_parallelism"])))
     sys.stdout.write(json.dumps({"metadata":metadata,"selected_parent_ids":selected},sort_keys=True)+"\n")
 if __name__=="__main__": main()
