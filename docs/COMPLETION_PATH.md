@@ -1,6 +1,6 @@
 # Validation path to an AGI-candidate presentation
 
-**Navigation only — 7 September 2026, reframed 8 September 2026.** This register creates no
+**Navigation only — 23 September 2026; original 7 September register, reframed 8 September and resynchronized after the V22 freeze.** This register creates no
 scientific evidence, moves no generality gate, fills no owner decision and changes no frozen record.
 It collects work that is already specified elsewhere into one ordered view, and attributes each
 remaining item to the party that can actually perform it.
@@ -9,14 +9,32 @@ remaining item to the party that can actually perform it.
 > capable of **empirical metamorphosis**; the objective and the architectural path are stated in
 > [`METAMORPHOSIS_TARGET.md`](METAMORPHOSIS_TARGET.md). The generality gates below measure how
 > general the resulting system is. They are a later evidence level, and reading them as the goal
-> makes the path look blocked by recruitment when the actual blocker on the program is that the
-> integrated runtime does not exist yet.
+> makes the path look blocked by recruitment. The integrated runtime now **does** exist; the active
+> internal frontier is instead transfer and recursive improvement of the improvement process itself.
+> That research path is tracked separately in
+> [`RSI_GENERAL_SUCCESSOR_MAP_2026-09-23.md`](RSI_GENERAL_SUCCESSOR_MAP_2026-09-23.md).
 
 Authoritative sources remain [`MIRA_GENERALITY_CRITERIA.md`](../MIRA_GENERALITY_CRITERIA.md),
 [`PROJECT_STATE.md`](../PROJECT_STATE.md), [`PROJECT_STATE.yaml`](../PROJECT_STATE.yaml),
 [`GENESIS_COMPLETION_CRITERIA.md`](../GENESIS_COMPLETION_CRITERIA.md),
 [`CURRENT_RESEARCH_FRONTIER.md`](CURRENT_RESEARCH_FRONTIER.md) and the frozen experiment records.
 Where this file and any of them disagree, they win.
+
+## Current relationship to the RSI line
+
+This file remains the roadmap to the repository's much stronger **generality / AGI-candidate
+presentation criteria**. It is not the execution plan for the current RSI experiments.
+
+As of 23 September 2026:
+
+- V21 provides positive but incompletely reproducible real-project process-dominance evidence;
+- V22 is the clean prospective retained-evaluator replication and has not yet produced a result;
+- a positive V22 would open V23's causal G2→G3 meta-improvement test;
+- none of those internal results can remove the independent-maintainer, independent-reproduction or
+  external-audit blockers listed below.
+
+Thus progress toward causal recursive improvement and progress toward the repository's external
+generality decision rule are related but **not interchangeable**.
 
 ## What this register measures
 
