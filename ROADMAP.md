@@ -3,6 +3,29 @@
 Mira Genesis has seven completed bounded construction phases, an active adaptive-embodiment phase
 and one parallel measurement track.
 
+## Current priority — RSI transfer and recursive meta-improvement
+
+**23 September 2026.** The historical phase ledger below remains valid, but the active research
+priority has moved beyond the M094/M095-era wording still preserved inside Phase 8.
+
+The current sequence is:
+
+1. **V21:** real-project transfer produced positive G2-vs-G1 process-dominance evidence on three
+   Brewstead repairs, but its final reserved evaluator/utility archive is incomplete, so L4 is not
+   claimed closed from V21.
+2. **V22:** clean prospective retained-evaluator replication, frozen before any proposer output.
+   Its job is to decide whether G2's acquired search-policy improvement transfers reproducibly to
+   fresh real-repository tasks under an explicit utility.
+3. **V23 (conditional):** if V22 is positive, test causal recursive meta-improvement rather than a
+   one-off better policy: G2 must improve the search that produces G3, G3 must improve fresh-holdout
+   process utility over G2, and G2-mechanism ablation must weaken that transition.
+4. **Later levels:** repeated causally linked meta-descent, cross-domain transfer, endogenous
+   bottleneck selection and an expanding descendant archive under fixed external evaluation.
+
+The prospective map is `docs/RSI_GENERAL_SUCCESSOR_MAP_2026-09-23.md`. This track does not replace
+the generality criteria; it supplies a stronger internal causal target while G1–G10 and their
+external blockers remain separately governed.
+
 From M070 onward, adaptive embodiment contains a separately attributed model-mediated track. It
 shares infrastructure with the endogenous Genesis line but cannot claim internal tool ownership or
 attribute external-model competence to Mira. See
