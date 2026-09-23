@@ -37,6 +37,13 @@ rsi_frontier:
     positive_v22_target: g2_improves_meta_search_that_produces_g3_then_g3_wins_fresh_holdout_with_g2_ablation
     negative_v22_rule: successor_must_target_measured_failure
     roadmap: docs/RSI_GENERAL_SUCCESSOR_MAP_2026-09-23.md
+  existing_recursive_development_apparatus:
+    repeated_meta_policy_descent_fixture: M0_to_M1_to_M2_P0_to_P1_to_P2_B0_to_B1_to_B2
+    recursive_research_strategy_generations_supported: true
+    example_strategy_depth: S0_to_S1_to_S2
+    scientific_status: development_only
+    counterfactual_meta_machinery_ablation_established: false
+    fresh_external_holdout_established: false
   claim_effect:
     closes_generality_gate: false
     establishes_open_ended_rsi: false
