@@ -1,10 +1,10 @@
 Genesis IV preprint build
-commit=3fcd0c4b9c8f542f2085f5543d3a4915f5afa562
-date=2026-09-23T11:41:22Z
-pdf_sha256=422febd871c08c7189a5ce3eb636780ca3ef3841dc3b4b994dbb807321ef8a64
+commit=aacde9f22a1496a39a3e8df02fa996a37a7f7a92
+date=2026-09-23T11:54:12Z
+pdf_sha256=3f86393aa7f39b6f6bb099cdab9f3e88d2d4bfb01fbcd028fcabea043e545c2c
 pages=
 
 Undefined-reference scan:
 
 Overfull scan:
-Overfull \hbox (83.06267pt too wide) in paragraph at lines 29--55
+Overfull \hbox (83.06267pt too wide) in paragraph at lines 29--57
