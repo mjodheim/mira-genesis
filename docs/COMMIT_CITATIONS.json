@@ -2639,6 +2639,11 @@
       "reason": "A GENUINE LOSS, recorded rather than excused. M049's positive bounded development result names this as the commit CI run 31076192847 qualified, and the object is not in this repository at all -- not dangling, absent. It predates the provenance tags and could not be preserved by them, because the sixteen-commit repair could only reach citations that still resolved. This is the population that check cannot see, which is why the commit-typed scan exists. M049's result is not wrong; it is unverifiable from the record as it stands.",
       "kind": "lost",
       "where": "PROJECT_STATE.yaml, experiments/M049/PROTOCOL.md, experiments/M049/DEVELOPMENT_RESULT.md"
+    },
+    "720b27c8bc80de16c04953e13d5f9e8425beea8c": {
+      "reason": "a commit in the external mjodheim/mjodheim-brewstead host repository, pinned by the RSI V21 real-project transfer record; it is not a commit in mira-genesis",
+      "kind": "external_repository",
+      "where": "docs/rsi-v21/adjudication.json (host_commit)"
     }
   }
 }
