@@ -1,6 +1,8 @@
 from __future__ import annotations
 import importlib.util
 import json
+import subprocess
+import sys
 from pathlib import Path
 
 ROOT=Path(__file__).resolve().parents[1]
@@ -92,3 +94,20 @@ def select_parent_batch(view,max_parallelism): return []
         assert "must be positive" in str(e)
     else:
         raise AssertionError("nonpositive control metadata was accepted")
+
+def test_cli_returns_nonzero_when_exact_replay_is_unsupported(tmp_path):
+    policy=write_policy(tmp_path,BASE+'''
+def select_parent_batch(view,max_parallelism):
+    if len(view["revealed_nodes"]) == 1: return [view["root_node_id"]]
+    return ["c1"]
+''')
+    state_path=tmp_path/"state.json"
+    state_path.write_text(json.dumps(state()))
+    p=subprocess.run(
+        [sys.executable,str(REPLAY_PATH),str(policy),str(state_path)],
+        text=True,capture_output=True,
+    )
+    assert p.returncode == 3
+    payload=json.loads(p.stdout)
+    assert payload["all_fully_supported"] is False
+    assert payload["results"][0]["eligible_for_exact_comparison"] is False
