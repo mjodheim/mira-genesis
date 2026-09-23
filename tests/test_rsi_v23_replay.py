@@ -71,3 +71,24 @@ def select_parent_batch(view,max_parallelism): return []
     assert r["represented_requests"] == 0
     assert r["best_quality_milli"] == 0
     assert r["stop_reason"] == "policy_empty_batch"
+
+def test_external_request_budget_caps_candidate_metadata(tmp_path):
+    p=write_policy(tmp_path,'''def policy_metadata(): return (1,1,1,1,1,1,1,8,99,99)
+def select_parent_batch(view,max_parallelism):
+    return [view["root_node_id"]] if max_parallelism > 0 else []
+''')
+    r=replay.replay_state(state(),p,max_requests=1,max_rounds=10,max_parallelism=4)
+    assert r["represented_requests"] == 1
+    assert r["stop_reason"] == "external_request_budget"
+    assert r["effective_limits"] == {"max_requests":1,"max_rounds":10,"max_parallelism":4}
+
+def test_nonpositive_policy_control_metadata_is_rejected(tmp_path):
+    p=write_policy(tmp_path,'''def policy_metadata(): return (1,1,1,1,1,1,1,0,8,2)
+def select_parent_batch(view,max_parallelism): return []
+''')
+    try:
+        replay.replay_state(state(),p)
+    except ValueError as e:
+        assert "must be positive" in str(e)
+    else:
+        raise AssertionError("nonpositive control metadata was accepted")
