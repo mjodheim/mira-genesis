@@ -100,8 +100,14 @@ reproduction and adversarial audit. Internal evidence cannot substitute for this
   before online deployment.
 - Darwin Gödel Machine: preserve an open archive/tree rather than collapsing immediately to one
   greedy lineage.
+- Gödel Agent: permit the agent implementation itself to become an editable search object rather
+  than constraining improvement to a fixed outer optimization routine.
 - MetaSkill-Evolve: evolve both task skills and the improvement procedure on different timescales.
-- HyperAgents: make the task agent and the meta-agent part of one editable self-referential program, so meta-level capability need not remain a fixed handcrafted shell.
+- HyperAgents: make the task agent and the meta-agent part of one editable self-referential program,
+  so meta-level capability need not remain a fixed handcrafted shell.
+- POLARIS: persist compact abstractions distilled from failures as reusable policy-level repairs.
+- SEAL: treat self-generated update directives, including persistent parameter adaptation, as a
+  later possible improvement substrate once weight-level experiments can be isolated and evaluated.
 - AlphaEvolve: use automated evaluators and a persistent program population.
 
 Genesis should combine those useful ideas with its existing stricter requirements: content
