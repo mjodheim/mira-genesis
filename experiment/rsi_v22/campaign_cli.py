@@ -1,9 +1,13 @@
 #!/usr/bin/env python3
 """File-oriented CLI for the frozen V22 campaign engine."""
 from __future__ import annotations
-import argparse,json,zipfile
+import argparse,importlib.util,json,zipfile
 from pathlib import Path
-import campaign
+
+HERE=Path(__file__).resolve().parent
+spec=importlib.util.spec_from_file_location("v22_campaign",HERE/"campaign.py")
+if spec is None or spec.loader is None: raise RuntimeError("cannot load V22 campaign")
+campaign=importlib.util.module_from_spec(spec); spec.loader.exec_module(campaign)
 
 def load(path:Path): return json.loads(path.read_text())
 def save(path:Path,obj): path.write_text(json.dumps(obj,indent=2,sort_keys=True)+'\n')
