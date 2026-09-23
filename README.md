@@ -19,24 +19,30 @@ replayable**.
 > what it acquired, and continues after a change of body or substrate. Stated in full at
 > [`docs/METAMORPHOSIS_TARGET.md`](docs/METAMORPHOSIS_TARGET.md).
 >
-> **Where the line stands:** the M095–M102 acquisition line qualified cumulative, carrier-neutral
-> acquisition under real interference. M107 then extended the lower interpreter endogenously, M108
-> modified the acquisition machinery itself, M109 had a modified machinery produce the next
-> modification from the lineage's own blame findings, M110 carried such a modification into a
-> materially different consumer family, and M111 reached self-directed diagnosis at recursive depth
-> three. M112 removed project authorship of the worlds. M113–M125 are an apparatus-convergence line
-> against a separate carrier question and remain **untested**, not negative.
+> **Where the line stands — 23 September 2026:** the project now has two connected
+> frontiers. The integrated `genesis/` runtime exists and composes the earlier bounded mechanisms,
+> while the active RSI transfer line asks whether an acquired improvement to the **improvement
+> policy itself** transfers to real software and then helps produce its own successor.
 >
-> **What is missing is not another mechanism.** These primitives had never run as one program.
-> The integrated runtime now exists at [`genesis/`](genesis/), and one lineage runs the whole cycle
-> end to end — measure, diagnose, transform, verify, adopt or reject, retain, change substrate, and
-> evolve again in the new form. It runs against **fixtures**, it is DEVELOPMENT apparatus, and it
-> advances no gate. What it establishes is that the mechanisms compose and that the program refuses
-> what it claims to refuse; whether the same holds with a real mechanism attached is the current
-> frontier. Ten defects found in it after the fact, and the questions still open, are recorded at
-> [`experiments/GENESIS/RUNTIME_NOTES.md`](experiments/GENESIS/RUNTIME_NOTES.md); what a run has to
-> exhibit, and which of those properties are driven to their negative, at
-> [`experiments/GENESIS/DEMONSTRATION_DEFINITION.md`](experiments/GENESIS/DEMONSTRATION_DEFINITION.md).
+> **V21** supplied positive process-dominance evidence on three Brewstead repairs: G2 reached the
+> same observed quality ceiling as G1 with fewer represented search requests. V21 is **not** treated
+> as a fully reproducible L4 closure because the retained archive no longer contains the exact
+> reserved evaluator source and scalar utility implementation. That limitation is preserved in
+> `docs/rsi-v21/` rather than repaired after the fact.
+>
+> **V22** is the prospective retained-evaluator replication. Before any proposer output, it freezes
+> three fresh Brewstead tasks, their reserved JUnit objectives, executable G1/G2 policy bytes,
+> explicit lexicographic utility, real-repair tree adapter, campaign engine and final adjudicator.
+> Calibration is green, the tested apparatus identity is frozen in
+> `docs/rsi-v22/V22_FREEZE_002.json`, and the next scientific action is the blind R1 proposer
+> round. V22 has **no result yet**.
+>
+> **V23** is conditionally preregistered before the V22 outcome. If V22 is positive, the next target
+> is causal recursive meta-improvement: test whether G2 improves the process that discovers a G3,
+> whether G3 beats G2 on fresh holdout tasks, and whether ablating the G2-acquired mechanism weakens
+> that successor transition. The broader path is recorded in
+> `docs/RSI_GENERAL_SUCCESSOR_MAP_2026-09-23.md`.
+
 
 For the detailed current snapshot, see
 [`docs/CURRENT_RESEARCH_FRONTIER.md`](docs/CURRENT_RESEARCH_FRONTIER.md).
