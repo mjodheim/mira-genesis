@@ -1,12 +1,62 @@
 # Mira Genesis — Current Research Frontier
 
-**Reader-facing status snapshot — 6 September 2026, after M124 closure and owner reconciliation.**
+**Reader-facing status snapshot — 23 September 2026, after V21 adjudication and the prospective V22 retained-evaluator freeze.**
 
 This is navigation only. Frozen protocols, immutable result artifacts, decisions and experiment-local
 evidence remain authoritative. The superseded pre-sync frontier is preserved byte-for-byte at
 [`state-history/CURRENT_RESEARCH_FRONTIER_PRE_SYNC_2026-09-05.md`](state-history/CURRENT_RESEARCH_FRONTIER_PRE_SYNC_2026-09-05.md).
 
-## Where the active carrier line stands
+## Project-wide frontier: transfer of the improvement policy itself
+
+The active project-wide question is no longer whether Genesis can exhibit another bounded
+self-modification primitive. It is whether an **acquired improvement to the search/improvement
+process transfers to a real software stack and then contributes causally to discovering the next
+improvement of that process**.
+
+### V21 — preserved transfer evidence, not formal L4 closure
+
+V21 transferred frozen G1/G2 search policies to three real Brewstead repair processes. The retained
+campaign records show the same 1000 best-quality ceiling for both policies while G2 stopped after one
+represented request per task and G1 continued to three. That is positive process-dominance evidence
+on 3/3 processes.
+
+The original V21 reserved evaluator source and exact scalar global-utility implementation are not
+recoverable from the retained archive. They are not reconstructed after observing outcomes. The
+result is therefore recorded in `rsi-v21/V21_ADJUDICATION.md` as positive evidence with a
+traceability defect, **not** as a fully reproducible L4 gate closure.
+
+### V22 — clean prospective L4 replication
+
+V22 was frozen before any proposer output. It retains:
+
+- three fresh Brewstead defect tasks on host commit `720b27c8…`;
+- one reserved JUnit objective per task;
+- exact executable G1/G2 policy bytes;
+- explicit lexicographic process and global utility;
+- deterministic real-repair → search-tree encoding;
+- mechanical proposer verification, retained evaluation, campaign planning and final adjudication.
+
+Calibration proved prospectively for all three tasks that the defect passes its relevant public
+guard, fails the reserved objective, and the unmodified host oracle passes the reserved objective.
+The complete executable apparatus at `4320ff8a…` passed repository integrity, the sealed-boundary
+suite, Python 3.11 and Python 3.13. `rsi-v22/V22_FREEZE_002.json` seals that identity.
+
+**No V22 proposer output or V22 result existed at freeze time.** The next action is the shared blind
+R1 proposer round for the three tasks.
+
+### Conditional successor — V23
+
+Before seeing V22's result, the project preregistered the successor question: if V22 is positive,
+test whether G2 improves the meta-search that produces a G3, whether G3 beats G2 on a fresh holdout,
+and whether ablating the G2-acquired mechanism weakens that transition under equal budget. A negative
+V22 instead forces a diagnostic successor aimed at the measured failure.
+
+The longer path toward repeated causal meta-improvement is recorded in
+`RSI_GENERAL_SUCCESSOR_MAP_2026-09-23.md`.
+
+Nothing in V21/V22/V23 currently closes a generality gate or establishes open-ended RSI.
+
+## Separate carrier frontier: M113–M125
 
 M124/H69 is the latest merged carrier milestone. It is **closed without replay and untested**, not a
 scientific negative.
