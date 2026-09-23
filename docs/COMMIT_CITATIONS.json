@@ -2619,6 +2619,13 @@
       "cited_in": [
         "docs/rsi-v22/V22_FREEZE.json"
       ]
+    },
+    "4320ff8a0fc02a9a9f12ddacc527551e9537a044": {
+      "subject": "merge: carry V21 adjudication into V22 lineage",
+      "preserved_by": "research/rsi-v22-retained-evaluator",
+      "cited_in": [
+        "docs/rsi-v22/V22_FREEZE_002.json"
+      ]
     }
   },
   "known_unresolvable": {
