@@ -60,6 +60,38 @@ The regression checks:
 - unchanged admitted source/trust root and evaluation contract;
 - process-death restoration of the final MetaPolicy, search policy, body and retention corpus.
 
+### Recursive research-strategy evolution
+
+Current `main` also contains `genesis.recursive_research_strategy`, one mutable level above the
+body / search-policy / MetaPolicy stack. It retains only aggregate admitted outcomes, builds a
+content-addressed research memory, can derive a descendant strategy from new evidence, and uses that
+strategy to rank inert candidate experiments before external evaluation.
+
+The DEVELOPMENT regressions exercise:
+
+- strategy generation `S0 -> S1` after repeated zero-signal evidence;
+- idempotence under the same memory digest;
+- a later `S1 -> S2` transition only when genuinely new evidence exists;
+- candidate-order invariance;
+- rejection of outcome/candidate records carrying undeclared evaluator-like fields.
+
+The intended internal chain already present in the repository is therefore approximately:
+
+```text
+body
+  -> search policy
+    -> MetaPolicy
+      -> transformation machinery
+        -> recursive research strategy
+          -> next experiment choice
+            -> external measurement
+              -> research strategy descendant
+```
+
+Again, this is architecture and DEVELOPMENT regression evidence. Its weighting/adaptation rules and
+candidate descriptions are project-authored, and it has not yet demonstrated that an acquired
+strategy improves successor discovery on a fresh external population.
+
 ## What this does not establish
 
 This is DEVELOPMENT fixture evidence. It does not establish the V23 hypothesis because:
