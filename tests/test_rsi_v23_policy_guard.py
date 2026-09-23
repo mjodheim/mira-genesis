@@ -47,3 +47,8 @@ def test_literal_top_level_constants_are_allowed():
 def test_computed_top_level_state_is_rejected():
     src="THRESHOLD=max(1,2)\n"+GOOD
     assert any("top-level assignments" in x for x in guard.guard_source(src))
+
+def test_execution_context_dunder_names_are_rejected():
+    src=GOOD.replace("return []","return [__file__]")
+    p=guard.guard_source(src)
+    assert any("__file__" in x and "dunder name" in x for x in p)
