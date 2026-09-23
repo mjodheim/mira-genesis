@@ -52,3 +52,8 @@ def test_execution_context_dunder_names_are_rejected():
     src=GOOD.replace("return []","return [__file__]")
     p=guard.guard_source(src)
     assert any("__file__" in x and "dunder name" in x for x in p)
+
+def test_embedded_dunder_format_literal_is_rejected():
+    src=GOOD.replace("return []",'return ["{0.__class__}".format(view)]')
+    p=guard.guard_source(src)
+    assert any("dunder-like literal" in x and "__class__" in x for x in p)
