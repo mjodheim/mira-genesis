@@ -55,7 +55,7 @@ independent reproduction across Python 3.11 and 3.13.
 This is a real, recorded, bounded result. It is finished. Nothing in the present objective reopens,
 widens or re-derives it, and no later work may cite it as more than it is.
 
-### 2. Empirical metamorphosis — **the current objective**
+### 2. Empirical metamorphosis — **the architectural objective; integrated runtime now exists**
 
 The mechanisms qualified since M107 are no longer isolated curiosities; they are the **primitives**
 of the program described above:
@@ -69,12 +69,14 @@ of the program described above:
 | M111 | self-directed diagnosis: spending a scarce probe where the lineage's own record shows its vocabulary undetermined | 3 |
 | M112 | the worlds themselves produced by a blind generator with no repository mount | — |
 
-What is missing is not another mechanism. It is that **these have never run as one program.** Each
-was demonstrated inside its own experiment harness, against its own authored population, and then
-stopped. There is no lineage that carries all of them, no loop that continues after a candidate is
-rejected, and no runtime in which a rejection becomes an observation rather than the end of a run.
+At the 8 September snapshot, what was missing was not another mechanism but composition:
+**these had never run as one program.** Each had been demonstrated inside its own experiment harness,
+against its own authored population, and then stopped. There was no lineage carrying all of them, no
+loop continuing after a candidate was rejected, and no runtime in which a rejection became an
+observation rather than the end of a run.
 
-Building that runtime is the current frontier.
+That runtime has since been built. The 23 September frontier is therefore no longer runtime
+construction; it is prospective transfer and recursive improvement of the improvement process.
 
 ### 3. Generality validation — **a later evidence level, not the purpose**
 
@@ -84,13 +86,13 @@ adversarial audit — remain unliftable from inside this repository.
 
 But they answer a **different question**. They ask how general the resulting system is. They do not
 tell you what to build, and the AGI-candidate tier was never the project's purpose. Treating it as
-the purpose has a specific cost: it makes the architectural path look blocked by recruitment, when
-the actual blocker on the *program* is that the runtime does not exist yet.
+the purpose has a specific cost: it makes the architectural path look blocked by recruitment, when, at the 8 September snapshot, the actual blocker on the *program* was that the runtime did not
+yet exist. That particular blocker has since been removed.
 
 `COMPLETION_PATH.md` remains accurate about the generality tier and about what only external people
 can supply. It is a validation roadmap, and it should be read as one.
 
-## What the objective requires that the repository does not yet have
+## What the objective required at the 8 September snapshot
 
 An integrated Genesis runtime, separate from the frozen experiment modules and reusing their
 validated invariants without editing their sources, providing at minimum:
@@ -108,7 +110,10 @@ validated invariants without editing their sources, providing at minimum:
 - a complete descent journal;
 - restoration after process death.
 
-And a loop that runs without human architectural intervention:
+The integrated `genesis/` runtime now provides this architectural layer; whether its improvement
+machinery transfers and recursively improves is the newer V22/V23 scientific question.
+
+And the architectural target includes a loop that runs without human architectural intervention:
 
 ```text
 observe -> diagnose -> hypothesize -> construct candidates -> isolate -> test
