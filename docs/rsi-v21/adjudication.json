@@ -1,0 +1,76 @@
+{
+  "schema": "mira-genesis-rsi-v21-adjudication-record-v1",
+  "date": "2026-09-23",
+  "host_repository": "mjodheim/mjodheim-brewstead",
+  "host_commit": "720b27c8bc80de16c04953e13d5f9e8425beea8c",
+  "g1_policy_sha256": "3354f887a93a08d9f00e9c54ccb097003f727ba77c1e1b4e9997adf676d35434",
+  "g2_generation_digest": "d2e2b990581b5c72c1e642944ccd08c96ff0470b5117dd8a8820425c0028c6bd",
+  "g2_source_sha256": "69d0d725601cd32adff27379dbb25f5c7be29946f9e9c6ac4858a0634cbd5fdf",
+  "g2_observed_stop_rule": "best_quality_milli >= 780",
+  "preregistered_success_criterion": {
+    "g2_tasks_solved_without_regression": "3/3",
+    "g2_strictly_better_processes_at_least": "2/3",
+    "global_utility": "strictly greater than G1"
+  },
+  "observed": {
+    "g1_represented_observations": 9,
+    "g2_represented_observations": 3,
+    "tasks": [
+      {
+        "task_id": "brewstead-chat-rate-window",
+        "root_tree_digest": "07f01bc42243d60b38abff538b90d83e7984715d768534a3b029e5936551f8ff",
+        "r1_champion_node_id": "v21-brewstead-chat-rate-window-child-e9959d71ac62",
+        "r1_champion_quality_milli": 1000,
+        "r1_champion_source_sha256": "beec24716d40a16b2a5ff992d395a4635c7e91d41e6523fceeb57124d6babaad",
+        "r1_champion_git_blob_sha1": "e790521a4b206b28c941ebc8b7b50f2c778412e7",
+        "host_oracle_git_blob_sha1": "e790521a4b206b28c941ebc8b7b50f2c778412e7",
+        "oracle_source_identity": true,
+        "g1_round2_parent_order": [
+          "v21-brewstead-chat-rate-window-child-e9959d71ac62",
+          "v21-brewstead-chat-rate-window-root"
+        ]
+      },
+      {
+        "task_id": "brewstead-farm-plant-ownership",
+        "root_tree_digest": "e63919f98c6ea07e4cd6155a4327fe1f9ae9d5aaf4c5a719cb7bd69c65e8e0c5",
+        "r1_champion_node_id": "v21-brewstead-farm-plant-ownership-child-82618bd9b063",
+        "r1_champion_quality_milli": 1000,
+        "r1_champion_source_sha256": "f24b1347698d2fb76bac68a63d36a3a75b9ab5ddf8bcff16f3b1d9736e8e5c98",
+        "r1_champion_git_blob_sha1": "ef1089f7a610f186a2a62b8e8e9238030ae90bf3",
+        "host_oracle_git_blob_sha1": "ef1089f7a610f186a2a62b8e8e9238030ae90bf3",
+        "oracle_source_identity": true,
+        "g1_round2_parent_order": [
+          "v21-brewstead-farm-plant-ownership-child-82618bd9b063",
+          "v21-brewstead-farm-plant-ownership-root"
+        ]
+      },
+      {
+        "task_id": "brewstead-brew-quality-bonus",
+        "root_tree_digest": "afda91fa161d45d9f1ef530815ada8f597645450eb9a16c9ac17da1856434836",
+        "r1_champion_node_id": "v21-brewstead-brew-quality-bonus-child-c0530c8c4399",
+        "r1_champion_quality_milli": 1000,
+        "r1_champion_source_sha256": "052fa6c2e61bdad8451817543ae23ca6a30c126dff4137156f2a81116b3a287c",
+        "r1_champion_git_blob_sha1": "37f6c1cfb3ad340313f312c8a5ed6b75d0a14690",
+        "host_oracle_git_blob_sha1": "b89446d5e172efc4632a7d3b0e055d825ddc7336",
+        "oracle_source_identity": false,
+        "oracle_equivalence_note": "R1 champion contains the same integer summands as the host oracle; progression bonus and active-effect shift are added in the opposite order. Laboratory quality was already 1000 before R2.",
+        "g1_round2_parent_order": [
+          "v21-brewstead-brew-quality-bonus-child-c0530c8c4399",
+          "v21-brewstead-brew-quality-bonus-root"
+        ]
+      }
+    ]
+  },
+  "dominance": {
+    "best_quality_tie_all_tasks": true,
+    "g2_fewer_observations_all_tasks": true,
+    "g2_strict_process_dominance_count": 3,
+    "required_strict_process_dominance_count": 2
+  },
+  "traceability_gap": {
+    "reserved_evaluator_source_recovered": false,
+    "v21_global_utility_formula_recovered": false,
+    "effect": "The process-dominance facts are reproducible, but the preregistered scalar global-utility comparison cannot be mechanically recomputed from retained V21 artifacts alone."
+  },
+  "status": "positive_process_dominance_evidence_formal_l4_gate_not_fully_reproducible"
+}
