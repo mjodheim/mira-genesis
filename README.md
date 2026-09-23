@@ -99,9 +99,10 @@ The current staged objective is:
 M091 demonstrated endogenous extension in a bounded abstract setting; M097 brought one acquired
 operation into the real-software line, M100 repeated the enabling relation twice, M101 moved the
 relation across authored text, record and Python-syntax carriers, and M102 acquired a registry
-policy under real forgetting pressure before reusing the chain in SQLite. The current frontier is
-whether an acquired state-owned improvement can expand the constructive reach of the acquisition
-machinery itself.
+policy under real forgetting pressure before reusing the chain in SQLite. M107–M112 later pushed
+that question into interpreter and acquisition-machinery modification. The current frontier is the
+V22/V23 sequence described above: real-project transfer of an acquired search-policy improvement,
+then causal recursive production of a better successor policy.
 
 ## Where the project stands now
 
