@@ -1,11 +1,16 @@
 #!/usr/bin/env python3
 """Build the next V22 proposer capsules exactly from frozen campaign plans."""
 from __future__ import annotations
-import argparse, gzip, hashlib, io, json, shutil, subprocess, tarfile, tempfile, zipfile
+import argparse, gzip, hashlib, importlib.util, io, json, shutil, subprocess, tarfile, tempfile, zipfile
 from pathlib import Path
-import campaign
+
+def _load_local(name:str,path:Path):
+    spec=importlib.util.spec_from_file_location(name,path)
+    if spec is None or spec.loader is None: raise RuntimeError(f"cannot load {path}")
+    module=importlib.util.module_from_spec(spec); spec.loader.exec_module(module); return module
 
 HERE=Path(__file__).resolve().parent
+campaign=_load_local("v22_campaign",HERE/"campaign.py")
 PROTOCOL=HERE/'V22_TRANSFER_PROPOSER_PROTOCOL.md'
 if not PROTOCOL.exists(): PROTOCOL=HERE/'protocol'/'V22_TRANSFER_PROPOSER_PROTOCOL.md'
 VERIFIER=HERE/'VERIFY_OUTPUT.py'
