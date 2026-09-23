@@ -1,0 +1,72 @@
+name: Build Genesis IV preprint PDF
+
+on:
+  push:
+    branches: [publication/genesis-iv-preprint]
+    paths:
+      - "papers/genesis-iv-preprint/**"
+      - ".github/workflows/genesis-iv-preprint-build.yml"
+    paths-ignore:
+      - "papers/genesis-iv-preprint/paper.pdf"
+      - "papers/genesis-iv-preprint/BUILD_LOG.txt"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: publication/genesis-iv-preprint
+          fetch-depth: 0
+
+      - name: Compile LaTeX
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: paper.tex
+          working_directory: papers/genesis-iv-preprint
+          latexmk_use_xelatex: false
+          args: -pdf -interaction=nonstopmode -halt-on-error -file-line-error
+
+      - name: Record build diagnostics
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd papers/genesis-iv-preprint
+          {
+            echo "Genesis IV preprint build"
+            echo "commit=$GITHUB_SHA"
+            echo "date=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+            echo "pdf_sha256=$(sha256sum paper.pdf | awk '{print $1}')"
+            echo "pages=$(pdfinfo paper.pdf | awk '/^Pages:/ {print $2}')"
+            echo
+            echo "Undefined-reference scan:"
+            grep -Ei "undefined references|citation.*undefined|reference.*undefined" paper.log || true
+            echo
+            echo "Overfull scan:"
+            grep -E "Overfull|Underfull" paper.log || true
+          } > BUILD_LOG.txt
+
+      - name: Fail on unresolved citations or references
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd papers/genesis-iv-preprint
+          if grep -Eiq "Citation .* undefined|Reference .* undefined|There were undefined references" paper.log; then
+            cat BUILD_LOG.txt
+            exit 1
+          fi
+
+      - name: Commit built PDF and log
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "Anthony Mets"
+          git config user.email "110968830+mjodheim@users.noreply.github.com"
+          git add papers/genesis-iv-preprint/paper.pdf papers/genesis-iv-preprint/BUILD_LOG.txt
+          git commit -m "docs(genesis): build Genesis IV preprint PDF"
+          git push origin HEAD:publication/genesis-iv-preprint
