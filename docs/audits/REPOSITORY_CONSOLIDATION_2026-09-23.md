@@ -62,9 +62,13 @@ still carry unique commits:
 - #282 — `feat(genesis): evolve search machinery after measured exhaustion`
 - #316 — `docs: freeze Genesis Free Metamorphosis v5 prospective preregistration`
 - #327 — `Record zero-spend v8 A001 proposer rejection`
+- #275 — `feat: the integrated Genesis runtime, plus the G7 apparatus findings and G9 instruments`
 
 Closing these PRs does not convert their development records into negatives or positives and does not
-delete their branch history.
+delete their branch history. #275 was closed only after a semantic audit found that current `main`
+already contains later successor mechanisms for generated bodies, persistent policy evolution,
+MetaPolicy evolution and repeated retained meta descent; its ten unique commits remain available as
+historical provenance rather than being merged wholesale over newer interfaces.
 
 ## Explicitly retained classes
 
