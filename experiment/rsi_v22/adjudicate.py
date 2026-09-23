@@ -1,9 +1,16 @@
 #!/usr/bin/env python3
 """Final frozen V22 G1/G2 adjudication from completed campaign states."""
 from __future__ import annotations
-import argparse,json
+import argparse,importlib.util,json
 from pathlib import Path
-from utility import TaskOutcome,global_utility,strictly_better
+
+HERE=Path(__file__).resolve().parent
+spec=importlib.util.spec_from_file_location("v22_utility",HERE/"utility.py")
+if spec is None or spec.loader is None: raise RuntimeError("cannot load V22 utility")
+utility=importlib.util.module_from_spec(spec); spec.loader.exec_module(utility)
+TaskOutcome=utility.TaskOutcome
+global_utility=utility.global_utility
+strictly_better=utility.strictly_better
 
 def arm_outcome(state,arm):
     a=state['arms'][arm]
