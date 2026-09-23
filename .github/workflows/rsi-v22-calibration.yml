@@ -1,0 +1,39 @@
+name: RSI V22 calibration
+
+on:
+  push:
+    branches:
+      - research/rsi-v22-retained-evaluator
+    paths:
+      - "experiment/rsi_v22/**"
+      - ".github/workflows/rsi-v22-calibration.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  calibrate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout Genesis apparatus
+        uses: actions/checkout@v4
+
+      - name: Checkout frozen Brewstead host
+        uses: actions/checkout@v4
+        with:
+          repository: mjodheim/mjodheim-brewstead
+          ref: 720b27c8bc80de16c04953e13d5f9e8425beea8c
+          path: host
+
+      - name: Set up Java 26
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "26"
+          cache: maven
+          cache-dependency-path: host/pom.xml
+
+      - name: Calibrate all retained objectives
+        run: bash experiment/rsi_v22/calibrate.sh
