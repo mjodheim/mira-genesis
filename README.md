@@ -7,17 +7,26 @@ measurement boundaries.
 
 The project was originated and is directed by **Anthony Mets**.
 
-The project is deliberately narrower than the phrase “self-improving AI” usually suggests. It does
-not treat a model rewriting source code as proof that a lineage owns the improvement process. The
-research question is instead whether progressively more of the machinery for diagnosis,
-transformation, validation, adoption and later improvement can become **lineage-owned, causal and
-replayable**.
+The project's **long-horizon research direction is general recursive self-improvement**: a
+persistent software lineage that can improve not only task solutions but progressively the machinery
+that discovers, evaluates and retains later improvements, repeat that process across materially
+different domains, and improve its disposable tools and execution environment as part of the same
+causal lineage.
 
-> **Objective:** build a program capable of **empirical metamorphosis** — a persistent lineage that
-> diagnoses its own limitations, modifies its body and progressively its own acquisition machinery,
-> evaluates its descendants experimentally, adopts or rejects transformations on evidence, retains
-> what it acquired, and continues after a change of body or substrate. Stated in full at
-> [`docs/METAMORPHOSIS_TARGET.md`](docs/METAMORPHOSIS_TARGET.md).
+That is a direction, **not a current claim**. Mira Genesis deliberately requires much narrower,
+prospectively testable statements at each step. A model rewriting source code, an agent improving a
+benchmark score, or a later generation outperforming an earlier one is not by itself evidence that
+the lineage owns a recursive improvement process. The stronger question is whether an acquired
+improvement becomes causally responsible for making a later improvement discoverable or cheaper,
+and whether that relation survives fresh transfer, ablation and repeated generations.
+
+> **Architectural objective:** build a program capable of **empirical metamorphosis** — a persistent
+> lineage that diagnoses its own limitations, modifies its body and progressively its own acquisition
+> machinery, evaluates its descendants experimentally, adopts or rejects transformations on
+> evidence, retains what it acquired, and continues after a change of body or substrate. This is the
+> architectural bridge toward the wider RSI direction. See
+> [`docs/METAMORPHOSIS_TARGET.md`](docs/METAMORPHOSIS_TARGET.md) and
+> [`docs/RSI_GENERAL_SUCCESSOR_MAP_2026-09-23.md`](docs/RSI_GENERAL_SUCCESSOR_MAP_2026-09-23.md).
 >
 > **Where the line stands — 23 September 2026:** the project now has two connected
 > frontiers. The integrated `genesis/` runtime exists and composes the earlier bounded mechanisms,
