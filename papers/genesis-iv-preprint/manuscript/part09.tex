@@ -1,0 +1,28 @@
+\section{Post-result hostile audit and reproducibility}
+
+The project performed an explicit post-result adversarial review after V20. This review is AI-assisted internal self-audit, not independent peer review.
+
+\subsection{Independent recomputation path}
+
+A post-result script separate from the V20 terminal finalizer regenerates the V19 holdout from its frozen seed construction, reloads the exact G1 and G2 sources, recomputes the 24-world comparison, reproduces the fully revealed A016 first-wave decisions, rereads the two immutable V20 physical result records, and recomputes the terminal utilities.
+
+That path recovers:
+\begin{itemize}
+  \item V19 holdout: 24 wins, 0 losses, 0 ties, mean core delta +75.25, mean request delta -1.0417;
+  \item A016 decisions: G1 selects the two frozen parents; G2 selects none;
+  \item V20 utilities: G1=(0,0,-2), G2=(0,0,0).
+\end{itemize}
+
+A separate direct cross-check rereads all six V15 physical observation records. The two round-one G0/G1 public projections match pairwise, the two G0 round-two results are neutral at 953, and the recomputed first-transition utilities are G0=(0,0,-4), G1=(0,0,-2).
+
+The successful V19/V20 audit is preserved as a CI-produced result. A later wrapper intended to combine V15 and V19/V20 into one GitHub Actions job failed before runner assignment during the observed reruns; it is not represented as a successful scientific execution. The direct V15 cross-check is recorded separately.
+
+\subsection{Reproducibility versus replication}
+
+The repository makes internal reproduction unusually explicit: protocol commits, bundle hashes, source freezes, holdout seed construction, exact executable policies and physical result records are public. A reader can reconstruct the logic from preserved artifacts.
+
+This is still not an independent replication. The project author operated the experimental workflow, and the mutation candidates were produced in manually created isolated chats. Independent execution by an unaffiliated group remains a stronger unmet standard.
+
+\subsection{Why negative results remain load-bearing}
+
+The audit verifies not only the final positive chain but also the preserved V18 holdout failure. This is important because V19's design is a response to that specific failure. Removing V18 from the narrative would make the stratified V19 corpus look arbitrary and would hide the strongest evidence that the holdout gate can reject an apparently successful self-modification.

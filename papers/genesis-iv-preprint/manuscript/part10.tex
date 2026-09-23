@@ -1,0 +1,23 @@
+\section{Related work}
+
+\subsection{Empirical self-modifying agents}
+
+The Darwin G\"odel Machine replaces formal proof of beneficial self-modification with empirical evaluation and preserves an archive of diverse agents \cite{zhang2025dgm}. G\"odel Agent exposes agent logic to iterative self-modification under high-level objectives \cite{yin2024godelagent}. The Self-Taught Optimizer treats an improver program as an optimization target \cite{zelikman2023stop}. These systems establish the practical importance of modifying the machinery around a base model rather than only prompting a fixed agent.
+
+Genesis shares the empirical, system-level view but places unusual weight on prospective protocol ordering and negative-evidence retention. Its central positive result is also narrower: process efficiency under a frozen evaluator, not open-ended benchmark improvement.
+
+\subsection{Exploration policy evolution and replay}
+
+Dream-RSI is the closest methodological relative. It treats accumulated discovery trees as exact replay simulators over realized search and recursively improves executable exploration policies offline before redeployment \cite{zheng2026dreamrsi}. Genesis adopts the same central insight but couples it to a separate hidden organism evaluator and to one-shot prospective gates. V18 demonstrates why this matters: a policy can dominate a public replay regime while failing completely to generalize.
+
+\subsection{Comparative and group evolution}
+
+Group-Evolving Agents addresses information isolation between tree branches by sharing experience across groups \cite{weng2026gea}. Mendel G\"odel Machine similarly argues that multi-trajectory and cross-lineage evidence improve mutation quality \cite{liu2026mgm}. Earlier Genesis archive designs also preserve cross-lineage evidence, but the V14--V20 chain studied here keeps the central causal variable on the search-policy side.
+
+\subsection{Overfitting and regularization}
+
+RRSI explicitly studies overfitting in recursively evolved agent harnesses and adds proposal- and selection-side regularization to improve out-of-distribution performance \cite{xia2026rrsi}. Genesis V18 exhibits the same broad hazard in a smaller controlled setting. V19 addresses it through stratified development, a world-identity ban and a fresh holdout rather than through RRSI's critic/pruner architecture.
+
+\subsection{Taxonomies of RSI}
+
+Recent surveys emphasize that self-improvement spans behavior, policy, evaluator and research-process changes, and that verification strength is central to credible claims \cite{chen2026rsisurvey}. This paper's \lthreep label is intended to make that distinction operational: the measured recursion is in the exploration process under fixed external evaluation, not in the evaluator or base model weights.
