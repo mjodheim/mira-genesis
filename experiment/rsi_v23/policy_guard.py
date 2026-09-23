@@ -75,8 +75,11 @@ def guard_source(source:str,forbidden_tokens:Iterable[str]=())->list[str]:
             problems.append(f"imports are forbidden at line {node.lineno}")
         elif isinstance(node,(ast.ClassDef,ast.AsyncFunctionDef,ast.Await,ast.Yield,ast.YieldFrom,ast.With,ast.AsyncWith,ast.Global,ast.Nonlocal)):
             problems.append(f"{type(node).__name__} is forbidden at line {getattr(node,'lineno','?')}")
-        elif isinstance(node,ast.Name) and node.id in BANNED_NAMES|BANNED_CALLS:
-            problems.append(f"forbidden name {node.id!r} at line {node.lineno}")
+        elif isinstance(node,ast.Name):
+            if node.id in BANNED_NAMES|BANNED_CALLS:
+                problems.append(f"forbidden name {node.id!r} at line {node.lineno}")
+            if node.id.startswith("__") and node.id.endswith("__") and len(node.id) >= 4:
+                problems.append(f"dunder name {node.id!r} is forbidden at line {node.lineno}")
         elif isinstance(node,ast.Attribute):
             if node.attr.startswith("__"):
                 problems.append(f"dunder attribute {node.attr!r} is forbidden at line {node.lineno}")
