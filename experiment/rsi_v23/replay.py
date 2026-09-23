@@ -166,10 +166,14 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("policy", type=Path)
     ap.add_argument("states", type=Path, nargs="+")
+    ap.add_argument("--forbidden-token-file", type=Path)
     ap.add_argument("--out", type=Path)
     args = ap.parse_args()
+    tokens=[] if args.forbidden_token_file is None else [
+        x.strip() for x in args.forbidden_token_file.read_text().splitlines() if x.strip()
+    ]
 
-    results = [replay_state(json.loads(path.read_text()), args.policy) for path in args.states]
+    results = [replay_state(json.loads(path.read_text()), args.policy, tokens) for path in args.states]
     payload = {
         "schema": "mira-genesis-rsi-v23-replay-batch-v1",
         "policy_sha256": sha256_file(args.policy),
