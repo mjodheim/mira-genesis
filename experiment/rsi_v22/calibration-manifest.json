@@ -1,0 +1,29 @@
+{
+  "schema": "mira-genesis-rsi-v22-calibration-manifest-v1",
+  "status": "draft_before_calibration",
+  "host_repository": "mjodheim/mjodheim-brewstead",
+  "host_commit": "720b27c8bc80de16c04953e13d5f9e8425beea8c",
+  "tasks": [
+    {
+      "task_id": "brewstead-game-state-estate-max-fields",
+      "allowed_source_path": "src/main/java/be/mjodheim/brewstead/service/GameStateService.java",
+      "defect_patch": "defects/game-state-estate-max-fields.patch",
+      "public_guard_test": "GameStateServiceTest",
+      "reserved_test": "GameStateEstateReservedTest"
+    },
+    {
+      "task_id": "brewstead-progression-merchant-coin-bonus",
+      "allowed_source_path": "src/main/java/be/mjodheim/brewstead/service/ProgressionService.java",
+      "defect_patch": "defects/progression-merchant-coin-bonus.patch",
+      "public_guard_test": "ProgressionServiceTest",
+      "reserved_test": "ProgressionMerchantReservedTest"
+    },
+    {
+      "task_id": "brewstead-catalog-crop-ingredient-name",
+      "allowed_source_path": "src/main/java/be/mjodheim/brewstead/service/CatalogService.java",
+      "defect_patch": "defects/catalog-crop-ingredient-name.patch",
+      "public_guard_test": "CatalogServiceTest",
+      "reserved_test": "CatalogCropIngredientReservedTest"
+    }
+  ]
+}

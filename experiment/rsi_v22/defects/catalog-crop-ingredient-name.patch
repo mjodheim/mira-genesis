@@ -1,0 +1,11 @@
+--- a/src/main/java/be/mjodheim/brewstead/service/CatalogService.java
++++ b/src/main/java/be/mjodheim/brewstead/service/CatalogService.java
+@@ -48,7 +48,7 @@
+                 crop.getId(),
+                 crop.getName(),
+                 crop.getIngredient().getId(),
+-                crop.getIngredient().getName(),
++                crop.getName(),
+                 crop.getGrowDurationMinutes(),
+                 crop.getYieldQuantity()
+         );
