@@ -1,0 +1,52 @@
+{
+  "schema": "mira-genesis-rsi-v22-freeze-v1",
+  "status": "FROZEN_BEFORE_ANY_V22_PROPOSER_OUTPUT",
+  "apparatus_commit": "b21f0e9ab6dbdee44d59e4750b6a3fdd7a4ba8e3",
+  "calibration": {
+    "workflow_run_id": 35902485164,
+    "head_sha": "b21f0e9ab6dbdee44d59e4750b6a3fdd7a4ba8e3",
+    "conclusion": "success",
+    "completed_at": "2026-09-23T18:28:11Z",
+    "required_marker": "GENESIS_RSI_V22_CALIBRATION=PASS"
+  },
+  "host": {
+    "repository": "mjodheim/mjodheim-brewstead",
+    "commit": "720b27c8bc80de16c04953e13d5f9e8425beea8c"
+  },
+  "policies": {
+    "g1_policy_sha256": "3354f887a93a08d9f00e9c54ccb097003f727ba77c1e1b4e9997adf676d35434",
+    "g2_generation_digest": "d2e2b990581b5c72c1e642944ccd08c96ff0470b5117dd8a8820425c0028c6bd",
+    "g2_source_sha256": "69d0d725601cd32adff27379dbb25f5c7be29946f9e9c6ac4858a0634cbd5fdf"
+  },
+  "sha256": {
+    "preregistration": "b830b581ce04aa420a7f2a235b22d0a45a06a9ca5ca7e54738f7569be41ec935",
+    "utility": "ad2781609013c6d26bf73a0f22af9709f76e52cf33c0b0badebcbb1a4a284102",
+    "proposer_protocol": "f28109600e1090254e2b70a666cd519724014c199ecce281970cc84dba5e23ca",
+    "calibration_manifest": "948e7ad615f859a0005bf48b12e21deca7cad9ed4daf9bcc214352c47e3822a0",
+    "output_verifier": "17b5587a0ba5ffb96a80547b8a618703d022891650cb472fddab2c411a9cd6f2",
+    "root_bundle_builder": "5a13006976101b91ba8efc20d274868bb99ba9daba7c1f4bdefc9ad34827b310",
+    "defects": {
+      "game_state": "a101cb1b5533e41d8c0d395f28c44c382b1a1fc9acd0e64793ec5ad56a8cc358",
+      "progression": "c53eb07feb70153c8ba89e3212b1539be03a12c556f8fa7eab4be66bb0e19d3a",
+      "catalog": "a3db807edf55a1e4525148b358f9c1aebc7b3120f1c68e7e40a2d6a47858604e"
+    },
+    "reserved_evaluators": {
+      "game_state": "c6ceb2e94313321ea81d7e58734f55aa5bedb0154b5b972715c9c02899896177",
+      "progression": "0bd2985e793be1a7ad0cdb5f000bcd6c4fcbcee822623d5fe834aec17b170129",
+      "catalog": "486e823877bb4ecaee01d249353b4d6f104e7ebed0768bcc6c47c42a96e181ff"
+    }
+  },
+  "success_rule": {
+    "g2_solved_without_public_regression": "3/3",
+    "g2_strict_process_utility_wins_at_least": "2/3",
+    "g2_global_utility": "strictly greater than G1",
+    "process_utility": "lexicographic(best_quality_milli, -represented_requests, -rounds)",
+    "global_utility": "lexicographic(tasks_solved_without_regression, sum_best_quality_milli, -total_represented_requests, -total_rounds)"
+  },
+  "reveal_boundary": {
+    "proposer_bundles_include_reserved_evaluator": false,
+    "proposer_bundles_include_evaluator_results": false,
+    "proposer_bundles_include_g1_g2_selection_information": false,
+    "evaluator_commitments_may_be_exposed_as_sha256": true
+  }
+}
