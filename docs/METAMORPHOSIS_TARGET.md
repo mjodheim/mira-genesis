@@ -7,6 +7,30 @@ no recorded result, and creates no evidence. It is a statement of **objective**,
 prospective by nature: `GENESIS_COMPLETION_CRITERIA.md`, `MIRA_GENERALITY_CRITERIA.md`, every frozen
 protocol and every recorded verdict keep exactly the meaning they already have.
 
+## Direction update — 23 September 2026
+
+The 8 September text below is preserved as the architectural objective that led to the integrated
+`genesis/` runtime. That runtime now exists in the repository, so statements below saying that it
+does not yet exist describe the **8 September frontier**, not the current one.
+
+The long-horizon project direction is now stated one level higher: **general recursive
+self-improvement**. Empirical metamorphosis remains the architectural bridge — persistent lineage
+state, endogenous modification, experimental adoption, retention and substrate change — but the
+active scientific frontier asks whether improvements to the **improvement process itself** transfer
+and become causal prerequisites for later improvements.
+
+The current prospective sequence is:
+
+- V21: preserved positive process-dominance evidence with an archival traceability defect;
+- V22: retained-evaluator real-project transfer replication, frozen before proposer execution;
+- V23, conditional on V22: test `G2 -> better meta-search -> G3 -> fresh holdout gain` with causal
+  ablation and matched controls;
+- later stages: repeated meta-descent, cross-domain transfer, endogenous bottleneck selection and
+  an expanding descendant archive under fixed external evaluation.
+
+See `RSI_GENERAL_SUCCESSOR_MAP_2026-09-23.md`. None of this retroactively widens the bounded
+scientific claims below or turns the integrated runtime itself into evidence of open-ended RSI.
+
 ## The objective
 
 > Build a program capable of **empirical metamorphosis**: a persistent software lineage able to
