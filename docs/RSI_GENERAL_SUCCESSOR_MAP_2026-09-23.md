@@ -101,11 +101,15 @@ reproduction and adversarial audit. Internal evidence cannot substitute for this
 - Darwin Gödel Machine: preserve an open archive/tree rather than collapsing immediately to one
   greedy lineage.
 - MetaSkill-Evolve: evolve both task skills and the improvement procedure on different timescales.
+- HyperAgents: make the task agent and the meta-agent part of one editable self-referential program, so meta-level capability need not remain a fixed handcrafted shell.
 - AlphaEvolve: use automated evaluators and a persistent program population.
 
 Genesis should combine those useful ideas with its existing stricter requirements: content
 identity, prospective evaluator commitments, exact rollback, negative preservation, causal
-ablation and fresh transfer.
+ablation and fresh transfer. The central differentiator must be causal recursive attribution:
+not merely that a later self-modified agent scores better, but that an acquired improvement in
+G(n) measurably raises the ability to discover G(n+1), and that removing that acquired mechanism
+reduces the successor gain under an equal budget.
 
 ## Autonomy policy for this research track
 
