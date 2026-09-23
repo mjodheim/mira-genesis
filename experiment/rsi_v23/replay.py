@@ -70,9 +70,27 @@ def expansion_queues(state: dict[str, Any]) -> dict[str, deque[str]]:
             queues[parent].append(child)
     return dict(queues)
 
-def replay_state(state: dict[str, Any], policy_path: Path, forbidden_tokens: list[str] | None = None) -> dict[str, Any]:
+def replay_state(
+    state: dict[str, Any],
+    policy_path: Path,
+    forbidden_tokens: list[str] | None = None,
+    *,
+    max_requests: int | None = None,
+    max_rounds: int | None = None,
+    max_parallelism: int | None = None,
+) -> dict[str, Any]:
     forbidden_tokens=list(forbidden_tokens or [])
     sandbox,metadata,metadata_raw=policy_metadata(policy_path,forbidden_tokens)
+    if metadata["parallelism"] < 1 or metadata["max_rounds"] < 1 or metadata["stall_rounds"] < 1:
+        raise ValueError("policy parallelism, max_rounds and stall_rounds must be positive")
+    if max_requests is not None and max_requests < 0:
+        raise ValueError("max_requests must be non-negative")
+    if max_rounds is not None and max_rounds < 1:
+        raise ValueError("max_rounds must be positive")
+    if max_parallelism is not None and max_parallelism < 1:
+        raise ValueError("max_parallelism must be positive")
+    effective_round_cap=min(metadata["max_rounds"],max_rounds) if max_rounds is not None else metadata["max_rounds"]
+    effective_parallelism=min(metadata["parallelism"],max_parallelism) if max_parallelism is not None else metadata["parallelism"]
     root = state["root_node_id"]
     nodes = state["nodes"]
     if root not in nodes:
@@ -89,7 +107,10 @@ def replay_state(state: dict[str, Any], policy_path: Path, forbidden_tokens: lis
     unsupported: dict[str, Any] | None = None
 
     while True:
-        if rounds >= metadata["max_rounds"]:
+        if max_requests is not None and requests >= max_requests:
+            stop_reason = "external_request_budget"
+            break
+        if rounds >= effective_round_cap:
             stop_reason = "max_rounds"
             break
         if rounds > 0 and stalls >= metadata["stall_rounds"]:
@@ -101,7 +122,10 @@ def replay_state(state: dict[str, Any], policy_path: Path, forbidden_tokens: lis
             "revealed_nodes": [_row(nodes[node_id]) for node_id in revealed],
             "eligible_parent_ids": sorted(revealed),
         }
-        call=sandbox.execute(policy_path,view,metadata["parallelism"],forbidden_tokens)
+        call_parallelism=effective_parallelism
+        if max_requests is not None:
+            call_parallelism=min(call_parallelism,max_requests-requests)
+        call=sandbox.execute(policy_path,view,call_parallelism,forbidden_tokens)
         if not call.get("accepted"):
             raise ValueError(f"policy selection rejected: {call}")
         if list(call["metadata"]) != metadata_raw:
@@ -109,8 +133,8 @@ def replay_state(state: dict[str, Any], policy_path: Path, forbidden_tokens: lis
         selected=list(call["selected_parent_ids"])
         if len(selected) != len(set(selected)):
             raise ValueError("candidate policy selected duplicate parents")
-        if len(selected) > metadata["parallelism"]:
-            raise ValueError("candidate policy exceeded frozen parallelism")
+        if len(selected) > call_parallelism:
+            raise ValueError("candidate policy exceeded effective parallelism")
         allowed = set(revealed)
         if any(parent not in allowed for parent in selected):
             raise ValueError("candidate policy selected an unrevealed parent")
@@ -147,6 +171,12 @@ def replay_state(state: dict[str, Any], policy_path: Path, forbidden_tokens: lis
         "schema": REPLAY_SCHEMA,
         "task_id": state["task_id"],
         "policy_sha256": sha256_file(policy_path),
+        "declared_policy_metadata": metadata,
+        "effective_limits": {
+            "max_requests": max_requests,
+            "max_rounds": effective_round_cap,
+            "max_parallelism": effective_parallelism,
+        },
         "fully_supported": unsupported is None,
         "stop_reason": stop_reason,
         "unsupported": unsupported,
@@ -167,13 +197,26 @@ def main() -> None:
     ap.add_argument("policy", type=Path)
     ap.add_argument("states", type=Path, nargs="+")
     ap.add_argument("--forbidden-token-file", type=Path)
+    ap.add_argument("--max-requests", type=int)
+    ap.add_argument("--max-rounds", type=int)
+    ap.add_argument("--max-parallelism", type=int)
     ap.add_argument("--out", type=Path)
     args = ap.parse_args()
     tokens=[] if args.forbidden_token_file is None else [
         x.strip() for x in args.forbidden_token_file.read_text().splitlines() if x.strip()
     ]
 
-    results = [replay_state(json.loads(path.read_text()), args.policy, tokens) for path in args.states]
+    results = [
+        replay_state(
+            json.loads(path.read_text()),
+            args.policy,
+            tokens,
+            max_requests=args.max_requests,
+            max_rounds=args.max_rounds,
+            max_parallelism=args.max_parallelism,
+        )
+        for path in args.states
+    ]
     payload = {
         "schema": "mira-genesis-rsi-v23-replay-batch-v1",
         "policy_sha256": sha256_file(args.policy),
