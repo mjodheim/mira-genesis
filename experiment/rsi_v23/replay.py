@@ -180,6 +180,7 @@ def replay_state(
             "max_parallelism": effective_parallelism,
         },
         "fully_supported": unsupported is None,
+        "eligible_for_exact_comparison": unsupported is None,
         "stop_reason": stop_reason,
         "unsupported": unsupported,
         "best_quality_milli": best,
@@ -229,6 +230,8 @@ def main() -> None:
     if args.out:
         args.out.write_text(text, encoding="utf-8")
     print(text, end="")
+    if not payload["all_fully_supported"]:
+        raise SystemExit(3)
 
 if __name__ == "__main__":
     main()
