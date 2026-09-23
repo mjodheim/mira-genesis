@@ -7,6 +7,41 @@ converting tool usage into unsupported legal conclusions. It should be read toge
 [`AUTHORS.md`](../AUTHORS.md), [`IP_ASSET_REGISTER.md`](../IP_ASSET_REGISTER.md), the Git history,
 and the experiment/protocol records.
 
+## Operational update — 23 September 2026
+
+The August snapshot remains the terms/provenance baseline below. The September RSI work adds an
+important factual clarification about **degree of delegation**.
+
+During the V21 adjudication, V22 retained-evaluator replication design, prospective V23 successor
+design, repository documentation synchronization and branch/PR consolidation, Anthony Mets gave
+ChatGPT broad standing direction to continue the Genesis research autonomously and intervene only
+where a human action was experimentally necessary. ChatGPT then performed substantial repository
+analysis, apparatus design, code/test/document generation, CI diagnosis, prospective-freeze
+preparation and GitHub operations through the connected repository tooling.
+
+Accordingly, Git commit authorship under the registered human account must **not** be read as a claim
+that every line, patch, experimental design choice or documentation paragraph was manually authored
+or independently selected line-by-line by the human developer. The repository's human-only
+attribution rule identifies the accountable human repository contributor; this provenance record
+separately records the material AI-tool role.
+
+For the V22 scientific boundary specifically:
+
+- the human research director supplied the project objective and authorized continued work toward
+  general recursive self-improvement;
+- ChatGPT designed and implemented much of the retained-evaluator replication apparatus under that
+  direction;
+- the reserved evaluator, policy identities, utility and campaign machinery were frozen before any
+  V22 proposer output;
+- the blind proposer stage remains separated: isolated proposer conversations receive only their
+  supplied bundles and not the retained evaluator;
+- final scientific claims remain governed by the frozen experiment records rather than by either
+  the human's or the AI tool's preference for a positive outcome.
+
+This update is about factual development provenance. It does not assign legal authorship,
+inventorship or ownership to an AI system, and it does not convert AI-assisted internal review into
+independent external reproduction.
+
 ## Human development declaration
 
 Anthony Mets (`mjodheim`) records that, as of this snapshot, he is the **sole human developer and
