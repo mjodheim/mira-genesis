@@ -9,6 +9,12 @@ that history contains outcomes for branches nobody actually expanded.
 
 The replay engine therefore implements **exact realized-tree replay only**.
 
+Here, **exact** has a deliberately narrow meaning: the engine consumes only child outcomes that were
+actually observed and preserves their recorded order. It does **not** claim that the same child would
+have been generated under a different request chronology, model sampling path or alternative policy.
+The history is therefore a recorded expansion tape for cheap development comparison, not an oracle
+for unobserved counterfactual generation. Fresh online holdout remains the decisive test.
+
 ## Historical expansion model
 
 A retained campaign state contains chronological observations. Each represented request creates one
