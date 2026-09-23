@@ -2612,6 +2612,20 @@
         "docs/state-history/SCIENTIFIC_HYPOTHESES_PRE_SYNC_2026-09-05.md",
         "experiments/M090/RESULT.md"
       ]
+    },
+    "b21f0e9ab6dbdee44d59e4750b6a3fdd7a4ba8e3": {
+      "subject": "research(v22): retain deterministic root bundle builder",
+      "preserved_by": "research/rsi-v22-retained-evaluator",
+      "cited_in": [
+        "docs/rsi-v22/V22_FREEZE.json"
+      ]
+    },
+    "4320ff8a0fc02a9a9f12ddacc527551e9537a044": {
+      "subject": "merge: carry V21 adjudication into V22 lineage",
+      "preserved_by": "research/rsi-v22-retained-evaluator",
+      "cited_in": [
+        "docs/rsi-v22/V22_FREEZE_002.json"
+      ]
     }
   },
   "known_unresolvable": {
@@ -2641,9 +2655,9 @@
       "where": "PROJECT_STATE.yaml, experiments/M049/PROTOCOL.md, experiments/M049/DEVELOPMENT_RESULT.md"
     },
     "720b27c8bc80de16c04953e13d5f9e8425beea8c": {
-      "reason": "a commit in the external mjodheim/mjodheim-brewstead host repository, pinned by the RSI V21 real-project transfer record; it is not a commit in mira-genesis",
+      "reason": "a commit in the external mjodheim/mjodheim-brewstead host repository, pinned prospectively by the RSI V22 retained-evaluator replication; it is not a commit in mira-genesis",
       "kind": "external_repository",
-      "where": "docs/rsi-v21/adjudication.json (host_commit)"
+      "where": "experiment/rsi_v22/calibration-manifest.json, experiment/rsi_v22/V22_PREREGISTRATION.md, docs/rsi-v22/V22_FREEZE.json"
     }
   }
 }
