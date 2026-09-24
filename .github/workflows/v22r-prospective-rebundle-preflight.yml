@@ -1,0 +1,127 @@
+name: V22R prospective rebundle preflight
+
+on:
+  push:
+    branches:
+      - research/rsi-v22r-retained-evaluator
+
+permissions:
+  contents: read
+
+jobs:
+  preflight:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Genesis
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Checkout frozen Brewstead host
+        uses: actions/checkout@v4
+        with:
+          repository: mjodheim/mjodheim-brewstead
+          ref: 720b27c8bc80de16c04953e13d5f9e8425beea8c
+          path: host
+
+      - name: Rebuild the exact supplied V22 source capsules
+        shell: bash
+        run: |
+          set -euo pipefail
+          git worktree add --detach /tmp/v22-base 4320ff8a0fc02a9a9f12ddacc527551e9537a044
+          test "$(sha256sum /tmp/v22-base/experiment/rsi_v22/utility.py | cut -d' ' -f1)" = "8ebae4e02b0450af997bc7f3b2ce4fcedfb2121886bb0d80ad9da522244e7d8d"
+          test "$(sha256sum /tmp/v22-base/experiment/rsi_v22/build_root_bundles.py | cut -d' ' -f1)" = "1aec9f4292afeabcc68c7d049212feee2e5e9908e2567f3ae75fea487d1ac583"
+          python3 /tmp/v22-base/experiment/rsi_v22/build_root_bundles.py \
+            --host "$GITHUB_WORKSPACE/host" \
+            --freeze-commit 4320ff8a0fc02a9a9f12ddacc527551e9537a044 \
+            --out /tmp/v22-source
+          cat <<'EOF' | sha256sum -c -
+          8a4c473d31d088240a81faca9b13e52f5d3fac308173c9211816ae0bff9d0f73  /tmp/v22-source/genesis-v22-brewstead-game-state-estate-max-fields-r1-shared-s1.zip
+          75255ab5c377a53797b50f37d2bf0ed6d1562e655ee089f8e61e445ba2610295  /tmp/v22-source/genesis-v22-brewstead-progression-merchant-coin-bonus-r1-shared-s1.zip
+          ef1f4da85734af6df8108fdaece0011a1b64f4eaeac391a49a3b87fd91edc533  /tmp/v22-source/genesis-v22-brewstead-catalog-crop-ingredient-name-r1-shared-s1.zip
+          EOF
+
+      - name: Build fresh-slot V22R capsules
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 experiment/rsi_v22r/build_replication_bundles.py \
+            --input-dir /tmp/v22-source \
+            --apparatus-commit a8f166dfba5ccfeeca5d92b1ae88ca01582cbe1c \
+            --out /tmp/v22r | tee /tmp/v22r-build.json
+          python3 - <<'PY'
+          import hashlib,json,zipfile
+          from pathlib import Path
+          rows=[]
+          for p in sorted(Path("/tmp/v22r").glob("*.zip")):
+              with zipfile.ZipFile(p) as z:
+                  m=z.read("task-manifest.json")
+                  tm=json.loads(m)
+              rows.append({
+                  "file":p.name,
+                  "sha256":hashlib.sha256(p.read_bytes()).hexdigest(),
+                  "task_id":tm["task_id"],
+                  "campaign_slot_id":tm["campaign_slot_id"],
+                  "freeze_commit":tm["freeze_commit"],
+                  "task_manifest_sha256":hashlib.sha256(m).hexdigest(),
+                  "parent_archive_sha256":tm["parent_archive_sha256"],
+                  "parent_tree_digest":tm["parent_tree_digest"],
+                  "evaluator_commitment_sha256":tm["evaluator_commitment_sha256"],
+              })
+          print("===V22R_BUNDLE_IDENTITIES===")
+          print(json.dumps(rows,indent=2,sort_keys=True))
+          print("===END_V22R_BUNDLE_IDENTITIES===")
+          PY
+
+      - name: Prove old transcripts cannot satisfy V22R slots
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin results/rsi-v22-r1-20260924:refs/remotes/origin/results/rsi-v22-r1-20260924
+          mkdir -p /tmp/old-results
+          copy_old() {
+            local short="$1"
+            git show "refs/remotes/origin/results/rsi-v22-r1-20260924:results/rsi-v22/r1-20260924/$short/proposal.patch" > "/tmp/old-results/$short-proposal.patch"
+            git show "refs/remotes/origin/results/rsi-v22-r1-20260924:results/rsi-v22/r1-20260924/$short/transcript.json" > "/tmp/old-results/$short-transcript.json"
+          }
+          copy_old game-state
+          copy_old progression
+          copy_old catalog
+
+          check_one() {
+            local short="$1" task="$2"
+            local bundle="/tmp/v22r/genesis-v22r-$task-r1-shared-s1.zip"
+            local work="/tmp/check-$short"
+            rm -rf "$work"; mkdir -p "$work"
+            python3 - "$bundle" "$work" <<'PY'
+          import sys,zipfile
+          with zipfile.ZipFile(sys.argv[1]) as z: z.extractall(sys.argv[2])
+          PY
+            if (cd "$work" && python3 VERIFY_OUTPUT.py "/tmp/old-results/$short-proposal.patch" "/tmp/old-results/$short-transcript.json"); then
+              echo "old transcript unexpectedly passed for $task" >&2
+              exit 1
+            fi
+            python3 - "$work/task-manifest.json" "/tmp/old-results/$short-transcript.json" "/tmp/fresh-$short-transcript.json" <<'PY'
+          import hashlib,json,sys
+          mp,oldp,outp=sys.argv[1:]
+          m=json.load(open(mp))
+          t=json.load(open(oldp))
+          t["campaign_slot_id"]=m["campaign_slot_id"]
+          t["task_manifest_sha256"]=hashlib.sha256(open(mp,"rb").read()).hexdigest()
+          with open(outp,"w") as f:
+              json.dump(t,f,indent=2)
+              f.write("\n")
+          PY
+            (cd "$work" && python3 VERIFY_OUTPUT.py "/tmp/old-results/$short-proposal.patch" "/tmp/fresh-$short-transcript.json") | grep -Fx "GENESIS_RSI_V22_TRANSFER_OUTPUT=PASS"
+          }
+
+          check_one game-state brewstead-game-state-estate-max-fields
+          check_one progression brewstead-progression-merchant-coin-bonus
+          check_one catalog brewstead-catalog-crop-ingredient-name
+
+      - name: Upload prospective V22R capsules
+        uses: actions/upload-artifact@v4
+        with:
+          name: v22r-r1-prospective-capsules
+          path: /tmp/v22r
+          if-no-files-found: error
