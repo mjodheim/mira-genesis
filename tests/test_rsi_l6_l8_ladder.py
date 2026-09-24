@@ -11,7 +11,8 @@ m=importlib.util.module_from_spec(spec); spec.loader.exec_module(m)
 CONFIG={
     "l6_min_causal_transitions":3,
     "l7_min_domain_families":4,
-    "l7_min_independently_maintained_domains":1,
+    "l7_min_external_maintained_domains":1,
+    "internal_maintainer_ids":["genesis-owner"],
     "l8_min_bottleneck_episodes":4,
     "l8_min_distinct_selected_components":2,
 }
@@ -21,30 +22,43 @@ PROGRAM={
     "expression":{"metric":"need_milli"},
 }
 
-def transition(a,b):
+def h(n):
+    return format(n,"x")[-1]*64
+
+def transition(a,b,seed=1):
     return {
         "from_generation":a,"to_generation":b,
         "producer_generation":a,"produced_generation":b,
         "successor_selected_without_human_ranking":True,
         "candidate_frozen_before_fresh_holdout":True,
         "evaluator_frozen_before_candidate":True,
-        "equal_budget":True,
         "negative_evidence_retained":True,
         "acquired_mechanism_id":f"{a}-mechanism",
+        "budgets":{"predecessor":10,"successor":10,"ablation":10},
+        "from_generation_sha256":h(seed),
+        "to_generation_sha256":h(seed+1),
+        "evaluator_commitment_sha256":h(seed+2),
+        "holdout_commitment_sha256":h(seed+3),
+        "mechanism_commitment_sha256":h(seed+4),
+        "selection_record_sha256":h(seed+5),
         "predecessor_holdout_utility":[1,100],
         "successor_holdout_utility":[1,110],
         "ablated_holdout_utility":[1,90],
     }
 
-def domain(i,independent=False):
+def domain(i,external=False):
     return {
         "domain_id":f"d{i}","domain_family":f"family-{i}","environment_id":f"env-{i}",
-        "independently_maintained":independent,
+        "maintainer_id":f"external-lab-{i}" if external else "genesis-owner",
         "candidate_frozen_before_holdout":True,
         "evaluator_frozen_before_candidate":True,
         "no_domain_specific_candidate_guidance":True,
-        "equal_budget":True,
         "negative_evidence_retained":True,
+        "budgets":{"predecessor":10,"successor":10},
+        "environment_commitment_sha256":h(i),
+        "evaluator_commitment_sha256":h(i+1),
+        "holdout_commitment_sha256":h(i+2),
+        "candidate_commitment_sha256":h(i+3),
         "predecessor_utility":[1,100],
         "successor_utility":[1,101],
     }
@@ -85,7 +99,7 @@ def episode(chosen,a,b,c,seed=1):
 def full_evidence():
     return {
         "schema":m.SCHEMA,
-        "transitions":[transition("G2","G3"),transition("G3","G4"),transition("G4","G5")],
+        "transitions":[transition("G2","G3",1),transition("G3","G4",7),transition("G4","G5",13)],
         "domain_transfer":[domain(1,True),domain(2),domain(3),domain(4)],
         "bottleneck_selection":{
             "selector_program":PROGRAM,
@@ -122,10 +136,10 @@ def test_l6_requires_contiguous_chain():
     e["transitions"][1]["from_generation"]="OTHER"
     assert m.assess(e,CONFIG)["L6"]["positive"] is False
 
-def test_l7_requires_independent_environment():
+def test_l7_requires_external_maintainer_identity():
     e=full_evidence()
     for d in e["domain_transfer"]:
-        d["independently_maintained"]=False
+        d["maintainer_id"]="genesis-owner"
     r=m.assess(e,CONFIG)
     assert r["L6"]["positive"] is True
     assert r["L7"]["positive"] is False
@@ -189,3 +203,18 @@ def test_thresholds_are_external_not_hardcoded():
     cfg=dict(CONFIG)
     cfg["l6_min_causal_transitions"]=4
     assert m.assess(e,cfg)["L6"]["positive"] is False
+
+def test_l6_recomputes_equal_budget():
+    e=full_evidence()
+    e["transitions"][0]["budgets"]["ablation"]=11
+    r=m.assess(e,CONFIG)
+    assert r["L6"]["positive"] is False
+    assert any("budgets are not equal" in p for p in r["L6"]["transitions"][0]["problems"])
+
+def test_l7_recomputes_equal_budget_and_commitments():
+    e=full_evidence()
+    e["domain_transfer"][0]["budgets"]["successor"]=11
+    assert m.assess(e,CONFIG)["L7"]["positive"] is False
+    e=full_evidence()
+    e["domain_transfer"][0]["holdout_commitment_sha256"]="bad"
+    assert m.assess(e,CONFIG)["L7"]["positive"] is False
