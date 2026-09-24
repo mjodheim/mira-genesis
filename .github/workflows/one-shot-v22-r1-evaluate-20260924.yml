@@ -65,12 +65,16 @@ jobs:
             "final_adjudicator":"experiment/rsi_v22/adjudicate.py",
             "campaign_cli":"experiment/rsi_v22/campaign_cli.py",
           }
+          mismatches=[]
           for key,path in mapping.items():
             got=hashlib.sha256((root/path).read_bytes()).hexdigest()
             want=freeze["sha256"][key]
+            status="PASS" if got==want else "MISMATCH"
+            print(f"V22_APPARATUS_HASH_{status} {key} actual={got} frozen={want}")
             if got!=want:
-              raise SystemExit(f"{key} mismatch: {got} != {want}")
-            print(f"V22_APPARATUS_HASH_PASS {key} {got}")
+              mismatches.append((key,got,want))
+          if mismatches:
+            raise SystemExit(f"V22 freeze byte-identity mismatch count={len(mismatches)}")
           PY
 
       - name: Rebuild exact active R1 bundles
