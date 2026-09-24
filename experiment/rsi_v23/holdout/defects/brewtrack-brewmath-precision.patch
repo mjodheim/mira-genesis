@@ -1,0 +1,17 @@
+diff --git a/Domain/BrewMath.cs b/Domain/BrewMath.cs
+--- a/Domain/BrewMath.cs
++++ b/Domain/BrewMath.cs
+@@ -12,12 +12,12 @@ namespace Domain
+             double g = (double)sg;
+             double plato = -616.868 + 1111.14 * g - 630.272 * g * g + 135.997 * g * g * g;
+-            return plato < 0 ? 0m : Math.Round((decimal)plato, 2);
++            return plato < 0 ? 0m : Math.Round((decimal)plato, 1);
+         }
+ 
+         /// <summary>Titre alcoométrique (% vol.) depuis les densités initiale et finale.</summary>
+         public static decimal AbvFromGravities(decimal originalGravity, decimal finalGravity) =>
+-            Math.Round((originalGravity - finalGravity) * 131.25m, 2);
++            Math.Round((originalGravity - finalGravity) * 131.25m, 1);
+ 
+         /// <summary>
+         /// Droit d'accise (bière) sur une quantité, selon le barème au litre-hectolitre par
