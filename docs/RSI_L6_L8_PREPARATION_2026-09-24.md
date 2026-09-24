@@ -65,16 +65,27 @@ remaining human choice.
 For L8, Genesis receives a frozen diagnostic snapshot and must choose **which improvement-pipeline
 component to target next** before intervention outcomes are known.
 
+The development apparatus now contains an identity-blind selector DSL. A selector program receives
+only integer metrics for one component at a time; it cannot read that component's name, source path
+or domain identity. The same expression is evaluated for every component and the apparatus-owned
+tie-break is deterministic. Snapshot and selector bytes are content-addressed.
+
+A development-only selector search can enumerate bounded metric expressions over historical episodes
+where every component already has a realized matched intervention outcome. It selects the best
+program mechanically without consuming the future holdout. Missing intervention outcomes are
+refused rather than fabricated.
+
 The canonical experiment should execute the adaptive choice *and* matched equal-budget interventions
 for every available component in each episode. This is expensive, but it makes the counterfactual
 comparison real instead of simulated.
 
 The adaptive selector is positive only if:
 
-- snapshots are frozen before selection;
+- snapshots and selector program are hash-bound before selection;
+- the recorded selection exactly matches mechanical re-execution of the frozen selector;
 - selections are frozen before interventions;
 - no human overrides the selector;
-- every available component receives a matched control intervention at equal budget;
+- every available component receives a matched control intervention with numerically equal budget;
 - the selector chooses more than one component across the evaluation population;
 - aggregate adaptive utility strictly beats the best single fixed-target strategy across the same
   episodes;
@@ -108,7 +119,11 @@ References:
 ## Files in this apparatus
 
 - `experiment/rsi_l6_l8/ladder.py` — deterministic structural assessment for L6/L7/L8 evidence.
+- `experiment/rsi_l6_l8/bottleneck_selector.py` — identity-blind selector DSL and frozen snapshot evaluation.
+- `experiment/rsi_l6_l8/selector_search.py` — development-only search over selector programs using realized matched interventions only.
 - `tests/test_rsi_l6_l8_ladder.py` — locks the refusal/positive semantics.
+- `tests/test_rsi_l8_bottleneck_selector.py` — locks selector identity blindness and deterministic evaluation.
+- `tests/test_rsi_l8_selector_search.py` — locks non-counterfactual development search.
 
 The validator deliberately cannot obtain evidence by itself. It only refuses or accepts a supplied
 evidence package under an externally frozen configuration.
