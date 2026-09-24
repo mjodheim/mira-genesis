@@ -5,7 +5,6 @@
     {
       "task_id": "brewtrack-brewmath-precision",
       "host_repository": "mjodheim/BrewTrack",
-      "host_commit": "1727fc0158c6dbd741bfb0b6d85e8fe70f1a40f3",
       "allowed_source_path": "Domain/BrewMath.cs",
       "host_source_git_blob_sha1": "18974e87d4677bc91660162cb56f1219b467919d",
       "defect_patch_path": "experiment/rsi_v23/holdout/defects/brewtrack-brewmath-precision.patch",
@@ -15,12 +14,12 @@
       "reserved_assertions": 4,
       "defect_families": 2,
       "quality_per_reserved_assertion": 250,
-      "credential_independent_snapshot": true
+      "credential_independent_snapshot": true,
+      "host_revision": "1727fc0158c6dbd741bfb0b6d85e8fe70f1a40f3"
     },
     {
       "task_id": "brewtrack-recipemath-units-water",
       "host_repository": "mjodheim/BrewTrack",
-      "host_commit": "1727fc0158c6dbd741bfb0b6d85e8fe70f1a40f3",
       "allowed_source_path": "Domain/RecipeMath.cs",
       "host_source_git_blob_sha1": "86210bb0f85c66760eeae4b2533d43df6262ade3",
       "defect_patch_path": "experiment/rsi_v23/holdout/defects/brewtrack-recipemath-units-water.patch",
@@ -30,12 +29,12 @@
       "reserved_assertions": 4,
       "defect_families": 2,
       "quality_per_reserved_assertion": 250,
-      "credential_independent_snapshot": true
+      "credential_independent_snapshot": true,
+      "host_revision": "1727fc0158c6dbd741bfb0b6d85e8fe70f1a40f3"
     },
     {
       "task_id": "brewstead-effect-rounding",
       "host_repository": "mjodheim/mjodheim-brewstead",
-      "host_commit": "84f6c2462b810a83870974068db1e12d7f1e3720",
       "allowed_source_path": "src/main/java/be/mjodheim/brewstead/service/EffectService.java",
       "host_source_git_blob_sha1": "c19daf7c311fd1d5c2ffe7dd04dd3eb042ecafaa",
       "defect_patch_path": "experiment/rsi_v23/holdout/defects/brewstead-effect-rounding.patch",
@@ -45,12 +44,12 @@
       "reserved_assertions": 4,
       "defect_families": 2,
       "quality_per_reserved_assertion": 250,
-      "credential_independent_snapshot": false
+      "credential_independent_snapshot": false,
+      "host_revision": "84f6c2462b810a83870974068db1e12d7f1e3720"
     },
     {
       "task_id": "brewstead-brew-lifecycle-thresholds",
       "host_repository": "mjodheim/mjodheim-brewstead",
-      "host_commit": "84f6c2462b810a83870974068db1e12d7f1e3720",
       "allowed_source_path": "src/main/java/be/mjodheim/brewstead/service/BrewService.java",
       "host_source_git_blob_sha1": "b89446d5e172efc4632a7d3b0e055d825ddc7336",
       "defect_patch_path": "experiment/rsi_v23/holdout/defects/brewstead-brew-lifecycle-thresholds.patch",
@@ -60,7 +59,8 @@
       "reserved_assertions": 4,
       "defect_families": 2,
       "quality_per_reserved_assertion": 250,
-      "credential_independent_snapshot": false
+      "credential_independent_snapshot": false,
+      "host_revision": "84f6c2462b810a83870974068db1e12d7f1e3720"
     }
   ]
 }
