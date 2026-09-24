@@ -9,6 +9,7 @@ import hashlib
 from experiment.rsi_v23 import l5_meta_development as dev
 from experiment.rsi_v23 import l5_meta_search as search
 from experiment.rsi_v23 import l5_policy_family as family
+from experiment.rsi_v23.holdout import candidate_generator as holdout_gen
 
 
 def test_l5_root_is_exact_frozen_g2():
@@ -53,3 +54,24 @@ def test_l5_ablation_is_not_g1_or_g2_and_removes_early_stop_only_plus_stall_reve
     assert "if best >= 780:" not in ablated
     assert "return (10, 6, 3, 5, 5, 4, 8, 1, 8, 1)" in ablated
     assert "return (10, 6, 3, 5, 5, 4, 8, 1, 8, 3)" in g2
+
+
+def test_l5_holdout_generator_has_four_two_locus_tasks_and_no_reserved_evaluator_dependency():
+    assert set(holdout_gen.TASKS) == {
+        "brewtrack-brewmath-precision",
+        "brewtrack-recipemath-units-water",
+        "brewstead-effect-rounding",
+        "brewstead-brew-lifecycle-thresholds",
+    }
+    for task_id, spec in holdout_gen.TASKS.items():
+        assert len(spec["loci"]) == 2
+        assert spec["path"]
+    source = holdout_gen.__file__
+    assert "evaluator" not in holdout_gen.manifest()["schema"].lower()
+
+
+def test_l5_holdout_external_caps_match_preregistration():
+    from experiment.rsi_v23.holdout import run_task
+    assert run_task.MAX_REQUESTS == 9
+    assert run_task.MAX_ROUNDS == 8
+    assert run_task.MAX_PARALLELISM == 2
