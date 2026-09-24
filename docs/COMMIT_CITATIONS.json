@@ -171,6 +171,14 @@
         "docs/state-history/PROJECT_STATE_2026-08-24.yaml"
       ]
     },
+    "0f7ac3875cc262b40b54ec533ca8ae11eaeefd12": {
+      "subject": "Merge positive V22R adjudication and close RSI L4",
+      "preserved_by": "main",
+      "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
+        "experiment/rsi_v23/build_l5_freeze.py"
+      ]
+    },
     "1081ed1276d5d5048ec78cb3c3348b6ba7c4ac08": {
       "subject": "test: connect M072 materializer to integrity graph",
       "preserved_by": "main",
@@ -1840,6 +1848,15 @@
         "results/M038.md",
         "results/artifacts/M038_CANONICAL_RESULT.json",
         "tests/test_m038_sealed.py"
+      ]
+    },
+    "ae45dd007dea37b37ea90ecba15d33a4ce7462a0": {
+      "subject": "research(v23): add fail-closed final L5 freeze builder",
+      "preserved_by": "research/rsi-v23-l5-causal-recursion",
+      "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
+        "experiment/rsi_v23/calibration/V23_L5_BREWTRACK_CALIBRATION.json",
+        "experiment/rsi_v23/calibration/V23_L5_BREWSTEAD_CALIBRATION.json"
       ]
     },
     "ae8b4dce2cb737fc51dc0fa3a9ffcae494ef1cdb": {
