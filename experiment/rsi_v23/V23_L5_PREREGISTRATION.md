@@ -44,9 +44,9 @@ candidate mutation family and public meta-development population.
 
 - **A / G2-meta** — exact frozen G2 controls parent selection and stopping.
 - **B / G1-meta** — exact frozen G1 controls the same G2-rooted descendant tree.
-- **C / G2-ablation** — exact G2 selection logic except:
-  1. the acquired `best >= 780` early-stop block is absent;
-  2. stall-round metadata is reverted from 3 to predecessor value 1.
+- **C / G2-ablation** — byte-identical G2 except the acquired `best >= 780`
+  strong-result early-stop block is absent. No metadata, ranking, continuation,
+  stall, depth or parallelism rule is changed.
 - **D / no-meta** — deterministic lexicographic breadth-first parent expansion.
 
 External caps, identical for every arm:
