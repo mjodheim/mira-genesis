@@ -128,8 +128,16 @@ Exactly four real-project tasks are frozen before the meta-search is executed.
 
 ### Host A — BrewTrack / C# .NET
 
-Repository: `mjodheim/BrewTrack`
+Repository of origin: `mjodheim/BrewTrack`
 commit: `1727fc0158c6dbd741bfb0b6d85e8fe70f1a40f3`
+
+Because that repository is private and a repository-scoped GitHub Actions token cannot fetch it
+cross-repository, L5 uses a credential-independent snapshot committed before freeze. The snapshot
+contains byte-exact copies of the two allowed production files, their two required enum dependencies,
+the original Domain project file and the exact relevant public BrewMath/RecipeMath tests. Its
+`SNAPSHOT_MANIFEST.json` binds every copied path to the source Git blob at the frozen BrewTrack
+commit. The only laboratory-authored file is a minimal test-project wrapper; it carries no task
+semantics.
 
 Allowed production files:
 
@@ -152,7 +160,9 @@ Task construction rule, fixed before G3:
 - each task has four retained reserved objective assertions, two per defect family;
 - the untouched frozen host passes 4/4;
 - the defect root passes 0/4;
-- existing public project tests remain the public regression guard;
+- Brewstead uses its relevant existing public project suite as regression guard;
+- BrewTrack uses the exact frozen public `BrewMathTests.cs` and `RecipeMathTests.cs` bytes from the
+  source commit as its regression guard inside the credential-independent snapshot;
 - the repair candidate generator is deterministic, finite and laboratory-owned;
 - candidate generation exposes no reserved assertion, hidden outcome or holdout result to a policy;
 - no task is included or removed after observing G2, G3 or any meta-search arm on that task.
@@ -217,6 +227,7 @@ Before any call to `l5_meta_search.run_all()`, the final V23 freeze must bind:
 - 12-landscape generator/evaluator;
 - meta-search engine;
 - exact four holdout defect patches;
+- exact BrewTrack snapshot manifest, copied source/test bytes and laboratory build-wrapper identity;
 - exact four retained evaluator sources;
 - exact holdout candidate-generator implementation;
 - host commit identities;
