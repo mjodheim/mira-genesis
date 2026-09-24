@@ -1348,6 +1348,14 @@
         "scripts/check_m073_result.py"
       ]
     },
+    "7896d62f1947a792a31bbf9c656c93f76a9ec015": {
+      "subject": "Merge canonical positive L4 main into V23 L5 apparatus",
+      "preserved_by": "research/rsi-v23-l5-causal-recursion",
+      "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
+        "experiment/rsi_v23/V23_FREEZE.json"
+      ]
+    },
     "78d53d733bdf77eab773414e8d273ed70e31391d": {
       "subject": "m073: preregister model-to-lineage skill appropriation",
       "preserved_by": "main",
