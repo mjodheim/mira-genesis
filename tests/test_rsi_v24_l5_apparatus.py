@@ -81,3 +81,9 @@ def test_v24_equal_external_meta_budgets_remain_v23_sized():
     assert search.META_ROUND_BUDGET == 8
     assert search.META_MAX_PARALLELISM == 2
     assert search.META_MUTATION_DEPTH == 2
+
+
+def test_v24_scientific_arms_fail_closed_before_freeze():
+    assert not search.FREEZE_PATH.exists()
+    with pytest.raises(RuntimeError, match="forbidden before V24_FREEZE.json"):
+        search.run_all()
