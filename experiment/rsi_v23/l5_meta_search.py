@@ -119,16 +119,34 @@ def _children_for(
     return tuple(rows)
 
 
+def _has_unseen_child(
+    node: Mapping[str, Any],
+    cursor: int,
+    index: Mapping[str, dict[str, Any]],
+    seen_candidate_digests: set[str],
+) -> bool:
+    children = _children_for(node, index)
+    return any(
+        row["candidate"]["params_digest"] not in seen_candidate_digests
+        for row in children[cursor:]
+    )
+
+
 def _view(
     nodes: Mapping[str, dict[str, Any]],
     revealed: list[str],
     cursors: Mapping[str, int],
     index: Mapping[str, dict[str, Any]],
+    seen_candidate_digests: set[str],
 ) -> dict[str, Any]:
     eligible = []
     for node_id in revealed:
-        children = _children_for(nodes[node_id], index)
-        if cursors.get(node_id, 0) < len(children):
+        if _has_unseen_child(
+            nodes[node_id],
+            cursors.get(node_id, 0),
+            index,
+            seen_candidate_digests,
+        ):
             eligible.append(node_id)
     return {
         "root_node_id": "g2-root",
@@ -178,6 +196,7 @@ def run_arm(arm: str) -> dict[str, Any]:
     )
     nodes: dict[str, dict[str, Any]] = {"g2-root": root}
     revealed = ["g2-root"]
+    seen_candidate_digests = {str(root_candidate["params_digest"])}
     cursors: dict[str, int] = {}
     requests = 0
     rounds = 0
@@ -198,7 +217,7 @@ def run_arm(arm: str) -> dict[str, Any]:
             metadata = list(meta["metadata"])
 
         while requests < META_REQUEST_BUDGET and rounds < META_ROUND_BUDGET:
-            view = _view(nodes, revealed, cursors, index)
+            view = _view(nodes, revealed, cursors, index, seen_candidate_digests)
             eligible = list(view["eligible_parent_ids"])
             if not eligible:
                 stop_reason = "candidate_family_exhausted"
@@ -235,11 +254,19 @@ def run_arm(arm: str) -> dict[str, Any]:
                 parent = nodes[parent_id]
                 children = _children_for(parent, index)
                 child_index = cursors.get(parent_id, 0)
-                if child_index >= len(children):
-                    raise RuntimeError("controller selected non-expandable parent")
-                expansion = children[child_index]
-                cursors[parent_id] = child_index + 1
+                expansion = None
+                while child_index < len(children):
+                    probe = children[child_index]
+                    child_index += 1
+                    if probe["candidate"]["params_digest"] in seen_candidate_digests:
+                        continue
+                    expansion = probe
+                    break
+                cursors[parent_id] = child_index
+                if expansion is None:
+                    raise RuntimeError("controller selected parent without unseen child")
                 candidate = expansion["candidate"]
+                seen_candidate_digests.add(str(candidate["params_digest"]))
                 node_id = "m-" + hashlib.sha256(
                     f"{parent_id}|{expansion['params_digest']}|{child_index}".encode()
                 ).hexdigest()[:16]
