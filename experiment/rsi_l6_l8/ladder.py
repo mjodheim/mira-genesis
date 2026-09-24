@@ -37,13 +37,15 @@ def _utility(value: Any) -> tuple[int,...]:
 def _strictly_better(a: Any,b: Any)->bool:
     return _utility(a) > _utility(b)
 
+def _is_sha256(value:Any)->bool:
+    return isinstance(value,str) and len(value)==64 and all(ch in "0123456789abcdef" for ch in value)
+
 def _transition_ok(t:dict[str,Any])->tuple[bool,list[str]]:
     problems=[]
     required_true=(
         "successor_selected_without_human_ranking",
         "candidate_frozen_before_fresh_holdout",
         "evaluator_frozen_before_candidate",
-        "equal_budget",
         "negative_evidence_retained",
     )
     for key in required_true:
@@ -53,6 +55,27 @@ def _transition_ok(t:dict[str,Any])->tuple[bool,list[str]]:
         problems.append("producer_generation must equal from_generation")
     if t.get("produced_generation") != t.get("to_generation"):
         problems.append("produced_generation must equal to_generation")
+
+    budgets=t.get("budgets")
+    if not isinstance(budgets,dict) or set(budgets)!={"predecessor","successor","ablation"}:
+        problems.append("budgets must contain predecessor, successor and ablation")
+    else:
+        if any(type(v) is not int or v <= 0 for v in budgets.values()):
+            problems.append("transition budgets must be positive integers")
+        elif len(set(budgets.values())) != 1:
+            problems.append("transition budgets are not equal")
+
+    for key in (
+        "from_generation_sha256",
+        "to_generation_sha256",
+        "evaluator_commitment_sha256",
+        "holdout_commitment_sha256",
+        "mechanism_commitment_sha256",
+        "selection_record_sha256",
+    ):
+        if not _is_sha256(t.get(key)):
+            problems.append(f"{key} must be lowercase SHA-256")
+
     if not _strictly_better(t.get("successor_holdout_utility"),t.get("predecessor_holdout_utility")):
         problems.append("successor holdout utility is not strictly greater than predecessor")
     if not _strictly_better(t.get("successor_holdout_utility"),t.get("ablated_holdout_utility")):
@@ -94,35 +117,62 @@ def _domain_ok(row:dict[str,Any])->tuple[bool,list[str]]:
         "candidate_frozen_before_holdout",
         "evaluator_frozen_before_candidate",
         "no_domain_specific_candidate_guidance",
-        "equal_budget",
         "negative_evidence_retained",
     ):
         if row.get(key) is not True:
             problems.append(f"{key} must be true")
+    budgets=row.get("budgets")
+    if not isinstance(budgets,dict) or set(budgets)!={"predecessor","successor"}:
+        problems.append("domain budgets must contain predecessor and successor")
+    else:
+        if any(type(v) is not int or v <= 0 for v in budgets.values()):
+            problems.append("domain budgets must be positive integers")
+        elif budgets["predecessor"] != budgets["successor"]:
+            problems.append("domain predecessor/successor budgets are not equal")
     if not _strictly_better(row.get("successor_utility"),row.get("predecessor_utility")):
         problems.append("successor utility is not strictly greater than predecessor")
-    for key in ("domain_id","domain_family","environment_id"):
+    for key in ("domain_id","domain_family","environment_id","maintainer_id"):
         if not isinstance(row.get(key),str) or not row[key]:
             problems.append(f"{key} must be non-empty")
+    for key in (
+        "environment_commitment_sha256",
+        "evaluator_commitment_sha256",
+        "holdout_commitment_sha256",
+        "candidate_commitment_sha256",
+    ):
+        if not _is_sha256(row.get(key)):
+            problems.append(f"{key} must be lowercase SHA-256")
     return (not problems,problems)
 
 def assess_l7(evidence:dict[str,Any],config:dict[str,Any],l6:dict[str,Any]|None=None)->dict[str,Any]:
     l6=l6 or assess_l6(evidence,config)
     domains=list(evidence.get("domain_transfer",[]))
     minimum=int(config["l7_min_domain_families"])
+    min_external=int(config["l7_min_external_maintained_domains"])
+    internal=set(config.get("internal_maintainer_ids",[]))
     rows=[]
     families=set()
-    independent=0
+    external=0
+    external_maintainers=set()
     for row in domains:
         ok,problems=_domain_ok(row)
-        rows.append({"domain_id":row.get("domain_id"),"ok":ok,"problems":problems})
+        is_external=(ok and row.get("maintainer_id") not in internal)
+        rows.append({
+            "domain_id":row.get("domain_id"),
+            "maintainer_id":row.get("maintainer_id"),
+            "external_maintainer":is_external,
+            "ok":ok,
+            "problems":problems,
+        })
         if ok:
             families.add(row["domain_family"])
-            independent += int(row.get("independently_maintained") is True)
+            if is_external:
+                external += 1
+                external_maintainers.add(row["maintainer_id"])
     positive=(
         l6["positive"]
         and len(families)>=minimum
-        and independent>=int(config["l7_min_independently_maintained_domains"])
+        and external>=min_external
         and all(r["ok"] for r in rows)
     )
     return {
@@ -131,13 +181,11 @@ def assess_l7(evidence:dict[str,Any],config:dict[str,Any],l6:dict[str,Any]|None=
         "requires_l6_positive":l6["positive"],
         "distinct_domain_families":len(families),
         "minimum_domain_families":minimum,
-        "independently_maintained_domains":independent,
-        "minimum_independently_maintained_domains":int(config["l7_min_independently_maintained_domains"]),
+        "external_maintained_domains":external,
+        "distinct_external_maintainers":len(external_maintainers),
+        "minimum_external_maintained_domains":min_external,
         "domains":rows,
     }
-
-def _is_sha256(value:Any)->bool:
-    return isinstance(value,str) and len(value)==64 and all(ch in "0123456789abcdef" for ch in value)
 
 def assess_l8(evidence:dict[str,Any],config:dict[str,Any],l7:dict[str,Any]|None=None)->dict[str,Any]:
     l7=l7 or assess_l7(evidence,config)
