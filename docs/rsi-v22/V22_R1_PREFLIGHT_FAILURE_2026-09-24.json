@@ -24,7 +24,7 @@
   "verified_matching_identities": {
     "proposer_protocol": "f28109600e1090254e2b70a666cd519724014c199ecce281970cc84dba5e23ca",
     "calibration_manifest": "948e7ad615f859a0005bf48b12e21deca7cad9ed4daf9bcc214352c47e3822a0",
-    "output_verifier": "17b5587a0ba5ffb96a80547f9ba034f24acbf9309",
+    "output_verifier": "17b5587a0ba5ffb96a80547b8a618703d022891650cb472fddab2c411a9cd6f2",
     "campaign_engine": "4447ed003d868e8cd6f0a5d81730f2e7c7ab4527c7be2359d919db7a7f958f58",
     "proposal_evaluator": "40bf7ef0062abb2b4c332c4330ce58e46239d50a9ee7b098cf579571802d22c9",
     "descendant_bundle_builder": "a97005766a3988ab0066e908905bfbb32bf385fcdd9fde74c1c2b28e596de9ba",
