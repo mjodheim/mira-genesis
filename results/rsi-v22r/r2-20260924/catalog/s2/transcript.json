@@ -1,0 +1,32 @@
+{
+  "schema": "mira-genesis-rsi-v22-transfer-proposal-v1",
+  "task_id": "brewstead-catalog-crop-ingredient-name",
+  "campaign_slot_id": "v22-brewstead-catalog-crop-ingredient-name-r2-g1-s2",
+  "parent_node_id": "v22r-brewstead-catalog-crop-ingredient-name-root",
+  "parent_tree_digest": "c61e697543dd463d893c71fc1a26bde788af35313cfb3117f129c303fc34dde4",
+  "host_commit": "720b27c8bc80de16c04953e13d5f9e8425beea8c",
+  "task_manifest_sha256": "6667f166a804ce862ee830724ea4da7efbcb5c36ae6b01ba06588571c84a7560",
+  "proposer_protocol_sha256": "f28109600e1090254e2b70a666cd519724014c199ecce281970cc84dba5e23ca",
+  "proposal_patch_sha256": "7df456192aff85104e72390baa28e79925afad244e88f8df67a5dbc270467514",
+  "intent": "Make crop catalog responses expose the linked ingredient's name in ingredientName instead of repeating the crop name.",
+  "rationale": "CropResponse defines ingredientName separately from the crop name, and CatalogService already obtains the linked ingredient for ingredientId. Replacing the duplicated crop.getName() argument with crop.getIngredient().getName() is the smallest causal repair and leaves all other mapping behavior unchanged.",
+  "files_changed": [
+    "src/main/java/be/mjodheim/brewstead/service/CatalogService.java"
+  ],
+  "public_checks": [
+    "Inspected the supplied CatalogServiceTest, CropResponse, Crop, and Ingredient sources to confirm the intended crop-to-ingredient mapping.",
+    "Verified the proposal mechanically with VERIFY_OUTPUT.py after generating the patch and transcript."
+  ],
+  "uncertainties": [
+    "The frozen Maven public guard was not executed because no local Maven executable is available and the bundled Maven wrapper requires an external Maven download, which is outside the allowed bundle-only boundary."
+  ],
+  "information_boundary": {
+    "used_only_supplied_bundle": true,
+    "used_web_or_github": false,
+    "used_saved_memory_or_previous_chats": false,
+    "used_reserved_evaluator_source_or_result": false,
+    "used_other_v22_attempt_or_slot_output": false,
+    "used_g1_g2_selection_information": false,
+    "used_human_candidate_specific_guidance": false
+  }
+}
