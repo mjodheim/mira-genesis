@@ -3,7 +3,7 @@
   "task_id": "brewstead-progression-merchant-coin-bonus",
   "campaign_slot_id": "v22-brewstead-progression-merchant-coin-bonus-r2-g1-s2",
   "parent_node_id": "v22r-brewstead-progression-merchant-coin-bonus-root",
-  "parent_tree_digest": "651e4f46d14b2567e056aeea0946fcfda488a83587f146ed6e2c26d529e5f0",
+  "parent_tree_digest": "651e4f46d14b2567e056aeea0946fcfda488a83587f146edeb6e2c26d529e5f0",
   "host_commit": "720b27c8bc80de16c04953e13d5f9e8425beea8c",
   "task_manifest_sha256": "865026114ebe75ad9565db30dd0e26da6dfa58a6e63eac154242280cbef853b7",
   "proposer_protocol_sha256": "f28109600e1090254e2b70a666cd519724014c199ecce281970cc84dba5e23ca",
