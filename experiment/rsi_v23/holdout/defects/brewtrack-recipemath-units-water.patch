@@ -1,7 +1,7 @@
 diff --git a/Domain/RecipeMath.cs b/Domain/RecipeMath.cs
 --- a/Domain/RecipeMath.cs
 +++ b/Domain/RecipeMath.cs
-@@ -117,7 +117,7 @@ namespace Domain
+@@ -117,6 +117,6 @@ namespace Domain
                         + grainKg
                         + volumeLiters * 0.10m * boilMinutes / 60m
 -                       + volumeLiters * 0.04m, 1);
