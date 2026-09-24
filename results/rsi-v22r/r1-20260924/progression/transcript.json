@@ -1,0 +1,32 @@
+{
+  "schema": "mira-genesis-rsi-v22-transfer-proposal-v1",
+  "task_id": "brewstead-progression-merchant-coin-bonus",
+  "campaign_slot_id": "v22r-brewstead-progression-merchant-coin-bonus-r1-shared-s1",
+  "parent_node_id": "v22r-brewstead-progression-merchant-coin-bonus-root",
+  "parent_tree_digest": "651e4f46d14b2567e056aeea0946fcfda488a83587f146edeb6e2c26d529e5f0",
+  "host_commit": "720b27c8bc80de16c04953e13d5f9e8425beea8c",
+  "task_manifest_sha256": "06bbd3fba34f69d2331875f2e6cb3396b8c8d0e5583725f51846be3e67396226",
+  "proposer_protocol_sha256": "f28109600e1090254e2b70a666cd519724014c199ecce281970cc84dba5e23ca",
+  "proposal_patch_sha256": "639e5748770bf35695cf942eecebca01e577826dc5388edf2f8cce445fce0f8c",
+  "intent": "Apply the MARCHAND specialization's documented 10% bonus to NPC-order coin rewards while leaving all other specializations on the unmodified base reward.",
+  "rationale": "The supplied ProgressionService currently returns the same base value from both branches of npcCoinReward. The repair changes only the MARCHAND branch to return the base multiplied by 1.10 and rounded to the nearest whole coin, preserving the existing base reward for every non-MARCHAND specialization.",
+  "files_changed": [
+    "src/main/java/be/mjodheim/brewstead/service/ProgressionService.java"
+  ],
+  "public_checks": [
+    "git apply --check proposal.patch: PASS",
+    "public guard command attempted; Maven wrapper could not fetch its Maven 3.9.16 distribution in the isolated runtime"
+  ],
+  "uncertainties": [
+    "The supplied public contract specifies a 10% integer coin bonus but does not explicitly define fractional-coin rounding; this repair uses Math.round to the nearest whole coin."
+  ],
+  "information_boundary": {
+    "used_only_supplied_bundle": true,
+    "used_web_or_github": false,
+    "used_saved_memory_or_previous_chats": false,
+    "used_reserved_evaluator_source_or_result": false,
+    "used_other_v22_attempt_or_slot_output": false,
+    "used_g1_g2_selection_information": false,
+    "used_human_candidate_specific_guidance": false
+  }
+}
