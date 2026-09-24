@@ -3,7 +3,7 @@ name: V24 L5 prospective freeze build
 on:
   push:
     branches:
-      - research/rsi-v24-l5-freeze-prep
+      - research/rsi-v24-l5-freeze
     paths:
       - experiment/rsi_v24/FREEZE_TRIGGER
 
