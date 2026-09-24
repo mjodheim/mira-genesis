@@ -1,0 +1,72 @@
+# RSI V23 exact replay contract
+
+Status: development apparatus prepared before V22 adjudication. It is not yet the V23 canonical evaluator.
+
+## Purpose
+
+V23 needs a cheap way to compare executable exploration policies on discovery history without pretending
+that history contains outcomes for branches nobody actually expanded.
+
+The replay engine therefore implements **exact realized-tree replay only**.
+
+Here, **exact** has a deliberately narrow meaning: the engine consumes only child outcomes that were
+actually observed and preserves their recorded order. It does **not** claim that the same child would
+have been generated under a different request chronology, model sampling path or alternative policy.
+The history is therefore a recorded expansion tape for cheap development comparison, not an oracle
+for unobserved counterfactual generation. Fresh online holdout remains the decisive test.
+
+## Historical expansion model
+
+A retained campaign state contains chronological observations. Each represented request creates one
+recorded parent -> child expansion. If the same parent was requested multiple times, those child
+expansions form a FIFO queue in the order actually observed.
+
+A replay starts from the retained root only. At each round the candidate policy sees exactly the same
+public node fields used by the online policy ABI:
+
+- root node id;
+- revealed node rows;
+- eligible revealed parents;
+- action features;
+- scored outcome fields;
+- lineage depth.
+
+The runner validates the candidate's declared parallelism, maximum rounds and stall-round count. Candidate metadata and parent selection are evaluated through the bounded policy subprocess; replay never imports candidate code into the laboratory process. The caller may additionally impose external caps on represented requests, rounds and parallelism. Those caps can only reduce the candidate's declared budget and are intended to make equal-budget arm comparisons enforceable by the laboratory rather than self-reported by the candidate.
+
+When a selected parent has a recorded unused child, replay consumes the next historical expansion,
+charges one represented request and reveals that child.
+
+## No counterfactual fabrication
+
+If a candidate requests a parent for which history contains no unused expansion, replay stops with:
+
+`unsupported_historical_expansion`.
+
+The engine does **not**:
+
+- invent a child;
+- estimate a reward;
+- assign zero;
+- substitute a nearby branch;
+- ask an LLM what might have happened.
+
+Such a replay is marked `fully_supported=false` and cannot be treated as an exact policy comparison.
+
+This makes the current deployed policy a naturally supported baseline while allowing alternative
+policies to become increasingly replayable as the archive accumulates diverse expansions.
+
+## What this apparatus does not freeze yet
+
+V23's canonical:
+
+- replay-pool membership;
+- candidate-policy budget;
+- policy-development model;
+- ranking utility;
+- support/coverage threshold;
+- fresh holdout;
+- causal ablation margin;
+
+must be frozen only after V22's measured cost scale is known and before any V23 proposer call.
+
+Development identity tokens may be supplied to the sandbox guard so task IDs, node IDs and source paths from the replay pool cannot appear literally in candidate code. This is an anti-memorization guard, not a substitute for fresh holdout evaluation.\n\nThis file therefore defines replay **semantics**, not the final V23 success threshold.\n
