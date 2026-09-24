@@ -1,0 +1,32 @@
+{
+  "schema": "mira-genesis-rsi-v22-transfer-proposal-v1",
+  "task_id": "brewstead-progression-merchant-coin-bonus",
+  "campaign_slot_id": "v22-brewstead-progression-merchant-coin-bonus-r1-shared-s1",
+  "parent_node_id": "v22-brewstead-progression-merchant-coin-bonus-root",
+  "parent_tree_digest": "651e4f46d14b2567e056aeea0946fcfda488a83587f146edeb6e2c26d529e5f0",
+  "host_commit": "720b27c8bc80de16c04953e13d5f9e8425beea8c",
+  "task_manifest_sha256": "a14af5e4c257f16c6e89a5eb6f4a1b326a781d669c3fd66b5825604aa8befde6",
+  "proposer_protocol_sha256": "f28109600e1090254e2b70a666cd519724014c199ecce281970cc84dba5e23ca",
+  "proposal_patch_sha256": "21e9bcea2486d3f524782fd79f85b579cd3bde188d0b56f9212224b9b7ba3685",
+  "intent": "Apply the documented 10% NPC-order coin bonus only for the MARCHAND specialization while leaving every other specialization on the base reward.",
+  "rationale": "npcCoinReward currently returns base on both sides of the specialization branch, so MARCHAND has no effect. Change only the MARCHAND branch to round base multiplied by 1.10 to the nearest integer coin; the non-MARCHAND branch remains exactly base and no other behavior is touched.",
+  "files_changed": [
+    "src/main/java/be/mjodheim/brewstead/service/ProgressionService.java"
+  ],
+  "public_checks": [
+    "Inspected the supplied ProgressionServiceTest and NpcOrderServiceTest usages relevant to specialization and NPC coin rewards.",
+    "Ran the exact supplied public guard command; it could not start because Maven 3.9.16 was not cached locally and the wrapper attempted a forbidden/unavailable network download."
+  ],
+  "uncertainties": [
+    "The exact public guard could not execute because the Maven wrapper distribution was absent locally and obtaining it would require network access forbidden by the supplied protocol."
+  ],
+  "information_boundary": {
+    "used_only_supplied_bundle": true,
+    "used_web_or_github": false,
+    "used_saved_memory_or_previous_chats": false,
+    "used_reserved_evaluator_source_or_result": false,
+    "used_other_v22_attempt_or_slot_output": false,
+    "used_g1_g2_selection_information": false,
+    "used_human_candidate_specific_guidance": false
+  }
+}
