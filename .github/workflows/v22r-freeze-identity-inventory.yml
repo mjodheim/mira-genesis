@@ -1,0 +1,51 @@
+name: V22R freeze identity inventory
+
+on:
+  push:
+    branches:
+      - research/rsi-v22r-retained-evaluator
+
+permissions:
+  contents: read
+
+jobs:
+  inventory:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify apparatus files unchanged from apparatus commit and print identities
+        shell: bash
+        run: |
+          set -euo pipefail
+          APP=6babe495ef00f2a5c666a5268bace3c79c5a226a
+          paths=(
+            experiment/rsi_v22r/V22R_PREREGISTRATION.md
+            experiment/rsi_v22r/build_root_bundles.py
+            docs/rsi-v22/V22_R1_PREFLIGHT_FAILURE_2026-09-24.json
+            docs/rsi-v22/V22_R1_PREFLIGHT_FAILURE_2026-09-24.md
+            experiment/rsi_v22/utility.py
+            experiment/rsi_v22/V22_TRANSFER_PROPOSER_PROTOCOL.md
+            experiment/rsi_v22/calibration-manifest.json
+            experiment/rsi_v22/VERIFY_OUTPUT.py
+            experiment/rsi_v22/campaign.py
+            experiment/rsi_v22/evaluate_proposal.py
+            experiment/rsi_v22/build_next_bundles.py
+            experiment/rsi_v22/adjudicate.py
+            experiment/rsi_v22/campaign_cli.py
+            experiment/rsi_v22/policies/g1_search_policy.py
+            experiment/rsi_v22/policies/g2_search_policy.py
+            experiment/rsi_v22/defects/game-state-estate-max-fields.patch
+            experiment/rsi_v22/defects/progression-merchant-coin-bonus.patch
+            experiment/rsi_v22/defects/catalog-crop-ingredient-name.patch
+            experiment/rsi_v22/evaluator/GameStateEstateReservedTest.java
+            experiment/rsi_v22/evaluator/ProgressionMerchantReservedTest.java
+            experiment/rsi_v22/evaluator/CatalogCropIngredientReservedTest.java
+          )
+          for p in "${paths[@]}"; do
+            git diff --exit-code "$APP" -- "$p"
+            printf 'V22R_FREEZE_SHA256 %s ' "$p"
+            sha256sum "$p" | cut -d' ' -f1
+          done
+          echo "V22R_APPARATUS_FILES_UNCHANGED=PASS"
