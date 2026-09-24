@@ -174,6 +174,20 @@ Reserved task quality is:
 
 Thus possible retained quality is exactly `0, 250, 500, 750, 1000`.
 
+## Fresh holdout execution budget
+
+G2, frozen G3 and the B/G1-meta selected successor receive identical external caps on every holdout
+task:
+
+- represented candidate evaluations: **9**
+- rounds: **8**
+- maximum parallelism: **2**
+- candidate mutation depth: **2 loci maximum**
+
+The finite candidate generator expands one predeclared source locus per edge. Only candidates actually
+requested by the controlling policy are evaluated; unrequested candidates do not consume or reveal
+reserved outcomes.
+
 ## Fresh holdout search utility
 
 For one holdout task:
