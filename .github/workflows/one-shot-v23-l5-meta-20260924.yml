@@ -1,0 +1,115 @@
+name: One-shot V23 L5 meta-search and retention gate 2026-09-24
+
+on:
+  push:
+    branches:
+      - results/rsi-v23-l5-meta-20260924
+
+permissions:
+  contents: read
+
+jobs:
+  meta:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout frozen V23 lineage
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify every frozen byte before meta-search
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+          freeze=json.loads(Path("experiment/rsi_v23/V23_FREEZE.json").read_text())
+          assert freeze["schema"]=="mira-genesis-rsi-v23-l5-freeze-v1"
+          assert freeze["status"]=="FROZEN_BEFORE_ANY_V23_META_SEARCH"
+          assert freeze["apparatus_commit"]=="7896d62f1947a792a31bbf9c656c93f76a9ec015"
+          for rel,want in freeze["files"].items():
+              got=hashlib.sha256(Path(rel).read_bytes()).hexdigest()
+              if got!=want:
+                  raise SystemExit(f"FROZEN_BYTE_MISMATCH {rel} {got} != {want}")
+          print("V23_L5_FROZEN_BYTES=PASS")
+          PY
+
+      - name: Execute all four frozen L5 meta-search arms
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/v23-meta
+          python3 experiment/rsi_v23/l5_meta_search.py > /tmp/v23-meta/V23_META_SEARCH_RESULT.json
+          cat /tmp/v23-meta/V23_META_SEARCH_RESULT.json
+
+      - name: Materialize mechanically selected successor bytes
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import hashlib, importlib.util, json
+          from pathlib import Path
+
+          def load(name,path):
+              spec=importlib.util.spec_from_file_location(name,path)
+              if spec is None or spec.loader is None: raise SystemExit(f"cannot load {path}")
+              m=importlib.util.module_from_spec(spec); spec.loader.exec_module(m); return m
+
+          family=load("v23_family_materialize",Path("experiment/rsi_v23/l5_policy_family.py"))
+          result=json.loads(Path("/tmp/v23-meta/V23_META_SEARCH_RESULT.json").read_text())
+          mapping={
+              "g2_meta":"G3_SELECTED.py",
+              "g1_meta":"G1_META_SELECTED.py",
+              "g2_ablation":"G2_ABLATION_SELECTED.py",
+              "no_meta":"NO_META_SELECTED.py",
+          }
+          for arm,name in mapping.items():
+              cand=result["arms"][arm]["selected_successor"]["candidate"]
+              source=family.render_source(cand["params"])
+              got=hashlib.sha256(source.encode()).hexdigest()
+              if got!=cand["source_sha256"]:
+                  raise SystemExit(f"{arm} selected source mismatch {got} != {cand['source_sha256']}")
+              Path("/tmp/v23-meta",name).write_text(source,encoding="utf-8")
+              print(f"V23_SELECTED {arm} {got} {cand['development_utility']}")
+          PY
+
+      - name: Run zero-tolerance L4 retention gate on G3
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 experiment/rsi_v23/l4_retention_gate.py /tmp/v23-meta/G3_SELECTED.py --out /tmp/v23-meta/V23_L4_RETENTION.json || true
+          cat /tmp/v23-meta/V23_L4_RETENTION.json
+
+      - name: Compute pre-holdout causal gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          meta=json.loads(Path("/tmp/v23-meta/V23_META_SEARCH_RESULT.json").read_text())
+          retention=json.loads(Path("/tmp/v23-meta/V23_L4_RETENTION.json").read_text())
+          a=meta["arms"]["g2_meta"]
+          c=meta["arms"]["g2_ablation"]
+          facts={
+              "schema":"mira-genesis-rsi-v23-l5-pre-holdout-gate-v1",
+              "g2_meta_found_strict_development_successor":bool(a["successor_strictly_better_than_g2_on_development"]),
+              "g2_meta_process_strictly_beats_g2_ablation":tuple(a["meta_process_utility"])>tuple(c["meta_process_utility"]),
+              "g3_zero_tolerance_l4_retention":bool(retention["zero_tolerance_retention"]),
+          }
+          facts["eligible_for_fresh_holdout"]=all(facts[k] for k in (
+              "g2_meta_found_strict_development_successor",
+              "g2_meta_process_strictly_beats_g2_ablation",
+              "g3_zero_tolerance_l4_retention",
+          ))
+          Path("/tmp/v23-meta/V23_PRE_HOLDOUT_GATE.json").write_text(json.dumps(facts,indent=2,sort_keys=True)+"\n")
+          print(json.dumps(facts,indent=2,sort_keys=True))
+          PY
+
+      - name: Upload complete pre-holdout evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: v23-l5-meta-and-retention
+          path: /tmp/v23-meta
+          if-no-files-found: error
