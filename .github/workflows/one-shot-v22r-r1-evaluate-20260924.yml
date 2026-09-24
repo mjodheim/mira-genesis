@@ -1,0 +1,68 @@
+name: One-shot V22R R1 retained evaluation 2026-09-24
+on:
+  push:
+    branches:
+      - results/rsi-v22r-r1-20260924
+permissions:
+  contents: read
+jobs:
+  evaluate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '26'
+      - uses: actions/checkout@v4
+        with:
+          repository: mjodheim/mjodheim-brewstead
+          ref: 720b27c8bc80de16c04953e13d5f9e8425beea8c
+          path: host
+      - name: Verify represented bytes and rebuild frozen V22R bundles
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat <<'EOF' | sha256sum -c -
+          763fa7ca40653b78faab4f98c5b9d6d02b57936685269885e6cf5c6f0aa1170b  results/rsi-v22r/r1-20260924/game-state/proposal.patch
+          372ef7585b6a36b092d03d66debde248f47c9fd13b57ae6654ac06ad124233ce  results/rsi-v22r/r1-20260924/game-state/transcript.json
+          f6f3a9dc9f498bd6c1723b2c6846058a3519acc04a4ca86906ae412c92d60f47  results/rsi-v22r/r1-20260924/catalog/proposal.patch
+          465fc5375740442b4ecc1d48cc895899b9c21b9038e4798783d7092c901d36b3  results/rsi-v22r/r1-20260924/catalog/transcript.json
+          639e5748770bf35695cf942eecebca01e577826dc5388edf2f8cce445fce0f8c  results/rsi-v22r/r1-20260924/progression/proposal.patch
+          6e6b597db7e238080e4f722250db8f75b3727d72636d168840f08380adffc1b3  results/rsi-v22r/r1-20260924/progression/transcript.json
+          EOF
+          python3 experiment/rsi_v22r/build_root_bundles.py --host "$GITHUB_WORKSPACE/host" --apparatus-commit 6babe495ef00f2a5c666a5268bace3c79c5a226a --out /tmp/v22r-bundles > /tmp/build.json
+          cat <<'EOF' | sha256sum -c -
+          c7146fac0c2544f8e88a7b0a868bce66556aa0027c6f0465fd966b5becc4a462  /tmp/v22r-bundles/genesis-v22r-brewstead-game-state-estate-max-fields-r1-shared-s1.zip
+          28e9881b4596c4efd283d17659aa84b9cc626f75f3c5382b9600bd9667ac212f  /tmp/v22r-bundles/genesis-v22r-brewstead-progression-merchant-coin-bonus-r1-shared-s1.zip
+          7fc37c9ab05e96dd2ea96610818b654abd12f640dfc12ea5eecaa33b5123a40a  /tmp/v22r-bundles/genesis-v22r-brewstead-catalog-crop-ingredient-name-r1-shared-s1.zip
+          EOF
+      - name: Evaluate R1 and apply frozen campaign policies
+        shell: bash
+        run: |
+          set -euo pipefail
+          A=experiment/rsi_v22
+          R=results/rsi-v22r/r1-20260924
+          mkdir -p /tmp/v22r-results
+          eval_one() {
+            short="$1"; task="$2"
+            python3 "$A/evaluate_proposal.py" "/tmp/v22r-bundles/genesis-v22r-$task-r1-shared-s1.zip" "$R/$short/proposal.patch" "$R/$short/transcript.json" --out "/tmp/v22r-results/$short-evaluation.json"
+            python3 "$A/campaign_cli.py" init "/tmp/v22r-bundles/genesis-v22r-$task-r1-shared-s1.zip" --out "/tmp/v22r-results/$short-state.json"
+            python3 "$A/campaign_cli.py" record "/tmp/v22r-results/$short-state.json" shared "/tmp/v22r-results/$short-evaluation.json" --out "/tmp/v22r-results/$short-state.json"
+            python3 "$A/campaign_cli.py" summary "/tmp/v22r-results/$short-state.json" > "/tmp/v22r-results/$short-summary.json"
+          }
+          eval_one game-state brewstead-game-state-estate-max-fields
+          eval_one catalog brewstead-catalog-crop-ingredient-name
+          eval_one progression brewstead-progression-merchant-coin-bonus
+          for f in /tmp/v22r-results/*-evaluation.json /tmp/v22r-results/*-summary.json; do
+            echo "===V22R_RESULT:$(basename "$f")==="
+            cat "$f"
+            echo "===END_V22R_RESULT:$(basename "$f")==="
+          done
+      - uses: actions/upload-artifact@v4
+        with:
+          name: v22r-r1-retained-evaluation
+          path: /tmp/v22r-results
+          if-no-files-found: error
