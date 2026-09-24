@@ -1,0 +1,35 @@
+{
+  "schema": "mira-genesis-rsi-v22-transfer-proposal-v1",
+  "task_id": "brewstead-progression-merchant-coin-bonus",
+  "campaign_slot_id": "v22-brewstead-progression-merchant-coin-bonus-r2-g1-s2",
+  "parent_node_id": "v22r-brewstead-progression-merchant-coin-bonus-root",
+  "parent_tree_digest": "651e4f46d14b2567e056aeea0946fcfda488a83587f146ed6e2c26d529e5f0",
+  "host_commit": "720b27c8bc80de16c04953e13d5f9e8425beea8c",
+  "task_manifest_sha256": "865026114ebe75ad9565db30dd0e26da6dfa58a6e63eac154242280cbef853b7",
+  "proposer_protocol_sha256": "f28109600e1090254e2b70a666cd519724014c199ecce281970cc84dba5e23ca",
+  "proposal_patch_sha256": "319babe94527ec47b1e555e91916bc6887d55c783406da9bf98abf417e74d52e",
+  "intent": "Apply the MARCHAND specialization's 10% bonus to NPC-order coin rewards without changing rewards for other specializations.",
+  "rationale": "The supplied ProgressionService.npcCoinReward method returns the base reward in both branches, so MARCHAND receives no specialization bonus. Changing only the MARCHAND branch to add 10% fixes the causal defect while leaving the non-MARCHAND branch unchanged and follows the supplied codebase's integer percentage-bonus convention.",
+  "files_changed": [
+    "src/main/java/be/mjodheim/brewstead/service/ProgressionService.java"
+  ],
+  "public_checks": [
+    "Confirmed NpcOrderService.completeOrder applies ProgressionService.npcCoinReward to the NPC coin reward before PlayerService.reward.",
+    "Confirmed the parent ProgressionService.java SHA-256 matches task-manifest parent_source_sha256.",
+    "Inspected supplied public tests: NpcOrderServiceTest verifies delegation to npcCoinReward and ProgressionServiceTest covers existing specialization behavior.",
+    "VERIFY_OUTPUT.py proposal.patch transcript.json prints GENESIS_RSI_V22_TRANSFER_OUTPUT=PASS."
+  ],
+  "uncertainties": [
+    "No supplied public test directly asserts the MARCHAND 10% arithmetic or a non-multiple-of-10 rounding case.",
+    "The public JUnit guard was not executed because the supplied bundle has no local Maven distribution and its wrapper would need an external download, which is outside the bundle-only boundary."
+  ],
+  "information_boundary": {
+    "used_only_supplied_bundle": true,
+    "used_web_or_github": false,
+    "used_saved_memory_or_previous_chats": false,
+    "used_reserved_evaluator_source_or_result": false,
+    "used_other_v22_attempt_or_slot_output": false,
+    "used_g1_g2_selection_information": false,
+    "used_human_candidate_specific_guidance": false
+  }
+}
