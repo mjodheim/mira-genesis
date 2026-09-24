@@ -1,9 +1,0 @@
-V24 L5 prospective freeze trigger.
-
-This file exists only to trigger .github/workflows/v24-l5-freeze-build.yml
-on the exact apparatus commit. The workflow runs V24 structural regressions,
-validates the complete public semantic bridge, verifies every reused V23 frozen
-file, and emits V24_FREEZE.json as an artifact.
-
-It does not execute G2-meta, G1-meta, G2-ablation, no-meta, L4 retention, or
-any fresh holdout task.
