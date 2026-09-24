@@ -61,14 +61,15 @@ def test_l5_equal_external_meta_budgets_are_fixed():
     assert search.META_MUTATION_DEPTH == 2
 
 
-def test_l5_ablation_is_not_g1_or_g2_and_removes_early_stop_only_plus_stall_reversion():
+def test_l5_ablation_is_exact_g2_except_for_the_l4_validated_early_stop():
     g2 = family.root_source()
     ablated = search.g2_ablation_source()
     assert ablated != g2
     assert "if best >= 780:" in g2
     assert "if best >= 780:" not in ablated
-    assert "return (10, 6, 3, 5, 5, 4, 8, 1, 8, 1)" in ablated
-    assert "return (10, 6, 3, 5, 5, 4, 8, 1, 8, 3)" in g2
+    assert "return (10, 6, 3, 5, 5, 4, 8, 1, 8, 3)" in ablated
+    expected = g2.replace("    if best >= 780:\\n        return []\\n\\n", "")
+    assert ablated == expected
 
 
 def test_l5_holdout_generator_has_four_two_locus_tasks_and_no_reserved_evaluator_dependency():
