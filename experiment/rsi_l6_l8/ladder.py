@@ -9,9 +9,23 @@ level has been adjudicated.
 from __future__ import annotations
 
 import argparse
+import importlib.util
 import json
 from pathlib import Path
 from typing import Any
+
+HERE=Path(__file__).resolve().parent
+
+def _load_selector():
+    path=HERE/"bottleneck_selector.py"
+    spec=importlib.util.spec_from_file_location("rsi_l8_bottleneck_selector_runtime",path)
+    if spec is None or spec.loader is None:
+        raise RuntimeError("cannot load bottleneck selector")
+    module=importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+SELECTOR=_load_selector()
 
 SCHEMA="mira-genesis-rsi-l6-l8-evidence-v1"
 
@@ -122,11 +136,25 @@ def assess_l7(evidence:dict[str,Any],config:dict[str,Any],l6:dict[str,Any]|None=
         "domains":rows,
     }
 
+def _is_sha256(value:Any)->bool:
+    return isinstance(value,str) and len(value)==64 and all(ch in "0123456789abcdef" for ch in value)
+
 def assess_l8(evidence:dict[str,Any],config:dict[str,Any],l7:dict[str,Any]|None=None)->dict[str,Any]:
     l7=l7 or assess_l7(evidence,config)
     b=dict(evidence.get("bottleneck_selection",{}))
     episodes=list(b.get("episodes",[]))
     problems=[]
+
+    selector_program=b.get("selector_program")
+    selector_hash=b.get("selector_sha256")
+    try:
+        selector_meta=SELECTOR.validate_program(selector_program)
+    except Exception as exc:
+        selector_meta=None
+        problems.append(f"invalid selector program: {exc}")
+    if selector_meta is not None and selector_hash != selector_meta["sha256"]:
+        problems.append("selector_sha256 does not match canonical selector program")
+
     if b.get("selector_frozen_before_holdout") is not True:
         problems.append("selector_frozen_before_holdout must be true")
     if b.get("selection_rule_not_human_overridden") is not True:
@@ -140,19 +168,50 @@ def assess_l8(evidence:dict[str,Any],config:dict[str,Any],l7:dict[str,Any]|None=
     episode_rows=[]
     for idx,ep in enumerate(episodes):
         eproblems=[]
-        available=list(ep.get("available_components",[]))
+        snapshot=ep.get("snapshot")
+        snapshot_hash=ep.get("snapshot_sha256")
+        if selector_meta is not None:
+            try:
+                choice=SELECTOR.choose(selector_program,snapshot)
+            except Exception as exc:
+                choice=None
+                eproblems.append(f"selector could not evaluate snapshot: {exc}")
+        else:
+            choice=None
+        if choice is not None and snapshot_hash != choice["snapshot_sha256"]:
+            eproblems.append("snapshot_sha256 does not match canonical snapshot")
         chosen=ep.get("selected_component")
+        if choice is not None and chosen != choice["selected_component"]:
+            eproblems.append("selected_component does not match frozen selector output")
+
+        available=[]
+        if isinstance(snapshot,dict) and isinstance(snapshot.get("components"),list):
+            available=[row.get("id") for row in snapshot["components"] if isinstance(row,dict)]
+
         outcomes=dict(ep.get("matched_intervention_utilities",{}))
+        budgets=dict(ep.get("component_budgets",{}))
+        commitments=dict(ep.get("intervention_evidence_sha256",{}))
+
         if ep.get("snapshot_frozen_before_selection") is not True:
             eproblems.append("snapshot_frozen_before_selection must be true")
         if ep.get("selection_frozen_before_intervention") is not True:
             eproblems.append("selection_frozen_before_intervention must be true")
-        if ep.get("equal_budget_per_component") is not True:
-            eproblems.append("equal_budget_per_component must be true")
         if chosen not in available:
             eproblems.append("selected_component must be available")
         if set(outcomes) != set(available):
             eproblems.append("matched intervention outcomes must exist for every available component")
+        if set(budgets) != set(available):
+            eproblems.append("numeric component budget must exist for every available component")
+        if set(commitments) != set(available):
+            eproblems.append("intervention evidence commitment must exist for every available component")
+        if budgets:
+            if any(type(v) is not int or v <= 0 for v in budgets.values()):
+                eproblems.append("all component budgets must be positive integers")
+            if len(set(budgets.values())) != 1:
+                eproblems.append("component budgets are not equal")
+        if commitments and any(not _is_sha256(v) for v in commitments.values()):
+            eproblems.append("intervention evidence commitments must be lowercase SHA-256")
+
         vectors={}
         for component,value in outcomes.items():
             try:
@@ -163,6 +222,7 @@ def assess_l8(evidence:dict[str,Any],config:dict[str,Any],l7:dict[str,Any]|None=
             widths={len(v) for v in vectors.values()}
             if len(widths)!=1:
                 eproblems.append("utility widths must match within an episode")
+
         if not eproblems:
             selected.append(chosen)
             chosen_v=vectors[chosen]
@@ -180,13 +240,25 @@ def assess_l8(evidence:dict[str,Any],config:dict[str,Any],l7:dict[str,Any]|None=
                         fixed_totals[component]=[
                             a+b for a,b in zip(fixed_totals[component],v,strict=True)
                         ]
-        episode_rows.append({"episode":idx+1,"selected_component":chosen,"ok":not eproblems,"problems":eproblems})
+
+        episode_rows.append({
+            "episode":idx+1,
+            "selected_component":chosen,
+            "selector_selected_component":choice["selected_component"] if choice is not None else None,
+            "selector_tie_count":choice["tie_count"] if choice is not None else None,
+            "ok":not eproblems,
+            "problems":eproblems,
+        })
 
     min_episodes=int(config["l8_min_bottleneck_episodes"])
     min_targets=int(config["l8_min_distinct_selected_components"])
-    common_components=set(episodes[0].get("available_components",[])) if episodes else set()
+    common_components=set()
+    if episodes and isinstance(episodes[0].get("snapshot"),dict):
+        common_components={row.get("id") for row in episodes[0]["snapshot"].get("components",[]) if isinstance(row,dict)}
     for ep in episodes[1:]:
-        common_components &= set(ep.get("available_components",[]))
+        snapshot=ep.get("snapshot",{})
+        ids={row.get("id") for row in snapshot.get("components",[]) if isinstance(row,dict)}
+        common_components &= ids
     comparable_fixed={k:v for k,v in fixed_totals.items() if k in common_components}
     best_fixed=max((tuple(v) for v in comparable_fixed.values()),default=None)
     adaptive_tuple=tuple(adaptive_total) if adaptive_total is not None else None
@@ -204,6 +276,7 @@ def assess_l8(evidence:dict[str,Any],config:dict[str,Any],l7:dict[str,Any]|None=
         "level":"L8",
         "positive":positive,
         "requires_l7_positive":l7["positive"],
+        "selector_sha256":selector_meta["sha256"] if selector_meta is not None else None,
         "minimum_episodes":min_episodes,
         "observed_episodes":len(episodes),
         "minimum_distinct_selected_components":min_targets,
