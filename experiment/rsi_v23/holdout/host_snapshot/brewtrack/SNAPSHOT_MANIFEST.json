@@ -1,0 +1,48 @@
+{
+  "schema": "mira-genesis-rsi-v23-brewtrack-snapshot-v1",
+  "source_repository": "mjodheim/BrewTrack",
+  "source_commit": "1727fc0158c6dbd741bfb0b6d85e8fe70f1a40f3",
+  "purpose": "credential-independent exact snapshot of L5-relevant BrewTrack domain sources and public tests",
+  "files": [
+    {
+      "source_path": "Domain/BrewTrack.Domain.csproj",
+      "snapshot_path": "experiment/rsi_v23/holdout/host_snapshot/brewtrack/Domain/BrewTrack.Domain.csproj",
+      "source_git_blob_sha1": "b760144708e78e674952c02b6553b53e44be0e5b"
+    },
+    {
+      "source_path": "Domain/BrewMath.cs",
+      "snapshot_path": "experiment/rsi_v23/holdout/host_snapshot/brewtrack/Domain/BrewMath.cs",
+      "source_git_blob_sha1": "18974e87d4677bc91660162cb56f1219b467919d"
+    },
+    {
+      "source_path": "Domain/RecipeMath.cs",
+      "snapshot_path": "experiment/rsi_v23/holdout/host_snapshot/brewtrack/Domain/RecipeMath.cs",
+      "source_git_blob_sha1": "86210bb0f85c66760eeae4b2533d43df6262ade3"
+    },
+    {
+      "source_path": "Domain/Enums/IngredientType.cs",
+      "snapshot_path": "experiment/rsi_v23/holdout/host_snapshot/brewtrack/Domain/Enums/IngredientType.cs",
+      "source_git_blob_sha1": "565e7669280dcf8c8a4fc252de62ac8d0cda8355"
+    },
+    {
+      "source_path": "Domain/Enums/Unit.cs",
+      "snapshot_path": "experiment/rsi_v23/holdout/host_snapshot/brewtrack/Domain/Enums/Unit.cs",
+      "source_git_blob_sha1": "7cb5ad93aedc9be055d77990f348aca4446ca141"
+    },
+    {
+      "source_path": "Tests/BrewMathTests.cs",
+      "snapshot_path": "experiment/rsi_v23/holdout/host_snapshot/brewtrack/Tests/BrewMathTests.cs",
+      "source_git_blob_sha1": "9acae992872cfbaf5c75c9f26c2aa46113b667b9"
+    },
+    {
+      "source_path": "Tests/RecipeMathTests.cs",
+      "snapshot_path": "experiment/rsi_v23/holdout/host_snapshot/brewtrack/Tests/RecipeMathTests.cs",
+      "source_git_blob_sha1": "d32a952b3666a7789c6ec27ccc11722d795a62a1"
+    }
+  ],
+  "laboratory_wrapper": {
+    "path": "experiment/rsi_v23/holdout/host_snapshot/brewtrack/Tests/L5Snapshot.Tests.csproj",
+    "source_origin": "laboratory-authored",
+    "note": "build wrapper only; it changes no BrewTrack source or test bytes"
+  }
+}
