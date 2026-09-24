@@ -1,7 +1,7 @@
 diff --git a/Domain/BrewMath.cs b/Domain/BrewMath.cs
 --- a/Domain/BrewMath.cs
 +++ b/Domain/BrewMath.cs
-@@ -12,12 +12,12 @@ namespace Domain
+@@ -12,11 +12,11 @@ namespace Domain
              double g = (double)sg;
              double plato = -616.868 + 1111.14 * g - 630.272 * g * g + 135.997 * g * g * g;
 -            return plato < 0 ? 0m : Math.Round((decimal)plato, 2);
