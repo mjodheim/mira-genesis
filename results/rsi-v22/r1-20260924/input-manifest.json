@@ -1,0 +1,25 @@
+{
+  "schema": "mira-genesis-rsi-v22-r1-input-archive-v1",
+  "freeze_commit": "4320ff8a0fc02a9a9f12ddacc527551e9537a044",
+  "host_commit": "720b27c8bc80de16c04953e13d5f9e8425beea8c",
+  "inputs": [
+    {
+      "task_id": "brewstead-game-state-estate-max-fields",
+      "bundle_sha256": "8a4c473d31d088240a81faca9b13e52f5d3fac308173c9211816ae0bff9d0f73",
+      "proposal_sha256": "763fa7ca40653b78faab4f98c5b9d6d02b57936685269885e6cf5c6f0aa1170b",
+      "transcript_sha256": "5fa3affa1e0d8316fa88953e8d88d3752c2cd25263bbfefd32c14fc6e795b152"
+    },
+    {
+      "task_id": "brewstead-progression-merchant-coin-bonus",
+      "bundle_sha256": "75255ab5c377a53797b50f37d2bf0ed6d1562e655ee089f8e61e445ba2610295",
+      "proposal_sha256": "21e9bcea2486d3f524782fd79f85b579cd3bde188d0b56f9212224b9b7ba3685",
+      "transcript_sha256": "5093187dc163767cd288aed2367b00086a2cd9a62692bbf604db995f71a925ee"
+    },
+    {
+      "task_id": "brewstead-catalog-crop-ingredient-name",
+      "bundle_sha256": "ef1f4da85734af6df8108fdaece0011a1b64f4eaeac391a49a3b87fd91edc533",
+      "proposal_sha256": "705fb9c56833e8bf94991f86e815312e45c42789c055ef06fc786c713671bd6f",
+      "transcript_sha256": "e15e35ffe83ac03e8ba56a77e399cdd8ff508c985cb185ef6eda9a2fc5082323"
+    }
+  ]
+}
