@@ -22,8 +22,6 @@ jobs:
         with:
           distribution: temurin
           java-version: '26'
-          cache: maven
-          cache-dependency-path: host/pom.xml
 
       - name: Verify archived proposer bytes
         shell: bash
