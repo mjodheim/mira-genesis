@@ -1,0 +1,68 @@
+name: Build V22R G1 R2 capsules
+on:
+  push:
+    branches:
+      - results/rsi-v22r-r1-20260924
+permissions:
+  contents: read
+  actions: read
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/checkout@v4
+        with:
+          repository: mjodheim/mjodheim-brewstead
+          ref: 720b27c8bc80de16c04953e13d5f9e8425beea8c
+          path: host
+      - name: Download exact represented R1 states
+        uses: actions/download-artifact@v4
+        with:
+          name: v22r-r1-retained-evaluation
+          path: /tmp/v22r-r1
+          run-id: 35951143503
+          github-token: ${{ github.token }}
+      - name: Rebuild frozen V22R roots
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 experiment/rsi_v22r/build_root_bundles.py \
+            --host "$GITHUB_WORKSPACE/host" \
+            --apparatus-commit 6babe495ef00f2a5c666a5268bace3c79c5a226a \
+            --out /tmp/v22r-roots > /tmp/v22r-root-build.json
+          cat <<'EOF' | sha256sum -c -
+          c7146fac0c2544f8e88a7b0a868bce66556aa0027c6f0465fd966b5becc4a462  /tmp/v22r-roots/genesis-v22r-brewstead-game-state-estate-max-fields-r1-shared-s1.zip
+          28e9881b4596c4efd283d17659aa84b9cc626f75f3c5382b9600bd9667ac212f  /tmp/v22r-roots/genesis-v22r-brewstead-progression-merchant-coin-bonus-r1-shared-s1.zip
+          7fc37c9ab05e96dd2ea96610818b654abd12f640dfc12ea5eecaa33b5123a40a  /tmp/v22r-roots/genesis-v22r-brewstead-catalog-crop-ingredient-name-r1-shared-s1.zip
+          EOF
+      - name: Build G1 R2 capsules with frozen descendant builder
+        shell: bash
+        run: |
+          set -euo pipefail
+          A=experiment/rsi_v22
+          R=results/rsi-v22r/r1-20260924
+          mkdir -p /tmp/v22r-r2
+          build_one() {
+            short="$1"; task="$2"
+            python3 "$A/build_next_bundles.py" \
+              --state "/tmp/v22r-r1/$short-state.json" \
+              --arm g1 \
+              --root-bundle "/tmp/v22r-roots/genesis-v22r-$task-r1-shared-s1.zip" \
+              --results-dir "$R" \
+              --freeze-commit 6babe495ef00f2a5c666a5268bace3c79c5a226a \
+              --out /tmp/v22r-r2 | tee "/tmp/$short-r2-build.json"
+          }
+          build_one game-state brewstead-game-state-estate-max-fields
+          build_one catalog brewstead-catalog-crop-ingredient-name
+          build_one progression brewstead-progression-merchant-coin-bonus
+          echo "===V22R_R2_SHA256==="
+          sha256sum /tmp/v22r-r2/*.zip
+          echo "===END_V22R_R2_SHA256==="
+      - uses: actions/upload-artifact@v4
+        with:
+          name: v22r-g1-r2-capsules
+          path: /tmp/v22r-r2
+          if-no-files-found: error
