@@ -1,0 +1,33 @@
+{
+  "schema": "mira-genesis-rsi-v22-transfer-proposal-v1",
+  "task_id": "brewstead-game-state-estate-max-fields",
+  "campaign_slot_id": "v22-brewstead-game-state-estate-max-fields-r2-g1-s2",
+  "parent_node_id": "v22r-brewstead-game-state-estate-max-fields-root",
+  "parent_tree_digest": "59725b22907797fb0c5c2b58f0b74787b50af35cbc1f7cec318dbc4b1b8b204a",
+  "host_commit": "720b27c8bc80de16c04953e13d5f9e8425beea8c",
+  "task_manifest_sha256": "3805c94e9733117128fee70a1c0c9d42fc03abb4290f001c26809bd97fbce241",
+  "proposer_protocol_sha256": "f28109600e1090254e2b70a666cd519724014c199ecce281970cc84dba5e23ca",
+  "proposal_patch_sha256": "b5178b10ba550a0e8240724c9c2daf5b765691d6ae292733ef644478aa33f697",
+  "intent": "Report the field capacity in EstateResponse.maxFields from the field schedule constant while leaving hive metadata and pricing behavior unchanged.",
+  "rationale": "EstateResponse orders field count, maxFields, and next field price before the corresponding hive values. GameStateService currently supplies EstatePrices.MAX_HIVES for maxFields even though EstatePrices defines the field schedule capacity separately as MAX_FIELDS and FarmService enforces that field limit. Replacing only that mismatched constant is the smallest causal repair.",
+  "files_changed": [
+    "src/main/java/be/mjodheim/brewstead/service/GameStateService.java"
+  ],
+  "public_checks": [
+    "Bundle-only static check confirmed EstateResponse.maxFields is paired with EstatePrices.MAX_FIELDS and that MAX_FIELDS is the field schedule capacity.",
+    "Confirmed the supplied parent GameStateService.java SHA-256 matches task-manifest parent_source_sha256.",
+    "Verified proposal.patch applies cleanly to the exact supplied parent with git apply --check."
+  ],
+  "uncertainties": [
+    "Runtime public-test execution remains unconfirmed because the bundled Maven wrapper requires an external Maven distribution that is not included in the bundle."
+  ],
+  "information_boundary": {
+    "used_only_supplied_bundle": true,
+    "used_web_or_github": false,
+    "used_saved_memory_or_previous_chats": false,
+    "used_reserved_evaluator_source_or_result": false,
+    "used_other_v22_attempt_or_slot_output": false,
+    "used_g1_g2_selection_information": false,
+    "used_human_candidate_specific_guidance": false
+  }
+}
