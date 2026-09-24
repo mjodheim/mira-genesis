@@ -19,6 +19,7 @@ preserved. No fresh holdout outcome is read or used here.
 from __future__ import annotations
 
 import importlib.util
+from functools import lru_cache
 from pathlib import Path
 from typing import Any, Mapping
 
@@ -45,6 +46,12 @@ family = _load("v24_bridge_family", V23 / "l5_policy_family.py")
 dev = _load("v24_bridge_dev", V23 / "l5_meta_development.py")
 
 
+@lru_cache(maxsize=1)
+def _public_universe() -> tuple[dict[str, Any], ...]:
+    """Evaluate the complete public universe once per process."""
+    return tuple(dev.evaluate_universe())
+
+
 def _rank_scale(values: tuple[tuple[int, ...], ...], lo: int, hi: int) -> dict[tuple[int, ...], int]:
     """Map sorted unique lexicographic utilities monotonically into [lo, hi]."""
     if not values:
@@ -59,9 +66,7 @@ def _rank_scale(values: tuple[tuple[int, ...], ...], lo: int, hi: int) -> dict[t
     }
 
 
-def utility_quality_map() -> dict[tuple[int, ...], int]:
-    """Return the frozen public utility -> semantic quality mapping."""
-    rows = dev.evaluate_universe()
+def _utility_quality_map(rows: tuple[dict[str, Any], ...]) -> dict[tuple[int, ...], int]:
     root_digest = family.params_digest(family.ROOT_PARAMS)
     root_rows = [row for row in rows if row["params_digest"] == root_digest]
     if len(root_rows) != 1:
@@ -89,26 +94,35 @@ def utility_quality_map() -> dict[tuple[int, ...], int]:
     return mapping
 
 
+def utility_quality_map() -> dict[tuple[int, ...], int]:
+    """Return the public utility -> semantic quality mapping."""
+    return _utility_quality_map(_public_universe())
+
+
 def root_utility() -> tuple[int, ...]:
-    rows = dev.evaluate_universe()
+    rows = _public_universe()
     root_digest = family.params_digest(family.ROOT_PARAMS)
     row = next(row for row in rows if row["params_digest"] == root_digest)
     return tuple(row["development_utility"])
 
 
-def bridge_candidate(candidate: Mapping[str, Any]) -> dict[str, Any]:
+def bridge_candidate(
+    candidate: Mapping[str, Any],
+    mapping: Mapping[tuple[int, ...], int] | None = None,
+) -> dict[str, Any]:
     """Copy one public candidate and replace only its controller-facing score."""
     utility = tuple(candidate["development_utility"])
-    mapping = utility_quality_map()
-    if utility not in mapping:
+    quality_map = utility_quality_map() if mapping is None else mapping
+    if utility not in quality_map:
         raise ValueError("candidate utility is outside the frozen public development universe")
     out = dict(candidate)
     out["v23_tier_quality_milli"] = int(candidate["quality_milli"])
-    out["quality_milli"] = int(mapping[utility])
+    out["quality_milli"] = int(quality_map[utility])
     return out
 
 
 def bridged_universe() -> tuple[dict[str, Any], ...]:
-    rows = tuple(bridge_candidate(row) for row in dev.evaluate_universe())
-    rows = tuple(sorted(rows, key=lambda row: row["params_digest"]))
-    return rows
+    rows = _public_universe()
+    mapping = _utility_quality_map(rows)
+    bridged = tuple(bridge_candidate(row, mapping) for row in rows)
+    return tuple(sorted(bridged, key=lambda row: row["params_digest"]))
