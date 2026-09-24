@@ -42,6 +42,7 @@ def test_v24_freeze_builder_binds_final_preregistration_and_v23_results():
     assert "experiment/rsi_v24/semantic_quality_bridge.py" in rels
     assert "experiment/rsi_v24/build_l5_freeze.py" in rels
     assert "experiment/rsi_v23/V23_FREEZE.json" in rels
+    assert ".github/workflows/v24-l5-freeze-build.yml" in rels
     assert (
         "results/rsi-v23/l5-20260924/"
         "V23_L5_PRE_HOLDOUT_ADJUDICATION.json"
