@@ -5,11 +5,26 @@ These tests deliberately do not execute the four scientific meta-search arms.
 from __future__ import annotations
 
 import hashlib
+import importlib.util
+from pathlib import Path
 
-from experiment.rsi_v23 import l5_meta_development as dev
-from experiment.rsi_v23 import l5_meta_search as search
-from experiment.rsi_v23 import l5_policy_family as family
-from experiment.rsi_v23.holdout import candidate_generator as holdout_gen
+ROOT = Path(__file__).resolve().parents[1]
+V23 = ROOT / "experiment" / "rsi_v23"
+
+
+def _load(name: str, path: Path):
+    spec = importlib.util.spec_from_file_location(name, path)
+    assert spec is not None and spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+family = _load("test_v23_l5_family", V23 / "l5_policy_family.py")
+dev = _load("test_v23_l5_dev", V23 / "l5_meta_development.py")
+search = _load("test_v23_l5_search", V23 / "l5_meta_search.py")
+holdout_gen = _load("test_v23_l5_holdout_gen", V23 / "holdout" / "candidate_generator.py")
+run_task = _load("test_v23_l5_run_task", V23 / "holdout" / "run_task.py")
 
 
 def test_l5_root_is_exact_frozen_g2():
@@ -63,15 +78,13 @@ def test_l5_holdout_generator_has_four_two_locus_tasks_and_no_reserved_evaluator
         "brewstead-effect-rounding",
         "brewstead-brew-lifecycle-thresholds",
     }
-    for task_id, spec in holdout_gen.TASKS.items():
+    for spec in holdout_gen.TASKS.values():
         assert len(spec["loci"]) == 2
         assert spec["path"]
-    source = holdout_gen.__file__
     assert "evaluator" not in holdout_gen.manifest()["schema"].lower()
 
 
 def test_l5_holdout_external_caps_match_preregistration():
-    from experiment.rsi_v23.holdout import run_task
     assert run_task.MAX_REQUESTS == 9
     assert run_task.MAX_ROUNDS == 8
     assert run_task.MAX_PARALLELISM == 2
