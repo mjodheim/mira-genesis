@@ -1,7 +1,9 @@
 name: Build prospective V23 L5 freeze artifact
 
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - lab/rsi-v23-l5-freeze-builder-20260924
 
 permissions:
   contents: read
