@@ -9,8 +9,8 @@ the discovered successor.
 V24 keeps the G2 program byte-identical. Instead, this module maps the public
 meta-development utility into three prospectively defined semantic regions:
 
-* utility worse than root G2  -> 0..710   (promising / keep searching)
-* utility equal to root G2    -> 750      (neutral grey zone)
+* utility worse than root G2  -> 0..710    (promising / keep searching)
+* utility equal to root G2    -> 750       (neutral grey zone)
 * utility strictly above G2   -> 780..1000 (strong successor)
 
 Within the worse and better regions, strict development-utility ordering is
@@ -21,7 +21,7 @@ from __future__ import annotations
 import importlib.util
 from functools import lru_cache
 from pathlib import Path
-from typing import Any, Mapping
+from typing import Any, Iterable, Mapping
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
@@ -31,6 +31,10 @@ PROMISING_MAX = 710
 NEUTRAL_QUALITY = 750
 STRONG_THRESHOLD = 780
 MAX_QUALITY = 1000
+
+# Public V23 root-G2 development utility, retained in the negative V23 result.
+# This is not a holdout observation.
+ROOT_DEVELOPMENT_UTILITY = (7, 12, 10970, -30, -30)
 
 
 def _load(name: str, path: Path):
@@ -48,11 +52,15 @@ dev = _load("v24_bridge_dev", V23 / "l5_meta_development.py")
 
 @lru_cache(maxsize=1)
 def _public_universe() -> tuple[dict[str, Any], ...]:
-    """Evaluate the complete public universe once per process."""
+    """Evaluate the complete public universe once per scientific process."""
     return tuple(dev.evaluate_universe())
 
 
-def _rank_scale(values: tuple[tuple[int, ...], ...], lo: int, hi: int) -> dict[tuple[int, ...], int]:
+def _rank_scale(
+    values: tuple[tuple[int, ...], ...],
+    lo: int,
+    hi: int,
+) -> dict[tuple[int, ...], int]:
     """Map sorted unique lexicographic utilities monotonically into [lo, hi]."""
     if not values:
         return {}
@@ -66,14 +74,15 @@ def _rank_scale(values: tuple[tuple[int, ...], ...], lo: int, hi: int) -> dict[t
     }
 
 
-def _utility_quality_map(rows: tuple[dict[str, Any], ...]) -> dict[tuple[int, ...], int]:
-    root_digest = family.params_digest(family.ROOT_PARAMS)
-    root_rows = [row for row in rows if row["params_digest"] == root_digest]
-    if len(root_rows) != 1:
-        raise RuntimeError("exactly one G2 root candidate is required")
-    root_utility = tuple(root_rows[0]["development_utility"])
+def semantic_quality_map(
+    utilities: Iterable[tuple[int, ...]],
+    root_utility: tuple[int, ...] = ROOT_DEVELOPMENT_UTILITY,
+) -> dict[tuple[int, ...], int]:
+    """Build the pure semantic utility -> controller-quality map."""
+    unique = tuple(sorted(set(tuple(value) for value in utilities)))
+    if root_utility not in unique:
+        raise ValueError("root utility must be present in semantic quality universe")
 
-    unique = tuple(sorted({tuple(row["development_utility"]) for row in rows}))
     worse = tuple(value for value in unique if value < root_utility)
     better = tuple(value for value in unique if value > root_utility)
 
@@ -83,7 +92,7 @@ def _utility_quality_map(rows: tuple[dict[str, Any], ...]) -> dict[tuple[int, ..
     mapping.update(_rank_scale(better, STRONG_THRESHOLD, MAX_QUALITY))
 
     if set(mapping) != set(unique):
-        raise RuntimeError("semantic bridge failed to cover the complete public utility set")
+        raise RuntimeError("semantic bridge failed to cover the complete utility set")
     for utility, quality in mapping.items():
         if utility < root_utility and not 0 <= quality <= PROMISING_MAX:
             raise RuntimeError("worse-than-root utility escaped the promising region")
@@ -94,16 +103,35 @@ def _utility_quality_map(rows: tuple[dict[str, Any], ...]) -> dict[tuple[int, ..
     return mapping
 
 
+def _verify_root(rows: tuple[dict[str, Any], ...]) -> None:
+    root_digest = family.params_digest(family.ROOT_PARAMS)
+    root_rows = [row for row in rows if row["params_digest"] == root_digest]
+    if len(root_rows) != 1:
+        raise RuntimeError("exactly one G2 root candidate is required")
+    observed = tuple(root_rows[0]["development_utility"])
+    if observed != ROOT_DEVELOPMENT_UTILITY:
+        raise RuntimeError(
+            f"public root G2 utility changed: {observed} != {ROOT_DEVELOPMENT_UTILITY}"
+        )
+
+
+def _utility_quality_map(
+    rows: tuple[dict[str, Any], ...],
+) -> dict[tuple[int, ...], int]:
+    _verify_root(rows)
+    return semantic_quality_map(
+        tuple(tuple(row["development_utility"]) for row in rows)
+    )
+
+
 def utility_quality_map() -> dict[tuple[int, ...], int]:
-    """Return the public utility -> semantic quality mapping."""
+    """Return the complete public utility -> semantic quality mapping."""
     return _utility_quality_map(_public_universe())
 
 
 def root_utility() -> tuple[int, ...]:
-    rows = _public_universe()
-    root_digest = family.params_digest(family.ROOT_PARAMS)
-    row = next(row for row in rows if row["params_digest"] == root_digest)
-    return tuple(row["development_utility"])
+    """Return the prospectively bound public root-G2 utility."""
+    return ROOT_DEVELOPMENT_UTILITY
 
 
 def bridge_candidate(
@@ -122,6 +150,7 @@ def bridge_candidate(
 
 
 def bridged_universe() -> tuple[dict[str, Any], ...]:
+    """Build the complete V24 controller-facing universe for scientific use."""
     rows = _public_universe()
     mapping = _utility_quality_map(rows)
     bridged = tuple(bridge_candidate(row, mapping) for row in rows)
