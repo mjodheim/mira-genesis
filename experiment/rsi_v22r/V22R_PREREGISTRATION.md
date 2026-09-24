@@ -38,33 +38,43 @@ evaluator was run and no represented campaign observation exists for them.
 V22R proposer calls must be fresh isolated chats. Previous V22 proposal/transcript bytes, conversation
 context and task-specific hints are forbidden information.
 
-To make accidental transcript reuse mechanically impossible, V22R R1 bundles retain the same exact
-parent archive but rewrite the task manifest's `campaign_slot_id` to a `v22r-` namespace and bind
-a new V22R apparatus commit. The unchanged V22 output verifier therefore rejects an old transcript
-because both the slot identity and task-manifest SHA differ.
+To make accidental transcript reuse mechanically impossible, V22R R1 bundles use a `v22r-`
+campaign-slot namespace, a distinct root node id and a new task-manifest digest. The unchanged V22
+output verifier therefore rejects an old transcript.
 
 A newly generated proposal patch may coincidentally be byte-identical to an earlier V22 patch; that
-is not itself a protocol violation. The returned transcript must be newly bound to the V22R task
-manifest and attest the unchanged information boundary.
+is not itself a protocol violation. The returned transcript must bind the V22R manifest and attest the
+unchanged information boundary.
 
 ## Root-parent provenance
 
-V22R does not reconstruct a new host parent. It consumes the three exact active V22 R1 bundle bytes
-already supplied before the failed evaluation and rewraps only proposer-visible metadata. The
-`parent.tar.gz`, reserved-evaluator commitment, allowed source path, public symptom and public guard
-remain unchanged byte-for-byte.
+V22R reconstructs each root independently from only:
 
-The source V22 R1 bundle SHA-256 values are frozen in the V22R freeze record.
+1. the frozen Brewstead host commit;
+2. the already frozen V22 defect patch for that task;
+3. the already frozen public symptom / allowed source / reserved evaluator commitment.
+
+It does **not** reuse the old V22 ZIP or `parent.tar.gz` bytes.
+
+The V22R root builder normalizes archive metadata: uid/gid, user/group names, mtimes and file modes
+are deterministic. Directories are 0755, regular files are 0644, and only `mvnw` is 0755. ZIP entry
+timestamps and modes are also fixed. Thus capsule identity no longer depends on checkout filesystem
+metadata.
+
+The parent **content** must still reproduce the original frozen tree digest for each task. If it does
+not, V22R preflight fails before any proposer call.
 
 ## Execution boundary
 
 The V22R freeze must bind:
 
-- the exact V22R rebundler bytes;
+- the exact V22R deterministic root-builder bytes;
 - the actual `utility.py` bytes rather than V22's incorrect recorded hash;
 - every inherited critical V22 apparatus hash;
-- the exact three source and V22R output bundle hashes;
-- the exact V22R task-manifest hashes;
-- the V22 pre-evaluator failure record.
+- the exact three V22R output bundle hashes and task-manifest hashes;
+- the reproduced parent tree/source identities;
+- the V22 pre-evaluator failure record;
+- a successful prospective CI that rebuilds every V22R bundle twice byte-identically and proves old
+  V22 transcripts cannot satisfy the new slots.
 
 No V22R proposer output may exist before that freeze commit.
