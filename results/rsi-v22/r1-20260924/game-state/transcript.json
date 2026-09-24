@@ -1,0 +1,34 @@
+{
+  "schema": "mira-genesis-rsi-v22-transfer-proposal-v1",
+  "task_id": "brewstead-game-state-estate-max-fields",
+  "campaign_slot_id": "v22-brewstead-game-state-estate-max-fields-r1-shared-s1",
+  "parent_node_id": "v22-brewstead-game-state-estate-max-fields-root",
+  "parent_tree_digest": "59725b22907797fb0c5c2b58f0b74787b50af35cbc1f7cec318dbc4b1b8b204a",
+  "host_commit": "720b27c8bc80de16c04953e13d5f9e8425beea8c",
+  "task_manifest_sha256": "6b4bdf08fcaf5861dd1843cf02a04a057f692809dd1728f14f3fda3885d7a447",
+  "proposer_protocol_sha256": "f28109600e1090254e2b70a666cd519724014c199ecce281970cc84dba5e23ca",
+  "proposal_patch_sha256": "763fa7ca40653b78faab4f98c5b9d6d02b57936685269885e6cf5c6f0aa1170b",
+  "intent": "Make estate metadata report the field capacity from the field schedule while leaving hive capacity and pricing behavior unchanged.",
+  "rationale": "EstateResponse.maxFields is the second constructor value, but GameStateService supplied EstatePrices.MAX_HIVES there. Replacing only that argument with EstatePrices.MAX_FIELDS directly repairs the reported field capacity and preserves every other estate value.",
+  "files_changed": [
+    "src/main/java/be/mjodheim/brewstead/service/GameStateService.java"
+  ],
+  "public_checks": [
+    "Inspected the supplied EstatePrices and public capacity tests: fields stop at 8 via MAX_FIELDS while hives stop at 6 via MAX_HIVES.",
+    "Ran the frozen public guard command; it could not start because the supplied Maven wrapper attempted to fetch Maven 3.9.16 and network access is unavailable.",
+    "VERIFY_OUTPUT.py proposal.patch transcript.json returned GENESIS_RSI_V22_TRANSFER_OUTPUT=PASS."
+  ],
+  "uncertainties": [
+    "Frozen public tests were not executed because the supplied Maven wrapper requires a network download unavailable in the isolated environment.",
+    "Reserved evaluator behavior is intentionally unknown and was not inspected."
+  ],
+  "information_boundary": {
+    "used_only_supplied_bundle": true,
+    "used_web_or_github": false,
+    "used_saved_memory_or_previous_chats": false,
+    "used_reserved_evaluator_source_or_result": false,
+    "used_other_v22_attempt_or_slot_output": false,
+    "used_g1_g2_selection_information": false,
+    "used_human_candidate_specific_guidance": false
+  }
+}
