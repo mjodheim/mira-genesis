@@ -21,6 +21,7 @@ V23 = ROOT / "experiment" / "rsi_v23"
 FAMILY_PATH = V23 / "l5_policy_family.py"
 SANDBOX_PATH = V23 / "sandbox_policy.py"
 BRIDGE_PATH = HERE / "semantic_quality_bridge.py"
+FREEZE_PATH = HERE / "V24_FREEZE.json"
 
 META_REQUEST_BUDGET = 9
 META_ROUND_BUDGET = 8
@@ -321,6 +322,8 @@ def run_arm(arm: str) -> dict[str, Any]:
 
 
 def run_all() -> dict[str, Any]:
+    if not FREEZE_PATH.is_file():
+        raise RuntimeError("V24 scientific meta-search is forbidden before V24_FREEZE.json exists")
     arms = {arm: run_arm(arm) for arm in ("g2_meta", "g1_meta", "g2_ablation", "no_meta")}
     a = arms["g2_meta"]
     b = arms["g1_meta"]
