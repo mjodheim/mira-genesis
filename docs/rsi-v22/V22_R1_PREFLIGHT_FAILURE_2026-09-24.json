@@ -1,0 +1,43 @@
+{
+  "schema": "mira-genesis-rsi-v22-pre-evaluator-identity-failure-v1",
+  "date": "2026-09-24",
+  "status": "PRE_EVALUATOR_IDENTITY_FAILURE_NO_SCIENTIFIC_VERDICT",
+  "archived_input_branch": "results/rsi-v22-r1-20260924",
+  "archived_input_head_sha": "961bf989ff2b606994f6c96f9b74726aaa98f520",
+  "preflight_workflow_run_id": 35946705189,
+  "reserved_evaluator_invoked": false,
+  "represented_observation_created": false,
+  "campaign_round_recorded": false,
+  "reason": "V22_FREEZE_002.json contains two incorrect byte-level SHA-256 commitments for pre-existing apparatus files.",
+  "mismatches": [
+    {
+      "path": "experiment/rsi_v22/utility.py",
+      "frozen_sha256": "ad2781609013c6d26bf73a0f22af9709f76e52cf33c0b0badebcbb1a4a284102",
+      "actual_sha256": "8ebae4e02b0450af997bc7f3b2ce4fcedfb2121886bb0d80ad9da522244e7d8d"
+    },
+    {
+      "path": "experiment/rsi_v22/build_root_bundles.py",
+      "frozen_sha256": "5a13006976101b91ba8efc20d274868bb99ba9daba7c1f4bdefc9ad34827b310",
+      "actual_sha256": "1aec9f4292afeabcc68c7d049212feee2e5e9908e2567f3ae75fea487d1ac583"
+    }
+  ],
+  "verified_matching_identities": {
+    "proposer_protocol": "f28109600e1090254e2b70a666cd519724014c199ecce281970cc84dba5e23ca",
+    "calibration_manifest": "948e7ad615f859a0005bf48b12e21deca7cad9ed4daf9bcc214352c47e3822a0",
+    "output_verifier": "17b5587a0ba5ffb96a80547b8a618703d022891650cb472fddab2c411a9cd6f2",
+    "campaign_engine": "4447ed003d868e8cd6f0a5d81730f2e7c7ab4527c7be2359d919db7a7f958f58",
+    "proposal_evaluator": "40bf7ef0062abb2b4c332c4330ce58e46239d50a9ee7b098cf579571802d22c9",
+    "descendant_bundle_builder": "a97005766a3988ab0066e908905bfbb32bf385fcdd9fde74c1c2b28e596de9ba",
+    "final_adjudicator": "5975251d49ddc3e32bdf001dcbf8e5c04d07cddb3f0efa73125c3e51de39b07e",
+    "campaign_cli": "d81eda4fca11f2c663db305d17f7c4a6bef7cd6d87a929db8b3beb6637429f73",
+    "policy_g1": "3354f887a93a08d9f00e9c54ccb097003f727ba77c1e1b4e9997adf676d35434",
+    "policy_g2": "69d0d725601cd32adff27379dbb25f5c7be29946f9e9c6ac4858a0634cbd5fdf",
+    "defect_game_state": "a101cb1b5533e41d8c0d395f28c44c382b1a1fc9acd0e64793ec5ad56a8cc358",
+    "defect_progression": "c53eb07feb70153c8ba89e3212b1539be03a12c556f8fa7eab4be66bb0e19d3a",
+    "defect_catalog": "a3db807edf55a1e4525148b358f9c1aebc7b3120f1c68e7e40a2d6a47858604e",
+    "reserved_game_state": "c6ceb2e94313321ea81d7e58734f55aa5bedb0154b5b972715c9c02899896177",
+    "reserved_progression": "0bd2985e793be1a7ad0cdb5f000bcd6c4fcbcee822623d5fe834aec17b170129",
+    "reserved_catalog": "486e823877bb4ecaee01d249353b4d6f104e7ebed0768bcc6c47c42a96e181ff"
+  },
+  "disposition": "Do not score archived V22 proposer outputs. Preserve them as pre-evaluator evidence. Open a prospectively frozen V22R replication with unchanged task/evaluator/policy/success semantics and corrected identity commitments."
+}

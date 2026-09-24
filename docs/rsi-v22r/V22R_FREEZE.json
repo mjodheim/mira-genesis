@@ -1,0 +1,107 @@
+{
+  "schema": "mira-genesis-rsi-v22r-freeze-v1",
+  "status": "FROZEN_BEFORE_ANY_V22R_PROPOSER_OUTPUT",
+  "date": "2026-09-24",
+  "apparatus_commit": "6babe495ef00f2a5c666a5268bace3c79c5a226a",
+  "host": {
+    "repository": "mjodheim/mjodheim-brewstead",
+    "host_commit": "720b27c8bc80de16c04953e13d5f9e8425beea8c"
+  },
+  "predecessor_v22": {
+    "disposition": "PRE_EVALUATOR_IDENTITY_FAILURE_NO_SCIENTIFIC_VERDICT",
+    "failure_record": "docs/rsi-v22/V22_R1_PREFLIGHT_FAILURE_2026-09-24.json",
+    "failure_record_sha256": "2360c59a0f8f49a2f1f0881aaaab11732fda8728c672ae05b2a4520aa19f0061",
+    "preflight_workflow_run_id": 35946705189,
+    "reserved_evaluator_invoked": false,
+    "represented_observation_created": false,
+    "old_v22_proposer_outputs_may_not_be_reused": true
+  },
+  "prospective_preflight": {
+    "root_capsule_workflow_run_id": 35947300243,
+    "root_capsule_conclusion": "success",
+    "freeze_identity_inventory_workflow_run_id": 35947492594,
+    "freeze_identity_inventory_conclusion": "success",
+    "root_capsules_built_twice_byte_identically": true,
+    "old_v22_transcripts_rejected_by_v22r_slots": true,
+    "parent_tree_digests_reproduced": true
+  },
+  "success_rule": {
+    "g2_solved_without_public_regression": "3/3",
+    "g2_strict_process_utility_wins_at_least": "2/3",
+    "g2_global_utility": "strictly greater than G1",
+    "process_utility": "lexicographic(best_quality_milli, -represented_requests, -rounds)",
+    "global_utility": "lexicographic(tasks_solved_without_regression, sum_best_quality_milli, -total_represented_requests, -total_rounds)"
+  },
+  "sha256": {
+    "v22r_preregistration": "7af612cb38da112a5583631a5ca61f9a024cb815b6f4b05d76f95a91cf72a90e",
+    "v22r_root_builder": "7f06fcfc541a78bccaa5b7943febb351529966559c7a7e8075f2856968b81cee",
+    "v22_failure_record_json": "2360c59a0f8f49a2f1f0881aaaab11732fda8728c672ae05b2a4520aa19f0061",
+    "v22_failure_record_md": "59bc0879e7ef934c24515380e62e68216ff608771d6ac8f2c0e88d1d015d45a8",
+    "utility": "8ebae4e02b0450af997bc7f3b2ce4fcedfb2121886bb0d80ad9da522244e7d8d",
+    "proposer_protocol": "f28109600e1090254e2b70a666cd519724014c199ecce281970cc84dba5e23ca",
+    "calibration_manifest": "948e7ad615f859a0005bf48b12e21deca7cad9ed4daf9bcc214352c47e3822a0",
+    "output_verifier": "17b5587a0ba5ffb96a80547b8a618703d022891650cb472fddab2c411a9cd6f2",
+    "campaign_engine": "4447ed003d868e8cd6f0a5d81730f2e7c7ab4527c7be2359d919db7a7f958f58",
+    "proposal_evaluator": "40bf7ef0062abb2b4c332c4330ce58e46239d50a9ee7b098cf579571802d22c9",
+    "descendant_bundle_builder": "a97005766a3988ab0066e908905bfbb32bf385fcdd9fde74c1c2b28e596de9ba",
+    "final_adjudicator": "5975251d49ddc3e32bdf001dcbf8e5c04d07cddb3f0efa73125c3e51de39b07e",
+    "campaign_cli": "d81eda4fca11f2c663db305d17f7c4a6bef7cd6d87a929db8b3beb6637429f73",
+    "policies": {
+      "g1": "3354f887a93a08d9f00e9c54ccb097003f727ba77c1e1b4e9997adf676d35434",
+      "g2": "69d0d725601cd32adff27379dbb25f5c7be29946f9e9c6ac4858a0634cbd5fdf"
+    },
+    "defects": {
+      "game_state": "a101cb1b5533e41d8c0d395f28c44c382b1a1fc9acd0e64793ec5ad56a8cc358",
+      "progression": "c53eb07feb70153c8ba89e3212b1539be03a12c556f8fa7eab4be66bb0e19d3a",
+      "catalog": "a3db807edf55a1e4525148b358f9c1aebc7b3120f1c68e7e40a2d6a47858604e"
+    },
+    "reserved_evaluators": {
+      "game_state": "c6ceb2e94313321ea81d7e58734f55aa5bedb0154b5b972715c9c02899896177",
+      "progression": "0bd2985e793be1a7ad0cdb5f000bcd6c4fcbcee822623d5fe834aec17b170129",
+      "catalog": "486e823877bb4ecaee01d249353b4d6f104e7ebed0768bcc6c47c42a96e181ff"
+    }
+  },
+  "r1_bundles": [
+    {
+      "task_id": "brewstead-game-state-estate-max-fields",
+      "file": "genesis-v22r-brewstead-game-state-estate-max-fields-r1-shared-s1.zip",
+      "sha256": "c7146fac0c2544f8e88a7b0a868bce66556aa0027c6f0465fd966b5becc4a462",
+      "task_manifest_sha256": "63c2738fe16ab60228d01fabc1274b24711a43502fb5a71d7956c8fbb00a54a9",
+      "campaign_slot_id": "v22r-brewstead-game-state-estate-max-fields-r1-shared-s1",
+      "parent_tree_digest": "59725b22907797fb0c5c2b58f0b74787b50af35cbc1f7cec318dbc4b1b8b204a",
+      "parent_source_sha256": "ebe9bc8bad474b9f2d54c78b190bd16b34e83ef5bcdb661e80d0605b4f54b45b",
+      "parent_archive_sha256": "45488952167b16a12cc37cc2bb567796784d3fb7763dca32eddb0119d16a53c0",
+      "evaluator_commitment_sha256": "c6ceb2e94313321ea81d7e58734f55aa5bedb0154b5b972715c9c02899896177"
+    },
+    {
+      "task_id": "brewstead-progression-merchant-coin-bonus",
+      "file": "genesis-v22r-brewstead-progression-merchant-coin-bonus-r1-shared-s1.zip",
+      "sha256": "28e9881b4596c4efd283d17659aa84b9cc626f75f3c5382b9600bd9667ac212f",
+      "task_manifest_sha256": "06bbd3fba34f69d2331875f2e6cb3396b8c8d0e5583725f51846be3e67396226",
+      "campaign_slot_id": "v22r-brewstead-progression-merchant-coin-bonus-r1-shared-s1",
+      "parent_tree_digest": "651e4f46d14b2567e056aeea0946fcfda488a83587f146edeb6e2c26d529e5f0",
+      "parent_source_sha256": "f47d0b6720e6e12b04885405a6cfa46bb9e37881ddcd2174d67897505466ced2",
+      "parent_archive_sha256": "490210d1e2984ca3fa96222639b51d8b13889b0c512e04ea8416679ae7b1266c",
+      "evaluator_commitment_sha256": "0bd2985e793be1a7ad0cdb5f000bcd6c4fcbcee822623d5fe834aec17b170129"
+    },
+    {
+      "task_id": "brewstead-catalog-crop-ingredient-name",
+      "file": "genesis-v22r-brewstead-catalog-crop-ingredient-name-r1-shared-s1.zip",
+      "sha256": "7fc37c9ab05e96dd2ea96610818b654abd12f640dfc12ea5eecaa33b5123a40a",
+      "task_manifest_sha256": "3286ae5e51bc3b5f76ee6acfd0558d5f1461623299603c01729bb915af0a73a2",
+      "campaign_slot_id": "v22r-brewstead-catalog-crop-ingredient-name-r1-shared-s1",
+      "parent_tree_digest": "c61e697543dd463d893c71fc1a26bde788af35313cfb3117f129c303fc34dde4",
+      "parent_source_sha256": "6ebe3c79143b0f9495ade67cd307f6c0ccb7f1be41d84d1639f57f1bc8d0d054",
+      "parent_archive_sha256": "4cb91e7cee2759fe851f18112f3a29c6511b855cbe23238dee9b6584309fa214",
+      "evaluator_commitment_sha256": "486e823877bb4ecaee01d249353b4d6f104e7ebed0768bcc6c47c42a96e181ff"
+    }
+  ],
+  "execution_rule": {
+    "fresh_isolated_v22r_proposer_chats_required": true,
+    "previous_v22_outputs_forbidden_information": true,
+    "reserved_evaluator_may_not_be_exposed_to_proposer": true,
+    "apparatus_paths_immutable_after_apparatus_commit": true,
+    "only_result_evidence_may_be_added_after_freeze": true,
+    "r1_bundle_freeze_commit_field": "6babe495ef00f2a5c666a5268bace3c79c5a226a"
+  }
+}
