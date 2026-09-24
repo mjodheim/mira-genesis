@@ -38,8 +38,12 @@ Every counted transition must establish:
 7. negative attempts remain in the archive.
 
 The evidence ladder validates a contiguous chain and takes the minimum number of transitions from an
-external config. The current roadmap's intended L6 target is at least three causal transitions, but
-this development apparatus does not freeze that number as a canonical experimental threshold.
+external config. A separate descent state machine advances the current parent generation only after
+the preceding transition has passed the same causal holdout/ablation checks; a negative transition is
+retained and stops the descent instead of inviting a discretionary human continuation.
+
+The current roadmap's intended L6 target is at least three causal transitions, but this development
+apparatus does not freeze that number as a canonical experimental threshold.
 
 ## L7 — cross-domain meta-transfer
 
@@ -119,6 +123,7 @@ References:
 ## Files in this apparatus
 
 - `experiment/rsi_l6_l8/ladder.py` — deterministic structural assessment for L6/L7/L8 evidence.
+- `experiment/rsi_l6_l8/descent_state.py` — deterministic continuation/stop state for repeated causal generations.
 - `experiment/rsi_l6_l8/bottleneck_selector.py` — identity-blind selector DSL and frozen snapshot evaluation.
 - `experiment/rsi_l6_l8/selector_search.py` — development-only search over selector programs using realized matched interventions only.
 - `tests/test_rsi_l6_l8_ladder.py` — locks the refusal/positive semantics.
