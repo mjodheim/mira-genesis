@@ -1,0 +1,37 @@
+name: Build prospective V23 L5 freeze artifact
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  freeze:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact audited L5 apparatus
+        uses: actions/checkout@v4
+        with:
+          ref: 7896d62f1947a792a31bbf9c656c93f76a9ec015
+          fetch-depth: 0
+
+      - name: Build fail-closed freeze record
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 experiment/rsi_v23/build_l5_freeze.py \
+            --apparatus-commit 7896d62f1947a792a31bbf9c656c93f76a9ec015 \
+            --calibration-run-id 36001678033 \
+            --out /tmp/V23_FREEZE.json
+          echo '===V23_L5_FREEZE==='
+          cat /tmp/V23_FREEZE.json
+          echo '===END_V23_L5_FREEZE==='
+          sha256sum /tmp/V23_FREEZE.json
+
+      - name: Upload exact prospective freeze
+        uses: actions/upload-artifact@v4
+        with:
+          name: v23-l5-prospective-freeze
+          path: /tmp/V23_FREEZE.json
+          if-no-files-found: error
