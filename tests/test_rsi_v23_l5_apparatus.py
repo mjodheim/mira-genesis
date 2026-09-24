@@ -68,7 +68,11 @@ def test_l5_ablation_is_exact_g2_except_for_the_l4_validated_early_stop():
     assert "if best >= 780:" in g2
     assert "if best >= 780:" not in ablated
     assert "return (10, 6, 3, 5, 5, 4, 8, 1, 8, 3)" in ablated
-    expected = g2.replace("    if best >= 780:\\n        return []\\n\\n", "")
+    block = """    if best >= 780:
+        return []
+
+"""
+    expected = g2.replace(block, "")
     assert ablated == expected
 
 
