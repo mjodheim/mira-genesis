@@ -65,10 +65,22 @@ jobs:
             "final_adjudicator":"experiment/rsi_v22/adjudicate.py",
             "campaign_cli":"experiment/rsi_v22/campaign_cli.py",
           }
-          mismatches=[]
+          checks=[]
           for key,path in mapping.items():
+            checks.append((key,path,freeze["sha256"][key]))
+          checks.extend([
+            ("policy_g1","experiment/rsi_v22/policies/g1_search_policy.py",freeze["policies"]["g1_sha256"]),
+            ("policy_g2","experiment/rsi_v22/policies/g2_search_policy.py",freeze["policies"]["g2_sha256"]),
+            ("defect_game_state","experiment/rsi_v22/defects/game-state-estate-max-fields.patch",freeze["sha256"]["defects"]["game_state"]),
+            ("defect_progression","experiment/rsi_v22/defects/progression-merchant-coin-bonus.patch",freeze["sha256"]["defects"]["progression"]),
+            ("defect_catalog","experiment/rsi_v22/defects/catalog-crop-ingredient-name.patch",freeze["sha256"]["defects"]["catalog"]),
+            ("reserved_game_state","experiment/rsi_v22/evaluator/GameStateEstateReservedTest.java",freeze["sha256"]["reserved_evaluators"]["game_state"]),
+            ("reserved_progression","experiment/rsi_v22/evaluator/ProgressionMerchantReservedTest.java",freeze["sha256"]["reserved_evaluators"]["progression"]),
+            ("reserved_catalog","experiment/rsi_v22/evaluator/CatalogCropIngredientReservedTest.java",freeze["sha256"]["reserved_evaluators"]["catalog"]),
+          ])
+          mismatches=[]
+          for key,path,want in checks:
             got=hashlib.sha256((root/path).read_bytes()).hexdigest()
-            want=freeze["sha256"][key]
             status="PASS" if got==want else "MISMATCH"
             print(f"V22_APPARATUS_HASH_{status} {key} actual={got} frozen={want}")
             if got!=want:
