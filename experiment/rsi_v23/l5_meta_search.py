@@ -2,8 +2,8 @@
 """Deterministic V23 L5 meta-search over the frozen G2 descendant family.
 
 Four controllers search the same candidate tree:
-A: exact G2, B: exact G1, C: G2 with its acquired early-stop rule removed
-and predecessor stall behavior restored, D: fixed lexicographic breadth-first.
+A: exact G2, B: exact G1, C: exact G2 with only its L4-validated
+strong-result early-stop rule removed, D: fixed lexicographic breadth-first.
 
 This module is apparatus only until the V23 L5 freeze record is committed.
 """
@@ -48,11 +48,6 @@ def _sha(text: str) -> str:
 
 def g2_ablation_source() -> str:
     src = family.root_source()
-    old_metadata = "return (10, 6, 3, 5, 5, 4, 8, 1, 8, 3)"
-    new_metadata = "return (10, 6, 3, 5, 5, 4, 8, 1, 8, 1)"
-    if src.count(old_metadata) != 1:
-        raise RuntimeError("G2 metadata marker changed")
-    src = src.replace(old_metadata, new_metadata)
     block = "    if best >= 780:\n        return []\n\n"
     if src.count(block) != 1:
         raise RuntimeError("G2 early-stop block changed")
