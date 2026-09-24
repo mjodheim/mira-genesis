@@ -135,6 +135,9 @@ def required_files() -> list[Path]:
         if path.is_file():
             paths.append(path)
     paths.append(V23_FREEZE_PATH)
+    workflow = ROOT / ".github" / "workflows" / "v24-l5-freeze-build.yml"
+    if workflow.is_file():
+        paths.append(workflow)
     for path in sorted(V23_RESULTS_DIR.rglob("*")):
         if path.is_file():
             paths.append(path)
