@@ -7,6 +7,7 @@ This directory contains mechanisms that can be built safely before L4/L5 results
 ## What is already executable
 
 - `ladder.py` validates prospective evidence packages for L6, L7 and L8.
+- `descent_state.py` advances or stops a repeated causal generation chain without discretionary continuation.
 - `bottleneck_selector.py` evaluates an identity-blind metric program over a frozen bottleneck snapshot.
 - `selector_search.py` searches a bounded selector grammar on development episodes with realized matched interventions.
 
