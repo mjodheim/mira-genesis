@@ -1,7 +1,6 @@
 {
   "schema": "mira-genesis-rsi-v23-brewtrack-snapshot-v1",
   "source_repository": "mjodheim/BrewTrack",
-  "source_commit": "1727fc0158c6dbd741bfb0b6d85e8fe70f1a40f3",
   "purpose": "credential-independent exact snapshot of L5-relevant BrewTrack domain sources and public tests",
   "files": [
     {
@@ -44,5 +43,6 @@
     "path": "experiment/rsi_v23/holdout/host_snapshot/brewtrack/Tests/L5Snapshot.Tests.csproj",
     "source_origin": "laboratory-authored",
     "note": "build wrapper only; it changes no BrewTrack source or test bytes"
-  }
+  },
+  "source_revision": "1727fc0158c6dbd741bfb0b6d85e8fe70f1a40f3"
 }
