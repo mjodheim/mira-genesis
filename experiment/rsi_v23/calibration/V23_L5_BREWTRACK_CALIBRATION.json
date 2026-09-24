@@ -1,0 +1,24 @@
+{
+  "schema": "mira-genesis-rsi-v23-l5-holdout-calibration-record-v1",
+  "workflow_run_id": 36001678033,
+  "workflow_head_sha": "ae45dd007dea37b37ea90ecba15d33a4ce7462a0",
+  "artifact_id": 10807888743,
+  "artifact_name": "v23-l5-brewtrack-calibration",
+  "artifact_digest": "sha256:177541293e72bc3c791f80983c7fe745082d8a6dcecf1f2fe74a6911f63c0805",
+  "host": "mjodheim/BrewTrack@1727fc0158c6dbd741bfb0b6d85e8fe70f1a40f3",
+  "snapshot_manifest": "experiment/rsi_v23/holdout/host_snapshot/brewtrack/SNAPSHOT_MANIFEST.json",
+  "public_guard": true,
+  "tasks": {
+    "brewtrack-brewmath-precision": {
+      "oracle_reserved_passed": 4,
+      "defect_reserved_passed": 0,
+      "total_reserved": 4
+    },
+    "brewtrack-recipemath-units-water": {
+      "oracle_reserved_passed": 4,
+      "defect_reserved_passed": 0,
+      "total_reserved": 4
+    }
+  },
+  "status": "GREEN_BEFORE_META_SEARCH"
+}

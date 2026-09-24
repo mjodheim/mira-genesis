@@ -1,0 +1,80 @@
+{
+  "g1_global_utility": [
+    3,
+    3000,
+    -9,
+    -6
+  ],
+  "g2_global_utility": [
+    3,
+    3000,
+    -3,
+    -3
+  ],
+  "g2_strict_process_wins": 3,
+  "g2_tasks_solved_without_regression": 3,
+  "schema": "mira-genesis-rsi-v22-final-adjudication-v1",
+  "tasks": [
+    {
+      "g1_best_quality_milli": 1000,
+      "g1_process_utility": [
+        1000,
+        -3,
+        -2
+      ],
+      "g1_requests": 3,
+      "g1_rounds": 2,
+      "g2_best_quality_milli": 1000,
+      "g2_process_utility": [
+        1000,
+        -1,
+        -1
+      ],
+      "g2_requests": 1,
+      "g2_rounds": 1,
+      "g2_strictly_better": true,
+      "task_id": "brewstead-catalog-crop-ingredient-name"
+    },
+    {
+      "g1_best_quality_milli": 1000,
+      "g1_process_utility": [
+        1000,
+        -3,
+        -2
+      ],
+      "g1_requests": 3,
+      "g1_rounds": 2,
+      "g2_best_quality_milli": 1000,
+      "g2_process_utility": [
+        1000,
+        -1,
+        -1
+      ],
+      "g2_requests": 1,
+      "g2_rounds": 1,
+      "g2_strictly_better": true,
+      "task_id": "brewstead-game-state-estate-max-fields"
+    },
+    {
+      "g1_best_quality_milli": 1000,
+      "g1_process_utility": [
+        1000,
+        -3,
+        -2
+      ],
+      "g1_requests": 3,
+      "g1_rounds": 2,
+      "g2_best_quality_milli": 1000,
+      "g2_process_utility": [
+        1000,
+        -1,
+        -1
+      ],
+      "g2_requests": 1,
+      "g2_rounds": 1,
+      "g2_strictly_better": true,
+      "task_id": "brewstead-progression-merchant-coin-bonus"
+    }
+  ],
+  "v22_positive": true
+}

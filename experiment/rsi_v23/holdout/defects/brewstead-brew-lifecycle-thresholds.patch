@@ -1,0 +1,15 @@
+diff --git a/src/main/java/be/mjodheim/brewstead/service/BrewService.java b/src/main/java/be/mjodheim/brewstead/service/BrewService.java
+--- a/src/main/java/be/mjodheim/brewstead/service/BrewService.java
++++ b/src/main/java/be/mjodheim/brewstead/service/BrewService.java
+@@ -161,9 +161,9 @@ public class BrewService {
+         long elapsedMillis = Math.max(0, Duration.between(batch.getStartedAt(), now).toMillis());
+         double progress = Math.min(1.0, (double) elapsedMillis / totalMillis);
+ 
+-        if (progress < 0.20) {
++        if (progress < 0.25) {
+             batch.setStatus(BatchStatus.BREWING);
+-        } else if (progress < 0.85) {
++        } else if (progress < 0.80) {
+             batch.setStatus(BatchStatus.FERMENTING);
+         } else {
+             batch.setStatus(BatchStatus.CONDITIONING);

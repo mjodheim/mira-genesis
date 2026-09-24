@@ -1,0 +1,35 @@
+{
+  "schema": "mira-genesis-rsi-v22-transfer-proposal-v1",
+  "task_id": "brewstead-progression-merchant-coin-bonus",
+  "campaign_slot_id": "v22-brewstead-progression-merchant-coin-bonus-r2-g1-s1",
+  "parent_node_id": "v22-brewstead-progression-merchant-coin-bonus-node-c3691fe5cf60",
+  "parent_tree_digest": "c3691fe5cf608dc0ddbd7ae368fdd28b335196f4105e3788033d93531962e78c",
+  "host_commit": "720b27c8bc80de16c04953e13d5f9e8425beea8c",
+  "task_manifest_sha256": "23f58f936ae53fb8ab068f15f0612a7c5b9c76b3ab7e1da49c7e27c029ed8d08",
+  "proposer_protocol_sha256": "f28109600e1090254e2b70a666cd519724014c199ecce281970cc84dba5e23ca",
+  "proposal_patch_sha256": "50220ff944eee39d1b9d3119ebad68723763a5298fce5e0baad9b7c094059004",
+  "intent": "Make the MARCHAND NPC-order coin bonus an exact 10% decimal increase rounded to whole coins, while leaving every other specialization on the base reward.",
+  "rationale": "The existing MARCHAND branch multiplies an integer reward by a binary float literal before rounding. That can distort the intended decimal 10% calculation for valid integer inputs; for example, base 1572864 becomes 1730150.5 as float and rounds to 1730151 instead of the exact 1730150.4 -> 1730150. Reusing the class's existing BigDecimal and RoundingMode imports makes the percentage exact and keeps nearest-coin HALF_UP behavior for positive NPC rewards. The non-MARCHAND branch remains unchanged.",
+  "files_changed": [
+    "src/main/java/be/mjodheim/brewstead/service/ProgressionService.java"
+  ],
+  "public_checks": [
+    "Inspected ProgressionServiceTest and NpcOrderServiceTest to confirm the public call path and existing specialization behavior.",
+    "Ran VERIFY_OUTPUT.py proposal.patch transcript.json and obtained GENESIS_RSI_V22_TRANSFER_OUTPUT=PASS.",
+    "Ran a Java arithmetic spot-check for NPC reward bases 130, 175, 220, 265, and 1572864; exact decimal HALF_UP produced 143, 193, 242, 292, and 1730150.",
+    "Ran the frozen Maven public guard command; it could not execute because Maven 3.9.16 was not available locally and the wrapper fetch failed in the isolated environment."
+  ],
+  "uncertainties": [
+    "The isolated environment could not execute the frozen Maven guard because Maven 3.9.16 was not locally available and the wrapper could not fetch it.",
+    "The public tests do not directly assert MARCHAND npcCoinReward rounding for all positive integer rewards."
+  ],
+  "information_boundary": {
+    "used_only_supplied_bundle": true,
+    "used_web_or_github": false,
+    "used_saved_memory_or_previous_chats": false,
+    "used_reserved_evaluator_source_or_result": false,
+    "used_other_v22_attempt_or_slot_output": false,
+    "used_g1_g2_selection_information": false,
+    "used_human_candidate_specific_guidance": false
+  }
+}

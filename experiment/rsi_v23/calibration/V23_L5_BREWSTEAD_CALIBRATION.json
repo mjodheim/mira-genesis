@@ -1,0 +1,23 @@
+{
+  "schema": "mira-genesis-rsi-v23-l5-holdout-calibration-record-v1",
+  "workflow_run_id": 36001678033,
+  "workflow_head_sha": "ae45dd007dea37b37ea90ecba15d33a4ce7462a0",
+  "artifact_id": 10809075036,
+  "artifact_name": "v23-l5-brewstead-calibration",
+  "artifact_digest": "sha256:1866e1e875a81de06a8f783b0d9e4398d75d5aa6d6b7642c9854afcabba81ff6",
+  "host": "mjodheim/mjodheim-brewstead@84f6c2462b810a83870974068db1e12d7f1e3720",
+  "public_guard": true,
+  "tasks": {
+    "brewstead-effect-rounding": {
+      "oracle_reserved_passed": 4,
+      "defect_reserved_passed": 0,
+      "total_reserved": 4
+    },
+    "brewstead-brew-lifecycle-thresholds": {
+      "oracle_reserved_passed": 4,
+      "defect_reserved_passed": 0,
+      "total_reserved": 4
+    }
+  },
+  "status": "GREEN_BEFORE_META_SEARCH"
+}

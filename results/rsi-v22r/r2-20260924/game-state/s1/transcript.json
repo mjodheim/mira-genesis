@@ -1,0 +1,32 @@
+{
+  "schema": "mira-genesis-rsi-v22-transfer-proposal-v1",
+  "task_id": "brewstead-game-state-estate-max-fields",
+  "campaign_slot_id": "v22-brewstead-game-state-estate-max-fields-r2-g1-s1",
+  "parent_node_id": "v22-brewstead-game-state-estate-max-fields-node-c3691fe5cf60",
+  "parent_tree_digest": "c3691fe5cf608dc0ddbd7ae368fdd28b335196f4105e3788033d93531962e78c",
+  "host_commit": "720b27c8bc80de16c04953e13d5f9e8425beea8c",
+  "task_manifest_sha256": "ff7da3b1a9e3db7a13fc19cd9b892dd3beb865c76da3a116ce511c128cbff889",
+  "proposer_protocol_sha256": "f28109600e1090254e2b70a666cd519724014c199ecce281970cc84dba5e23ca",
+  "proposal_patch_sha256": "8d2ef1270c72499de644d1b0f01c26034f5ae3dc30db41171c06f06a7bd91994",
+  "intent": "Report estate maxFields from the field purchase schedule while preserving existing hive metadata and pricing behavior.",
+  "rationale": "Compute maxFields by walking EstatePrices.nextField from STARTING_FIELDS until the field schedule reports no next purchase. This keeps estate field capacity tied to the field schedule and leaves the hive capacity path untouched.",
+  "files_changed": [
+    "src/main/java/be/mjodheim/brewstead/service/GameStateService.java"
+  ],
+  "public_checks": [
+    "Compiled and ran a bundle-only EstatePrices probe: field schedule capacity resolved to 8 while MAX_HIVES is 6.",
+    "Verified proposal.patch applies cleanly to the exact supplied parent with git apply --check."
+  ],
+  "uncertainties": [
+    "The frozen Maven public guard could not be executed because the bundled Maven wrapper requires downloading Maven 3.9.16, and external network use is forbidden by the proposer protocol."
+  ],
+  "information_boundary": {
+    "used_only_supplied_bundle": true,
+    "used_web_or_github": false,
+    "used_saved_memory_or_previous_chats": false,
+    "used_reserved_evaluator_source_or_result": false,
+    "used_other_v22_attempt_or_slot_output": false,
+    "used_g1_g2_selection_information": false,
+    "used_human_candidate_specific_guidance": false
+  }
+}
