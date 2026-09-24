@@ -1,0 +1,13 @@
+diff --git a/src/main/java/be/mjodheim/brewstead/service/ProgressionService.java b/src/main/java/be/mjodheim/brewstead/service/ProgressionService.java
+--- a/src/main/java/be/mjodheim/brewstead/service/ProgressionService.java
++++ b/src/main/java/be/mjodheim/brewstead/service/ProgressionService.java
+@@ -122,7 +122,8 @@
+     @Transactional
+     public int npcCoinReward(Long playerId, int base) {
+         return getOrCreate(playerId).getSpecialization() == Specialization.MARCHAND
+-                ? Math.round(base * 1.10f) : base;
++                ? BigDecimal.valueOf(base).multiply(new BigDecimal("1.10"))
++                        .setScale(0, RoundingMode.HALF_UP).intValueExact() : base;
+     }
+ 
+     private PlayerProgress getOrCreate(Long playerId) {

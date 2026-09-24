@@ -1,0 +1,17 @@
+diff --git a/src/main/java/be/mjodheim/brewstead/service/GameStateService.java b/src/main/java/be/mjodheim/brewstead/service/GameStateService.java
+--- a/src/main/java/be/mjodheim/brewstead/service/GameStateService.java
++++ b/src/main/java/be/mjodheim/brewstead/service/GameStateService.java
+@@ -41,8 +41,12 @@
+      * navigateur : deux copies d'un prix finissent toujours par diverger.
+      */
+     private EstateResponse estate(int fields, int hives) {
++        int maxFields = EstatePrices.STARTING_FIELDS;
++        while (EstatePrices.nextField(maxFields) != null) {
++            maxFields++;
++        }
+         return new EstateResponse(
+-                fields, EstatePrices.MAX_FIELDS, EstatePrices.nextField(fields),
++                fields, maxFields, EstatePrices.nextField(fields),
+                 hives, EstatePrices.MAX_HIVES, EstatePrices.nextHive(hives),
+                 EstatePrices.MAX_HIVE_LEVEL, EstatePrices.upgrades());
+     }

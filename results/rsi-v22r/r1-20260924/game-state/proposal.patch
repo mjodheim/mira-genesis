@@ -1,0 +1,12 @@
+diff --git a/src/main/java/be/mjodheim/brewstead/service/GameStateService.java b/src/main/java/be/mjodheim/brewstead/service/GameStateService.java
+--- a/src/main/java/be/mjodheim/brewstead/service/GameStateService.java
++++ b/src/main/java/be/mjodheim/brewstead/service/GameStateService.java
+@@ -42,7 +42,7 @@
+      */
+     private EstateResponse estate(int fields, int hives) {
+         return new EstateResponse(
+-                fields, EstatePrices.MAX_HIVES, EstatePrices.nextField(fields),
++                fields, EstatePrices.MAX_FIELDS, EstatePrices.nextField(fields),
+                 hives, EstatePrices.MAX_HIVES, EstatePrices.nextHive(hives),
+                 EstatePrices.MAX_HIVE_LEVEL, EstatePrices.upgrades());
+     }

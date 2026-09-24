@@ -1,0 +1,39 @@
+{
+  "schema": "mira-genesis-rsi-v22r-r1-selection-v1",
+  "date": "2026-09-24",
+  "selection_rule": "For each V22R R1 campaign_slot_id, represent the chronologically earliest valid proposal/transcript pair received for that slot. Archive later same-slot outputs as accidental duplicates and do not expose reserved evaluator results for them.",
+  "selection_rule_fixed_before_reserved_evaluator": true,
+  "represented": [
+    {
+      "task_id": "brewstead-game-state-estate-max-fields",
+      "proposal_filename": "proposal(20260924-025106).patch",
+      "transcript_filename": "transcript(20260924-025108).json",
+      "proposal_sha256": "763fa7ca40653b78faab4f98c5b9d6d02b57936685269885e6cf5c6f0aa1170b",
+      "transcript_sha256": "372ef7585b6a36b092d03d66debde248f47c9fd13b57ae6654ac06ad124233ce"
+    },
+    {
+      "task_id": "brewstead-catalog-crop-ingredient-name",
+      "proposal_filename": "proposal(20260924-030106).patch",
+      "transcript_filename": "transcript(20260924-030108).json",
+      "proposal_sha256": "f6f3a9dc9f498bd6c1723b2c6846058a3519acc04a4ca86906ae412c92d60f47",
+      "transcript_sha256": "465fc5375740442b4ecc1d48cc895899b9c21b9038e4798783d7092c901d36b3"
+    },
+    {
+      "task_id": "brewstead-progression-merchant-coin-bonus",
+      "proposal_filename": "proposal(20260924-030954).patch",
+      "transcript_filename": "transcript(20260924-030956).json",
+      "proposal_sha256": "639e5748770bf35695cf942eecebca01e577826dc5388edf2f8cce445fce0f8c",
+      "transcript_sha256": "6e6b597db7e238080e4f722250db8f75b3727d72636d168840f08380adffc1b3"
+    }
+  ],
+  "accidental_duplicates": {
+    "brewstead-game-state-estate-max-fields": [
+      "proposal(20260924-025113).patch + transcript(20260924-025115).json",
+      "proposal(20260924-025114).patch + transcript(20260924-025116).json"
+    ],
+    "brewstead-catalog-crop-ingredient-name": [
+      "proposal(20260924-030106-1).patch + transcript(20260924-030109).json"
+    ]
+  },
+  "reserved_evaluator_invoked_before_selection_record": false
+}

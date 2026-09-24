@@ -1,0 +1,32 @@
+{
+  "schema": "mira-genesis-rsi-v22-transfer-proposal-v1",
+  "task_id": "brewstead-game-state-estate-max-fields",
+  "campaign_slot_id": "v22r-brewstead-game-state-estate-max-fields-r1-shared-s1",
+  "parent_node_id": "v22r-brewstead-game-state-estate-max-fields-root",
+  "parent_tree_digest": "59725b22907797fb0c5c2b58f0b74787b50af35cbc1f7cec318dbc4b1b8b204a",
+  "host_commit": "720b27c8bc80de16c04953e13d5f9e8425beea8c",
+  "task_manifest_sha256": "63c2738fe16ab60228d01fabc1274b24711a43502fb5a71d7956c8fbb00a54a9",
+  "proposer_protocol_sha256": "f28109600e1090254e2b70a666cd519724014c199ecce281970cc84dba5e23ca",
+  "proposal_patch_sha256": "763fa7ca40653b78faab4f98c5b9d6d02b57936685269885e6cf5c6f0aa1170b",
+  "intent": "Report estate field capacity using the field schedule maximum while leaving hive capacity and all pricing behavior unchanged.",
+  "rationale": "GameStateService.estate currently populates EstateResponse.maxFields with EstatePrices.MAX_HIVES. EstatePrices defines a distinct MAX_FIELDS constant for the field schedule, so replacing only that mismatched constant is the smallest causal repair for the stated symptom.",
+  "files_changed": [
+    "src/main/java/be/mjodheim/brewstead/service/GameStateService.java"
+  ],
+  "public_checks": [
+    "Inspected the supplied GameStateServiceTest, EstatePrices, EstateResponse, and GameStateService source relevant to the public symptom.",
+    "Verified proposal.patch applies cleanly to the exact supplied parent with VERIFY_OUTPUT.py."
+  ],
+  "uncertainties": [
+    "The frozen Maven public guard could not be completed because the supplied Maven wrapper required an external Maven distribution download, which was unavailable under the bundle-only constraint."
+  ],
+  "information_boundary": {
+    "used_only_supplied_bundle": true,
+    "used_web_or_github": false,
+    "used_saved_memory_or_previous_chats": false,
+    "used_reserved_evaluator_source_or_result": false,
+    "used_other_v22_attempt_or_slot_output": false,
+    "used_g1_g2_selection_information": false,
+    "used_human_candidate_specific_guidance": false
+  }
+}

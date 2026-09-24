@@ -1,0 +1,43 @@
+{
+  "schema": "mira-genesis-rsi-v22r-r2-inputs-v1",
+  "date": "2026-09-24",
+  "r1_workflow_run_id": 35951143503,
+  "r1_artifact_id": 10788497665,
+  "arm": "g1",
+  "round": 2,
+  "bundles": {
+    "catalog_s1": "0f916832ffe2a3406bb488cf64e4852c2c0248e6d3a6ba4116274eaf7492a0",
+    "catalog_s2": "47655eef490f9155b9cfe78bc27d9cdc7bda96e473d5ef3bd078f807c361cba5",
+    "game_state_s1": "7717405016c106f9b5ac70ad4d65cf6d10cfb5c2359b5da59551bd1929c8a906",
+    "game_state_s2": "3d7109fd833d8cc02e76dd5cbf904e34acbcb6bc455ca0394a491a292d9b33f3",
+    "progression_s1": "f12ff4213ad952b214b42774009d1f8e5334b9761a07b2d84fd01b8ec9181ac7",
+    "progression_s2": "f58ea30fed1f9ffa26b595efab1d2260c91035f767d3b464ccb7ed844ce66d05"
+  },
+  "outputs": {
+    "catalog_s1": {
+      "proposal_sha256": "94847b17864b215f9fd15d3ff8b2e1f5f501b85028dd0eec83a40db82e3ca612",
+      "transcript_sha256": "4edbc66f621deb6a410c77b9a644510c7c1885f943f5c2db321dd16db77e3712"
+    },
+    "catalog_s2": {
+      "proposal_sha256": "7df456192aff85104e72390baa28e79925afad244e88f8df67a5dbc270467514",
+      "transcript_sha256": "2b0db2aae58caf72a9af78fdf1a7b750e160fdfc4a7006a20c43c418fb7dd45d"
+    },
+    "game_state_s1": {
+      "proposal_sha256": "8d2ef1270c72499de644d1b0f01c26034f5ae3dc30db41171c06f06a7bd91994",
+      "transcript_sha256": "7d75b9d8b693a0504f857e9d159844a7a0d2460688660eb945dd932413d5c3ad"
+    },
+    "game_state_s2": {
+      "proposal_sha256": "b5178b10ba550a0e8240724c9c2daf5b765691d6ae292733ef644478aa33f697",
+      "transcript_sha256": "b66490c6087695ca35b5bf28998d1ba1bf43d7a6358d799ef085eb7a3f6995dd"
+    },
+    "progression_s1": {
+      "proposal_sha256": "50220ff944eee39d1b9d3119ebad68723763a5298fce5e0baad9b7c094059004",
+      "transcript_sha256": "56976889b0fccb486180c8a43c6d3aed37264889d41524946e2b6e5ec6a32bec"
+    },
+    "progression_s2": {
+      "proposal_sha256": "319babe94527ec47b1e555e91916bc6887d55c783406da9bf98abf417e74d52e",
+      "transcript_sha256": "9b895feffc927e1b17804a4cd1c491601f86023883f9943f38d7f79ee7709185"
+    }
+  },
+  "all_outputs_verified_against_supplied_bundle": true
+}
