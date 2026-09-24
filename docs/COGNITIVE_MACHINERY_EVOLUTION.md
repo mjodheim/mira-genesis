@@ -1,20 +1,20 @@
 # Evolvable cognitive machinery — foundation
 
 Status: **DEVELOPMENT engineering design**, 24 September 2026. No scientific claim, no gate movement,
-no V22/V22R/V23 result, and no change to the immutable trust root.
+no V22/V22R/V23/V24 result, and no change to the immutable trust root.
 
 ## Baseline before this line
 
-This branch starts from main commit 1e3f81a148d41ca50665e29ab4502efb86174b3e, which merged the
-identity-corrected retained-evaluator V22R replication apparatus.
+This line began immediately after the identity-corrected retained-evaluator V22R replication apparatus
+was integrated. It is continuously rebased/merged forward onto the live scientific mainline without
+editing frozen evidence.
 
 At branch creation, active work already existed in PRs #332–#336 around V23 replay, repository/state
-synchronisation, real-project gate hardening, and prospective L6–L8 RSI apparatus. This line is kept
-orthogonal to those experiments. It does not edit their frozen evidence, select a V22/V23 outcome, or
-reuse hidden observations.
+synchronisation, real-project gate hardening, and prospective L6–L8 RSI apparatus. Later V23/V24 work
+has continued independently on main. This line remains orthogonal to those experiments: it does not
+edit their frozen evidence, select an RSI outcome, or reuse hidden observations.
 
-The integrated runtime already has several prerequisites this line should preserve rather than
-rebuild:
+The integrated runtime already has several prerequisites this line should preserve rather than rebuild:
 
 - immutable genesis.trust_root separated from mutable Genesis;
 - persistent generated program bodies and interpreter-form migration;
@@ -42,88 +42,55 @@ A later experiment should optimise a frontier such as:
 
 No scalar “intelligence score” or energy estimate is introduced in this foundation.
 
-## Increment 0 — canonical cognitive architecture genome
+## Implemented increments
 
-The first implementation is intentionally small: genesis/cognitive_architecture.py.
+### Increment 0 — canonical cognitive architecture genome
 
-It adds a canonical, content-addressed graph representation with:
-
-- externally admitted primitive identifiers rather than a fixed neural family;
-- complete configuration included in identity;
-- explicit feedforward and recurrent edges;
-- acyclic within-step feedforward dependencies;
-- recurrent loops permitted only when declared as such;
-- optional externally imposed node/edge bounds;
-- deterministic structural profiling;
-- no execution, learning, mutation search, or adoption yet;
-- no FLOP, watt, energy, latency, parameter-count or intelligence inference from topology.
-
-This is an IR, not a model.
-
-The important design choice is that primitive semantics live outside the genome. Genesis can later
-change topology and select among admitted primitives without this module deciding that attention,
-recurrence, SSMs, memory, routers or symbolic operators are the privileged substrate. A later
-primitive registry/executor can itself become an evolvable lineage artifact only after its authority
-and measurement boundaries are explicit.
-
-## Boundary that must not move
-
-Mutable Genesis may eventually change:
-
-- topology;
-- primitive selection;
-- memory layout;
-- recurrence;
-- routing;
-- learning/update rules;
-- mutation operators;
-- architecture search policy;
-- allocation of its own admitted compute budget.
-
-It must not gain authority over:
-
-- hidden/fresh evaluation cases;
-- correctness grading;
-- final accept/reject;
-- resource ceilings;
-- measurement provenance;
-- evaluator identity;
-- rollback / integrity checks.
-
-Those remain external or trust-root-governed.
-
-## Planned increments
+`genesis/cognitive_architecture.py` provides a canonical, content-addressed graph representation with
+externally admitted primitive identifiers, complete configuration in identity, explicit feedforward
+and recurrent edges, acyclic within-step dependencies, optional external node/edge bounds and
+deterministic structural profiling. It deliberately makes no FLOP, watt, energy, latency,
+parameter-count or intelligence inference from topology.
 
 ### Increment 1 — executable primitive registry
 
-Add a tiny deterministic executor for a deliberately small primitive catalogue. The catalogue should
-include structurally different mechanisms, for example feedforward transform, state cell, gated
-router and memory read/write, so architecture search is not merely tuning layer counts.
+`genesis/cognitive_executor.py` executes a deliberately small deterministic primitive catalogue under
+an externally imposed node-execution ceiling. Recurrent state remains outside the genome. Actual CPU
+process time is reported only as a compute proxy; energy remains unavailable unless it is independently
+instrumented.
 
-The executor must expose exact runtime observations. CPU time remains a compute proxy, never energy.
-Actual energy enters only when an external meter or trustworthy host telemetry is available.
+### Increment 2 — bounded architecture mutations (in progress)
 
-### Increment 2 — bounded architecture mutations
+`genesis/cognitive_mutation.py` applies explicit externally chosen mutation intents and validates the
+result against admitted primitives and externally supplied size bounds. Primitive/config replacement
+and edge addition/removal are implemented. Node addition/removal and content-addressed mutation
+lineage are the next bounded extension.
 
-Introduce canonical mutation intents such as add/remove node, add/remove edge, replace primitive and
-change configuration. Every mutation receives externally imposed size and evaluation budgets.
-Mutation identity and parent identity are journalled.
+Mutation policy, scoring and scientific selection remain outside this module.
 
-Do not allow arbitrary Python rewriting as the first architecture mutation mechanism.
+## Boundary that must not move
+
+Mutable Genesis may eventually change topology, primitive selection, memory layout, recurrence,
+routing, learning/update rules, mutation operators, architecture search policy and allocation of its
+own admitted compute budget.
+
+It must not gain authority over hidden/fresh evaluation cases, correctness grading, final
+accept/reject, resource ceilings, measurement provenance, evaluator identity, rollback or integrity
+checks. Those remain external or trust-root-governed.
+
+## Planned increments
 
 ### Increment 3 — lineage-held architecture search
 
 Let a lineage-held policy propose architecture mutations from admitted evidence. Candidate
 architectures execute in isolation and the unchanged evaluator compares them with the parent under
-matched budgets and fresh holdout tasks.
-
-Selection should preserve a Pareto view rather than reward capability at any compute cost.
+matched budgets and fresh holdout tasks. Selection should preserve a Pareto view rather than reward
+capability at any compute cost.
 
 ### Increment 4 — resource-aware causal adoption
 
 Require an adopted architecture to carry independently measured capability and resource evidence.
 Where energy cannot be measured, say so; do not substitute an invented conversion from CPU seconds.
-
 Run ablations to distinguish “new topology caused the gain” from noise, larger budget, or a changed
 evaluation path.
 
@@ -138,8 +105,6 @@ root still decides whether that meta-change produced better externally measured 
 Add a separate environment generator that produces new externally verifiable pressures near the
 current capability frontier. Keep generation seeds, verifiers and hidden evaluation inaccessible to
 the organism being judged.
-
-This is where open-ended pressure can begin without turning the evaluator into mutable Genesis.
 
 ## What would count as progress
 

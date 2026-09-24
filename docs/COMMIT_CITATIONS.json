@@ -1683,6 +1683,15 @@
         "docs/state-history/PROJECT_STATE_2026-08-24.md"
       ]
     },
+    "9acff7900e057629f61217c1b481993ea8726449": {
+      "subject": "Merge frozen causal recursive meta-improvement experiment for RSI L5",
+      "preserved_by": "main",
+      "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
+        "results/rsi-v23/l5-20260924/V23_L5_PRE_HOLDOUT_ADJUDICATION.json",
+        "results/rsi-v23/l5-20260924/V23_L5_PRE_HOLDOUT_ADJUDICATION.md"
+      ]
+    },
     "9b69d7fb16aa84a9b0e95f25b284f6a4be49e181": {
       "subject": "freeze(m094): bind the eligible set and the qualification pool before any run",
       "preserved_by": "main",
@@ -2324,6 +2333,15 @@
       "cited_in": [
         "IP_ASSET_REGISTER.md",
         "docs/COMMIT_CITATIONS.json"
+      ]
+    },
+    "db258c2912ea6ceed745548ad67919437c834aea": {
+      "subject": "research(v23): freeze L5 before any meta-search",
+      "preserved_by": "research/rsi-v23-l5-causal-recursion",
+      "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
+        "results/rsi-v23/l5-20260924/V23_L5_PRE_HOLDOUT_ADJUDICATION.json",
+        "results/rsi-v23/l5-20260924/V23_L5_PRE_HOLDOUT_ADJUDICATION.md"
       ]
     },
     "db609a0355bd602e8ff9640a718c228a36e381a5": {
