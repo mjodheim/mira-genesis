@@ -1,0 +1,34 @@
+{
+  "schema": "mira-genesis-rsi-v22-transfer-proposal-v1",
+  "task_id": "brewstead-catalog-crop-ingredient-name",
+  "campaign_slot_id": "v22-brewstead-catalog-crop-ingredient-name-r2-g1-s1",
+  "parent_node_id": "v22-brewstead-catalog-crop-ingredient-name-node-c3691fe5cf60",
+  "parent_tree_digest": "c3691fe5cf608dc0ddbd7ae368fdd28b335196f4105e3788033d93531962e78c",
+  "host_commit": "720b27c8bc80de16c04953e13d5f9e8425beea8c",
+  "task_manifest_sha256": "0805211325a5464ce025f83ba7cb9484f1447fa784a454561af9e1270f516bc2",
+  "proposer_protocol_sha256": "f28109600e1090254e2b70a666cd519724014c199ecce281970cc84dba5e23ca",
+  "proposal_patch_sha256": "94847b17864b215f9fd15d3ff8b2e1f5f501b85028dd0eec83a40db82e3ca612",
+  "intent": "Make crop catalog mapping source the ingredient identifier and ingredient name from one explicit linked Ingredient reference.",
+  "rationale": "Bind crop.getIngredient() once before constructing CropResponse, then map ingredientId and ingredientName from that linked Ingredient while leaving the crop name, growth duration, and yield mapping unchanged.",
+  "files_changed": [
+    "src/main/java/be/mjodheim/brewstead/service/CatalogService.java"
+  ],
+  "public_checks": [
+    "Inspected CatalogServiceTest mapping expectations and CropResponse component order in the supplied parent.",
+    "Public guard attempted with the supplied Maven wrapper; it could not run because the Maven distribution was not included in the bundle and bundle-only execution forbids fetching it.",
+    "VERIFY_OUTPUT.py proposal.patch transcript.json -> GENESIS_RSI_V22_TRANSFER_OUTPUT=PASS"
+  ],
+  "uncertainties": [
+    "The full public Maven guard could not execute offline because the wrapper distribution was absent from the bundle.",
+    "The supplied parent already dereferenced crop.getIngredient().getName(); no reserved evaluator was available, so the patch makes the linked Ingredient binding explicit without changing intended mapping semantics."
+  ],
+  "information_boundary": {
+    "used_only_supplied_bundle": true,
+    "used_web_or_github": false,
+    "used_saved_memory_or_previous_chats": false,
+    "used_reserved_evaluator_source_or_result": false,
+    "used_other_v22_attempt_or_slot_output": false,
+    "used_g1_g2_selection_information": false,
+    "used_human_candidate_specific_guidance": false
+  }
+}
