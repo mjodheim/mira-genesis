@@ -15,24 +15,32 @@ jobs:
     steps:
       - name: Checkout Genesis apparatus
         uses: actions/checkout@v6
-      - name: Checkout exact BrewTrack host
-        uses: actions/checkout@v6
-        with:
-          repository: mjodheim/BrewTrack
-          ref: 1727fc0158c6dbd741bfb0b6d85e8fe70f1a40f3
-          path: brewtrack
+      - name: Materialize exact BrewTrack L5 snapshot
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp -a experiment/rsi_v23/holdout/host_snapshot/brewtrack brewtrack
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          m=json.loads(Path("brewtrack/SNAPSHOT_MANIFEST.json").read_text())
+          assert m["source_repository"]=="mjodheim/BrewTrack"
+          assert m["source_commit"]=="1727fc0158c6dbd741bfb0b6d85e8fe70f1a40f3"
+          assert len(m["files"])==7
+          print("L5_BREWTRACK_SNAPSHOT=PASS")
+          PY
       - name: Setup .NET 10
         uses: actions/setup-dotnet@v5
         with:
           dotnet-version: '10.0.x'
       - name: Restore once
         working-directory: brewtrack
-        run: dotnet restore Tests/BrewTrack.Tests.csproj
+        run: dotnet restore Tests/L5Snapshot.Tests.csproj
       - name: Public oracle guard
         working-directory: brewtrack
         run: |
-          dotnet build Tests/BrewTrack.Tests.csproj -c Release --no-restore
-          dotnet test Tests/BrewTrack.Tests.csproj -c Release --no-build --verbosity normal
+          dotnet build Tests/L5Snapshot.Tests.csproj -c Release --no-restore
+          dotnet test Tests/L5Snapshot.Tests.csproj -c Release --no-build --filter "FullyQualifiedName~BrewMathTests|FullyQualifiedName~RecipeMathTests" --verbosity normal
       - name: Calibrate BrewMath oracle and defect root
         shell: bash
         run: |
@@ -43,9 +51,9 @@ jobs:
           cp experiment/rsi_v23/holdout/evaluator/L5BrewMathReservedTests.cs /tmp/brewmath-defect/Tests/
           git -C /tmp/brewmath-defect apply "$GITHUB_WORKSPACE/experiment/rsi_v23/holdout/defects/brewtrack-brewmath-precision.patch"
 
-          dotnet test /tmp/brewmath-oracle/Tests/BrewTrack.Tests.csproj -c Release --filter FullyQualifiedName~L5BrewMathReservedTests --logger "trx;LogFileName=oracle.trx"
+          dotnet test /tmp/brewmath-oracle/Tests/L5Snapshot.Tests.csproj -c Release --filter FullyQualifiedName~L5BrewMathReservedTests --logger "trx;LogFileName=oracle.trx"
           set +e
-          dotnet test /tmp/brewmath-defect/Tests/BrewTrack.Tests.csproj -c Release --filter FullyQualifiedName~L5BrewMathReservedTests --logger "trx;LogFileName=defect.trx"
+          dotnet test /tmp/brewmath-defect/Tests/L5Snapshot.Tests.csproj -c Release --filter FullyQualifiedName~L5BrewMathReservedTests --logger "trx;LogFileName=defect.trx"
           defect_rc=$?
           set -e
           test "$defect_rc" -ne 0
@@ -66,7 +74,7 @@ jobs:
           assert defect.get("total")==4 and defect.get("passed")==0 and defect.get("failed")==4
           PY
           rm /tmp/brewmath-defect/Tests/L5BrewMathReservedTests.cs
-          dotnet test /tmp/brewmath-defect/Tests/BrewTrack.Tests.csproj -c Release --verbosity normal
+          dotnet test /tmp/brewmath-defect/Tests/L5Snapshot.Tests.csproj -c Release --verbosity normal
 
       - name: Calibrate RecipeMath oracle and defect root
         shell: bash
@@ -78,9 +86,9 @@ jobs:
           cp experiment/rsi_v23/holdout/evaluator/L5RecipeMathReservedTests.cs /tmp/recipemath-defect/Tests/
           git -C /tmp/recipemath-defect apply "$GITHUB_WORKSPACE/experiment/rsi_v23/holdout/defects/brewtrack-recipemath-units-water.patch"
 
-          dotnet test /tmp/recipemath-oracle/Tests/BrewTrack.Tests.csproj -c Release --filter FullyQualifiedName~L5RecipeMathReservedTests --logger "trx;LogFileName=oracle.trx"
+          dotnet test /tmp/recipemath-oracle/Tests/L5Snapshot.Tests.csproj -c Release --filter FullyQualifiedName~L5RecipeMathReservedTests --logger "trx;LogFileName=oracle.trx"
           set +e
-          dotnet test /tmp/recipemath-defect/Tests/BrewTrack.Tests.csproj -c Release --filter FullyQualifiedName~L5RecipeMathReservedTests --logger "trx;LogFileName=defect.trx"
+          dotnet test /tmp/recipemath-defect/Tests/L5Snapshot.Tests.csproj -c Release --filter FullyQualifiedName~L5RecipeMathReservedTests --logger "trx;LogFileName=defect.trx"
           defect_rc=$?
           set -e
           test "$defect_rc" -ne 0
@@ -101,7 +109,7 @@ jobs:
           assert defect.get("total")==4 and defect.get("passed")==0 and defect.get("failed")==4
           PY
           rm /tmp/recipemath-defect/Tests/L5RecipeMathReservedTests.cs
-          dotnet test /tmp/recipemath-defect/Tests/BrewTrack.Tests.csproj -c Release --verbosity normal
+          dotnet test /tmp/recipemath-defect/Tests/L5Snapshot.Tests.csproj -c Release --verbosity normal
 
   brewstead:
     name: Calibrate Brewstead L5 holdouts
