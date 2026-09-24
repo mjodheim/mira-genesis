@@ -79,7 +79,7 @@
       "sha256": "28e9881b4596c4efd283d17659aa84b9cc626f75f3c5382b9600bd9667ac212f",
       "task_manifest_sha256": "06bbd3fba34f69d2331875f2e6cb3396b8c8d0e5583725f51846be3e67396226",
       "campaign_slot_id": "v22r-brewstead-progression-merchant-coin-bonus-r1-shared-s1",
-      "parent_tree_digest": "651e4f46d14b2567e056aeea0946fcfda488a83587f146ed6e2c26d529e5f0",
+      "parent_tree_digest": "651e4f46d14b2567e056aeea0946fcfda488a83587f146edeb6e2c26d529e5f0",
       "parent_source_sha256": "f47d0b6720e6e12b04885405a6cfa46bb9e37881ddcd2174d67897505466ced2",
       "parent_archive_sha256": "490210d1e2984ca3fa96222639b51d8b13889b0c512e04ea8416679ae7b1266c",
       "evaluator_commitment_sha256": "0bd2985e793be1a7ad0cdb5f000bcd6c4fcbcee822623d5fe834aec17b170129"
