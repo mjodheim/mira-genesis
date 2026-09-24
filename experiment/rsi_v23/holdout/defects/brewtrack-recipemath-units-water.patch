@@ -1,0 +1,20 @@
+diff --git a/Domain/RecipeMath.cs b/Domain/RecipeMath.cs
+--- a/Domain/RecipeMath.cs
++++ b/Domain/RecipeMath.cs
+@@ -117,7 +117,7 @@ namespace Domain
+                        + grainKg
+                        + volumeLiters * 0.10m * boilMinutes / 60m
+-                       + volumeLiters * 0.04m, 1);
++                       + volumeLiters * 0.04m, 0);
+ 
+         // ---- Garde-fou de vraisemblance -----------------------------------------
+ 
+@@ -145,7 +145,7 @@ namespace Domain
+         {
+             Unit.Kilogram => quantity * 1000m,
+             Unit.Gram => quantity,
+-            Unit.Milligram => quantity / 1000m,
++            Unit.Milligram => quantity / 100m,
+             Unit.Liter => quantity * 1000m,
+             Unit.Milliliter => quantity,
+             _ => quantity,
