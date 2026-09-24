@@ -1,0 +1,64 @@
+name: Final V22R L4 adjudication 2026-09-24
+
+on:
+  push:
+    branches:
+      - results/rsi-v22r-final-20260924
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  adjudicate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact result lineage
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Download exact completed R2 artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/r2
+          gh run download 35994451674 -n v22r-g1-r2-retained-evaluation -D /tmp/r2
+          test -f /tmp/r2/catalog-state.json
+          test -f /tmp/r2/game-state-state.json
+          test -f /tmp/r2/progression-state.json
+
+      - name: Run frozen final adjudicator
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 experiment/rsi_v22/adjudicate.py             /tmp/r2/catalog-state.json             /tmp/r2/game-state-state.json             /tmp/r2/progression-state.json             --out /tmp/V22R_FINAL_ADJUDICATION.json
+          echo '===V22R_FINAL_ADJUDICATION==='
+          cat /tmp/V22R_FINAL_ADJUDICATION.json
+          echo '===END_V22R_FINAL_ADJUDICATION==='
+
+      - name: Require positive L4 predicate
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          p="/tmp/V22R_FINAL_ADJUDICATION.json"
+          d=json.load(open(p))
+          if d.get("v22_positive") is not True:
+              raise SystemExit("V22R final adjudication is not positive")
+          if d.get("g2_tasks_solved_without_regression") != 3:
+              raise SystemExit("G2 did not solve all three tasks")
+          if d.get("g2_strict_process_wins",0) < 2:
+              raise SystemExit("G2 did not achieve enough strict process wins")
+          print("GENESIS_RSI_V22R_L4=PASS")
+          PY
+
+      - name: Upload final adjudication
+        uses: actions/upload-artifact@v4
+        with:
+          name: v22r-final-l4-adjudication
+          path: /tmp/V22R_FINAL_ADJUDICATION.json
+          if-no-files-found: error
