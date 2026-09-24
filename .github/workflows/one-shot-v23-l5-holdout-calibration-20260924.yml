@@ -111,6 +111,27 @@ jobs:
           rm /tmp/recipemath-defect/Tests/L5RecipeMathReservedTests.cs
           dotnet test /tmp/recipemath-defect/Tests/L5Snapshot.Tests.csproj -c Release --verbosity normal
 
+      - name: Preserve BrewTrack calibration record
+        shell: bash
+        run: |
+          cat > /tmp/v23-l5-brewtrack-calibration.json <<'EOF'
+          {
+            "schema": "mira-genesis-rsi-v23-l5-holdout-calibration-v1",
+            "host": "mjodheim/BrewTrack@1727fc0158c6dbd741bfb0b6d85e8fe70f1a40f3",
+            "snapshot_manifest": "experiment/rsi_v23/holdout/host_snapshot/brewtrack/SNAPSHOT_MANIFEST.json",
+            "public_guard": true,
+            "tasks": {
+              "brewtrack-brewmath-precision": {"oracle_reserved": "4/4", "defect_reserved": "0/4"},
+              "brewtrack-recipemath-units-water": {"oracle_reserved": "4/4", "defect_reserved": "0/4"}
+            }
+          }
+          EOF
+      - uses: actions/upload-artifact@v4
+        with:
+          name: v23-l5-brewtrack-calibration
+          path: /tmp/v23-l5-brewtrack-calibration.json
+          if-no-files-found: error
+
   brewstead:
     name: Calibrate Brewstead L5 holdouts
     runs-on: ubuntu-latest
@@ -194,3 +215,23 @@ jobs:
           PY
           rm /tmp/brew-defect/src/test/java/be/mjodheim/brewstead/service/L5BrewServiceReservedTest.java
           (cd /tmp/brew-defect && ./mvnw -q -Dtest='*ServiceTest,*ControllerTest,DomainBehaviorTest,RequestValidationTest,MapperTest,GameClockTest,ApiExceptionHandlerTest' test)
+
+      - name: Preserve Brewstead calibration record
+        shell: bash
+        run: |
+          cat > /tmp/v23-l5-brewstead-calibration.json <<'EOF'
+          {
+            "schema": "mira-genesis-rsi-v23-l5-holdout-calibration-v1",
+            "host": "mjodheim/mjodheim-brewstead@84f6c2462b810a83870974068db1e12d7f1e3720",
+            "public_guard": true,
+            "tasks": {
+              "brewstead-effect-rounding": {"oracle_reserved": "4/4", "defect_reserved": "0/4"},
+              "brewstead-brew-lifecycle-thresholds": {"oracle_reserved": "4/4", "defect_reserved": "0/4"}
+            }
+          }
+          EOF
+      - uses: actions/upload-artifact@v4
+        with:
+          name: v23-l5-brewstead-calibration
+          path: /tmp/v23-l5-brewstead-calibration.json
+          if-no-files-found: error
