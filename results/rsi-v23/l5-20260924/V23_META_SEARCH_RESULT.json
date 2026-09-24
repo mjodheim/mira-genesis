@@ -1,0 +1,664 @@
+{
+  "arms": {
+    "g1_meta": {
+      "arm": "g1_meta",
+      "controller_sha256": "3354f887a93a08d9f00e9c54ccb097003f727ba77c1e1b4e9997adf676d35434",
+      "meta_process_utility": [
+        8,
+        12,
+        11240,
+        -32,
+        -32,
+        -3,
+        -2
+      ],
+      "represented_requests": 3,
+      "revealed_node_ids": [
+        "g2-root",
+        "m-79eb5518cb739fd2",
+        "m-2a3456a3fe621b48",
+        "m-91b7d7aca4b309d4"
+      ],
+      "root_g2_development_utility": [
+        7,
+        12,
+        10970,
+        -30,
+        -30
+      ],
+      "rounds": 2,
+      "schema": "mira-genesis-rsi-v23-l5-meta-arm-v1",
+      "selected_successor": {
+        "candidate": {
+          "development_utility": [
+            8,
+            12,
+            11240,
+            -32,
+            -32
+          ],
+          "episodes": [
+            {
+              "accepted": true,
+              "best_quality_milli": 1000,
+              "episode_id": "q650-deep-p0",
+              "represented_requests": 3,
+              "rounds": 3,
+              "solved": true
+            },
+            {
+              "accepted": true,
+              "best_quality_milli": 1000,
+              "episode_id": "q650-deep-p1",
+              "represented_requests": 3,
+              "rounds": 3,
+              "solved": true
+            },
+            {
+              "accepted": true,
+              "best_quality_milli": 1000,
+              "episode_id": "q650-root-p0",
+              "represented_requests": 4,
+              "rounds": 4,
+              "solved": true
+            },
+            {
+              "accepted": true,
+              "best_quality_milli": 1000,
+              "episode_id": "q650-root-p1",
+              "represented_requests": 4,
+              "rounds": 4,
+              "solved": true
+            },
+            {
+              "accepted": true,
+              "best_quality_milli": 1000,
+              "episode_id": "q730-deep-p0",
+              "represented_requests": 3,
+              "rounds": 3,
+              "solved": true
+            },
+            {
+              "accepted": true,
+              "best_quality_milli": 1000,
+              "episode_id": "q730-deep-p1",
+              "represented_requests": 3,
+              "rounds": 3,
+              "solved": true
+            },
+            {
+              "accepted": true,
+              "best_quality_milli": 1000,
+              "episode_id": "q730-root-p0",
+              "represented_requests": 4,
+              "rounds": 4,
+              "solved": true
+            },
+            {
+              "accepted": true,
+              "best_quality_milli": 1000,
+              "episode_id": "q730-root-p1",
+              "represented_requests": 4,
+              "rounds": 4,
+              "solved": true
+            },
+            {
+              "accepted": true,
+              "best_quality_milli": 810,
+              "episode_id": "q810-deep-p0",
+              "represented_requests": 1,
+              "rounds": 1,
+              "solved": false
+            },
+            {
+              "accepted": true,
+              "best_quality_milli": 810,
+              "episode_id": "q810-deep-p1",
+              "represented_requests": 1,
+              "rounds": 1,
+              "solved": false
+            },
+            {
+              "accepted": true,
+              "best_quality_milli": 810,
+              "episode_id": "q810-root-p0",
+              "represented_requests": 1,
+              "rounds": 1,
+              "solved": false
+            },
+            {
+              "accepted": true,
+              "best_quality_milli": 810,
+              "episode_id": "q810-root-p1",
+              "represented_requests": 1,
+              "rounds": 1,
+              "solved": false
+            }
+          ],
+          "mutation_depth": 2,
+          "params": {
+            "deep_min_depth": 1,
+            "max_rounds": 7,
+            "parallelism": 1,
+            "promising_quality_max": 710,
+            "stall_rounds": 3,
+            "stop_quality": 780
+          },
+          "params_digest": "b83e099c231eb30d4dea1e171b4a0a58ca083ebaa8582d255fced248ffdc307b",
+          "quality_milli": 769,
+          "source_sha256": "fda0bef4d698f2355e76a0b1196f1dbfc12de56b5b48985904a66e218a340e2b"
+        },
+        "node_id": "m-91b7d7aca4b309d4"
+      },
+      "stop_reason": "policy_stall_rounds",
+      "successor_development_utility": [
+        8,
+        12,
+        11240,
+        -32,
+        -32
+      ],
+      "successor_strictly_better_than_g2_on_development": true
+    },
+    "g2_ablation": {
+      "arm": "g2_ablation",
+      "controller_sha256": "6475a013ced3936689ba7d6cc973a7759ad272198eb60d2a8c484b332fc25c80",
+      "meta_process_utility": [
+        8,
+        12,
+        11240,
+        -32,
+        -32,
+        -4,
+        -4
+      ],
+      "represented_requests": 4,
+      "revealed_node_ids": [
+        "g2-root",
+        "m-79eb5518cb739fd2",
+        "m-91b7d7aca4b309d4",
+        "m-01e1f2b474cb6e5c",
+        "m-567a79dae33d75bb"
+      ],
+      "root_g2_development_utility": [
+        7,
+        12,
+        10970,
+        -30,
+        -30
+      ],
+      "rounds": 4,
+      "schema": "mira-genesis-rsi-v23-l5-meta-arm-v1",
+      "selected_successor": {
+        "candidate": {
+          "development_utility": [
+            8,
+            12,
+            11240,
+            -32,
+            -32
+          ],
+          "episodes": [
+            {
+              "accepted": true,
+              "best_quality_milli": 1000,
+              "episode_id": "q650-deep-p0",
+              "represented_requests": 3,
+              "rounds": 3,
+              "solved": true
+            },
+            {
+              "accepted": true,
+              "best_quality_milli": 1000,
+              "episode_id": "q650-deep-p1",
+              "represented_requests": 3,
+              "rounds": 3,
+              "solved": true
+            },
+            {
+              "accepted": true,
+              "best_quality_milli": 1000,
+              "episode_id": "q650-root-p0",
+              "represented_requests": 4,
+              "rounds": 4,
+              "solved": true
+            },
+            {
+              "accepted": true,
+              "best_quality_milli": 1000,
+              "episode_id": "q650-root-p1",
+              "represented_requests": 4,
+              "rounds": 4,
+              "solved": true
+            },
+            {
+              "accepted": true,
+              "best_quality_milli": 1000,
+              "episode_id": "q730-deep-p0",
+              "represented_requests": 3,
+              "rounds": 3,
+              "solved": true
+            },
+            {
+              "accepted": true,
+              "best_quality_milli": 1000,
+              "episode_id": "q730-deep-p1",
+              "represented_requests": 3,
+              "rounds": 3,
+              "solved": true
+            },
+            {
+              "accepted": true,
+              "best_quality_milli": 1000,
+              "episode_id": "q730-root-p0",
+              "represented_requests": 4,
+              "rounds": 4,
+              "solved": true
+            },
+            {
+              "accepted": true,
+              "best_quality_milli": 1000,
+              "episode_id": "q730-root-p1",
+              "represented_requests": 4,
+              "rounds": 4,
+              "solved": true
+            },
+            {
+              "accepted": true,
+              "best_quality_milli": 810,
+              "episode_id": "q810-deep-p0",
+              "represented_requests": 1,
+              "rounds": 1,
+              "solved": false
+            },
+            {
+              "accepted": true,
+              "best_quality_milli": 810,
+              "episode_id": "q810-deep-p1",
+              "represented_requests": 1,
+              "rounds": 1,
+              "solved": false
+            },
+            {
+              "accepted": true,
+              "best_quality_milli": 810,
+              "episode_id": "q810-root-p0",
+              "represented_requests": 1,
+              "rounds": 1,
+              "solved": false
+            },
+            {
+              "accepted": true,
+              "best_quality_milli": 810,
+              "episode_id": "q810-root-p1",
+              "represented_requests": 1,
+              "rounds": 1,
+              "solved": false
+            }
+          ],
+          "mutation_depth": 2,
+          "params": {
+            "deep_min_depth": 1,
+            "max_rounds": 7,
+            "parallelism": 1,
+            "promising_quality_max": 710,
+            "stall_rounds": 3,
+            "stop_quality": 780
+          },
+          "params_digest": "b83e099c231eb30d4dea1e171b4a0a58ca083ebaa8582d255fced248ffdc307b",
+          "quality_milli": 769,
+          "source_sha256": "fda0bef4d698f2355e76a0b1196f1dbfc12de56b5b48985904a66e218a340e2b"
+        },
+        "node_id": "m-91b7d7aca4b309d4"
+      },
+      "stop_reason": "policy_stall_rounds",
+      "successor_development_utility": [
+        8,
+        12,
+        11240,
+        -32,
+        -32
+      ],
+      "successor_strictly_better_than_g2_on_development": true
+    },
+    "g2_meta": {
+      "arm": "g2_meta",
+      "controller_sha256": "69d0d725601cd32adff27379dbb25f5c7be29946f9e9c6ac4858a0634cbd5fdf",
+      "meta_process_utility": [
+        8,
+        12,
+        11240,
+        -32,
+        -32,
+        -4,
+        -4
+      ],
+      "represented_requests": 4,
+      "revealed_node_ids": [
+        "g2-root",
+        "m-79eb5518cb739fd2",
+        "m-91b7d7aca4b309d4",
+        "m-01e1f2b474cb6e5c",
+        "m-567a79dae33d75bb"
+      ],
+      "root_g2_development_utility": [
+        7,
+        12,
+        10970,
+        -30,
+        -30
+      ],
+      "rounds": 4,
+      "schema": "mira-genesis-rsi-v23-l5-meta-arm-v1",
+      "selected_successor": {
+        "candidate": {
+          "development_utility": [
+            8,
+            12,
+            11240,
+            -32,
+            -32
+          ],
+          "episodes": [
+            {
+              "accepted": true,
+              "best_quality_milli": 1000,
+              "episode_id": "q650-deep-p0",
+              "represented_requests": 3,
+              "rounds": 3,
+              "solved": true
+            },
+            {
+              "accepted": true,
+              "best_quality_milli": 1000,
+              "episode_id": "q650-deep-p1",
+              "represented_requests": 3,
+              "rounds": 3,
+              "solved": true
+            },
+            {
+              "accepted": true,
+              "best_quality_milli": 1000,
+              "episode_id": "q650-root-p0",
+              "represented_requests": 4,
+              "rounds": 4,
+              "solved": true
+            },
+            {
+              "accepted": true,
+              "best_quality_milli": 1000,
+              "episode_id": "q650-root-p1",
+              "represented_requests": 4,
+              "rounds": 4,
+              "solved": true
+            },
+            {
+              "accepted": true,
+              "best_quality_milli": 1000,
+              "episode_id": "q730-deep-p0",
+              "represented_requests": 3,
+              "rounds": 3,
+              "solved": true
+            },
+            {
+              "accepted": true,
+              "best_quality_milli": 1000,
+              "episode_id": "q730-deep-p1",
+              "represented_requests": 3,
+              "rounds": 3,
+              "solved": true
+            },
+            {
+              "accepted": true,
+              "best_quality_milli": 1000,
+              "episode_id": "q730-root-p0",
+              "represented_requests": 4,
+              "rounds": 4,
+              "solved": true
+            },
+            {
+              "accepted": true,
+              "best_quality_milli": 1000,
+              "episode_id": "q730-root-p1",
+              "represented_requests": 4,
+              "rounds": 4,
+              "solved": true
+            },
+            {
+              "accepted": true,
+              "best_quality_milli": 810,
+              "episode_id": "q810-deep-p0",
+              "represented_requests": 1,
+              "rounds": 1,
+              "solved": false
+            },
+            {
+              "accepted": true,
+              "best_quality_milli": 810,
+              "episode_id": "q810-deep-p1",
+              "represented_requests": 1,
+              "rounds": 1,
+              "solved": false
+            },
+            {
+              "accepted": true,
+              "best_quality_milli": 810,
+              "episode_id": "q810-root-p0",
+              "represented_requests": 1,
+              "rounds": 1,
+              "solved": false
+            },
+            {
+              "accepted": true,
+              "best_quality_milli": 810,
+              "episode_id": "q810-root-p1",
+              "represented_requests": 1,
+              "rounds": 1,
+              "solved": false
+            }
+          ],
+          "mutation_depth": 2,
+          "params": {
+            "deep_min_depth": 1,
+            "max_rounds": 7,
+            "parallelism": 1,
+            "promising_quality_max": 710,
+            "stall_rounds": 3,
+            "stop_quality": 780
+          },
+          "params_digest": "b83e099c231eb30d4dea1e171b4a0a58ca083ebaa8582d255fced248ffdc307b",
+          "quality_milli": 769,
+          "source_sha256": "fda0bef4d698f2355e76a0b1196f1dbfc12de56b5b48985904a66e218a340e2b"
+        },
+        "node_id": "m-91b7d7aca4b309d4"
+      },
+      "stop_reason": "policy_stall_rounds",
+      "successor_development_utility": [
+        8,
+        12,
+        11240,
+        -32,
+        -32
+      ],
+      "successor_strictly_better_than_g2_on_development": true
+    },
+    "no_meta": {
+      "arm": "no_meta",
+      "controller_sha256": null,
+      "meta_process_utility": [
+        8,
+        12,
+        11240,
+        -32,
+        -32,
+        -8,
+        -8
+      ],
+      "represented_requests": 8,
+      "revealed_node_ids": [
+        "g2-root",
+        "m-79eb5518cb739fd2",
+        "m-2a3456a3fe621b48",
+        "m-aa5f8ec8274063e8",
+        "m-8b198ab7f96f7e27",
+        "m-d8004ce91331d8d6",
+        "m-6dd07e69f343a097",
+        "m-f886700e567bddd6",
+        "m-3623c501546864f9"
+      ],
+      "root_g2_development_utility": [
+        7,
+        12,
+        10970,
+        -30,
+        -30
+      ],
+      "rounds": 8,
+      "schema": "mira-genesis-rsi-v23-l5-meta-arm-v1",
+      "selected_successor": {
+        "candidate": {
+          "development_utility": [
+            8,
+            12,
+            11240,
+            -32,
+            -32
+          ],
+          "episodes": [
+            {
+              "accepted": true,
+              "best_quality_milli": 1000,
+              "episode_id": "q650-deep-p0",
+              "represented_requests": 3,
+              "rounds": 3,
+              "solved": true
+            },
+            {
+              "accepted": true,
+              "best_quality_milli": 1000,
+              "episode_id": "q650-deep-p1",
+              "represented_requests": 3,
+              "rounds": 3,
+              "solved": true
+            },
+            {
+              "accepted": true,
+              "best_quality_milli": 1000,
+              "episode_id": "q650-root-p0",
+              "represented_requests": 4,
+              "rounds": 4,
+              "solved": true
+            },
+            {
+              "accepted": true,
+              "best_quality_milli": 1000,
+              "episode_id": "q650-root-p1",
+              "represented_requests": 4,
+              "rounds": 4,
+              "solved": true
+            },
+            {
+              "accepted": true,
+              "best_quality_milli": 1000,
+              "episode_id": "q730-deep-p0",
+              "represented_requests": 3,
+              "rounds": 3,
+              "solved": true
+            },
+            {
+              "accepted": true,
+              "best_quality_milli": 1000,
+              "episode_id": "q730-deep-p1",
+              "represented_requests": 3,
+              "rounds": 3,
+              "solved": true
+            },
+            {
+              "accepted": true,
+              "best_quality_milli": 1000,
+              "episode_id": "q730-root-p0",
+              "represented_requests": 4,
+              "rounds": 4,
+              "solved": true
+            },
+            {
+              "accepted": true,
+              "best_quality_milli": 1000,
+              "episode_id": "q730-root-p1",
+              "represented_requests": 4,
+              "rounds": 4,
+              "solved": true
+            },
+            {
+              "accepted": true,
+              "best_quality_milli": 810,
+              "episode_id": "q810-deep-p0",
+              "represented_requests": 1,
+              "rounds": 1,
+              "solved": false
+            },
+            {
+              "accepted": true,
+              "best_quality_milli": 810,
+              "episode_id": "q810-deep-p1",
+              "represented_requests": 1,
+              "rounds": 1,
+              "solved": false
+            },
+            {
+              "accepted": true,
+              "best_quality_milli": 810,
+              "episode_id": "q810-root-p0",
+              "represented_requests": 1,
+              "rounds": 1,
+              "solved": false
+            },
+            {
+              "accepted": true,
+              "best_quality_milli": 810,
+              "episode_id": "q810-root-p1",
+              "represented_requests": 1,
+              "rounds": 1,
+              "solved": false
+            }
+          ],
+          "mutation_depth": 1,
+          "params": {
+            "deep_min_depth": 2,
+            "max_rounds": 8,
+            "parallelism": 1,
+            "promising_quality_max": 750,
+            "stall_rounds": 3,
+            "stop_quality": 780
+          },
+          "params_digest": "a0ba0237f1df8c0923a09422d66e4fb4a55085af9cfccf228951224e7923dfe7",
+          "quality_milli": 769,
+          "source_sha256": "773a625c4fbf1e342832719f2bcd1b6f57af4a1ef8674a11dd9619207b59e7d3"
+        },
+        "node_id": "m-f886700e567bddd6"
+      },
+      "stop_reason": "external_round_budget",
+      "successor_development_utility": [
+        8,
+        12,
+        11240,
+        -32,
+        -32
+      ],
+      "successor_strictly_better_than_g2_on_development": true
+    }
+  },
+  "budgets": {
+    "max_parallelism": 2,
+    "mutation_depth": 2,
+    "represented_requests_per_arm": 9,
+    "rounds_per_arm": 8
+  },
+  "pre_holdout_facts": {
+    "g2_ablation_meta_process_equal": true,
+    "g2_ablation_selects_same_successor": true,
+    "g2_meta_found_development_improvement": true,
+    "g2_meta_process_beats_g1_meta": false
+  },
+  "schema": "mira-genesis-rsi-v23-l5-meta-search-v1"
+}

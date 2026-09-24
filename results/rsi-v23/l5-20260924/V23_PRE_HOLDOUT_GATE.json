@@ -1,0 +1,7 @@
+{
+  "eligible_for_fresh_holdout": false,
+  "g2_meta_found_strict_development_successor": true,
+  "g2_meta_process_strictly_beats_g2_ablation": false,
+  "g3_zero_tolerance_l4_retention": true,
+  "schema": "mira-genesis-rsi-v23-l5-pre-holdout-gate-v1"
+}
