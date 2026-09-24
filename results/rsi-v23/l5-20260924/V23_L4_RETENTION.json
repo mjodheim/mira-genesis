@@ -1,0 +1,27 @@
+{
+  "l4_reference_per_task_utility": [
+    1000,
+    -1,
+    -1
+  ],
+  "policy_sha256": "fda0bef4d698f2355e76a0b1196f1dbfc12de56b5b48985904a66e218a340e2b",
+  "schema": "mira-genesis-rsi-v23-l4-retention-v1",
+  "tasks": [
+    {
+      "retained": true,
+      "selected_parent_ids": [],
+      "task_id": "brewstead-catalog-crop-ingredient-name"
+    },
+    {
+      "retained": true,
+      "selected_parent_ids": [],
+      "task_id": "brewstead-game-state-estate-max-fields"
+    },
+    {
+      "retained": true,
+      "selected_parent_ids": [],
+      "task_id": "brewstead-progression-merchant-coin-bonus"
+    }
+  ],
+  "zero_tolerance_retention": true
+}
