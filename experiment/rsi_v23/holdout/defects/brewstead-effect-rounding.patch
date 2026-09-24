@@ -1,0 +1,19 @@
+diff --git a/src/main/java/be/mjodheim/brewstead/service/EffectService.java b/src/main/java/be/mjodheim/brewstead/service/EffectService.java
+--- a/src/main/java/be/mjodheim/brewstead/service/EffectService.java
++++ b/src/main/java/be/mjodheim/brewstead/service/EffectService.java
+@@ -84,14 +84,14 @@ public class EffectService {
+     @Transactional
+     public int qualityShift(Long playerId) {
+-        return magnitudeOf(playerId, EffectKind.INSPIRATION) / 2
+-                - magnitudeOf(playerId, EffectKind.MAIN_LOURDE) / 2;
++        return (magnitudeOf(playerId, EffectKind.INSPIRATION)
++                - magnitudeOf(playerId, EffectKind.MAIN_LOURDE)) / 2;
+     }
+ 
+     @Transactional
+     public int boostCoins(Long playerId, int coins) {
+-        return coins + coins * magnitudeOf(playerId, EffectKind.BOURSE_PERCEE) / 100;
++        return (int) Math.round(coins + coins * magnitudeOf(playerId, EffectKind.BOURSE_PERCEE) / 100.0);
+     }
+ 
+     @Transactional
