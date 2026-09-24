@@ -1,0 +1,33 @@
+{
+  "schema": "mira-genesis-rsi-v22-transfer-proposal-v1",
+  "task_id": "brewstead-catalog-crop-ingredient-name",
+  "campaign_slot_id": "v22-brewstead-catalog-crop-ingredient-name-r1-shared-s1",
+  "parent_node_id": "v22-brewstead-catalog-crop-ingredient-name-root",
+  "parent_tree_digest": "c61e697543dd463d893c71fc1a26bde788af35313cfb3117f129c303fc34dde4",
+  "host_commit": "720b27c8bc80de16c04953e13d5f9e8425beea8c",
+  "task_manifest_sha256": "9b8ce469960a044d27e25ee45212b8f5a3d36e64d1d1d58042188d4612c0244f",
+  "proposer_protocol_sha256": "f28109600e1090254e2b70a666cd519724014c199ecce281970cc84dba5e23ca",
+  "proposal_patch_sha256": "705fb9c56833e8bf94991f86e815312e45c42789c055ef06fc786c713671bd6f",
+  "intent": "Expose each crop catalog entry's linked ingredient name in CropResponse instead of repeating the crop name.",
+  "rationale": "CropResponse's fourth field is ingredientName. The existing mapper already reads the linked ingredient for ingredientId but populated ingredientName with crop.getName(); replacing only that expression with crop.getIngredient().getName() is the smallest causal repair and leaves all other catalog mapping behavior unchanged.",
+  "files_changed": [
+    "src/main/java/be/mjodheim/brewstead/service/CatalogService.java"
+  ],
+  "public_checks": [
+    "./mvnw -q -Dtest='*ServiceTest,*ControllerTest,DomainBehaviorTest,RequestValidationTest,MapperTest,GameClockTest,ApiExceptionHandlerTest' test — not executable offline because the supplied wrapper requires downloading Maven 3.9.16",
+    "./mvnw -q -Dtest=CatalogServiceTest test — not executable offline because the supplied wrapper requires downloading Maven 3.9.16",
+    "git diff --check — passed"
+  ],
+  "uncertainties": [
+    "The supplied Maven wrapper could not run without prohibited network access, so public JUnit execution could not be completed in this isolated environment."
+  ],
+  "information_boundary": {
+    "used_only_supplied_bundle": true,
+    "used_web_or_github": false,
+    "used_saved_memory_or_previous_chats": false,
+    "used_reserved_evaluator_source_or_result": false,
+    "used_other_v22_attempt_or_slot_output": false,
+    "used_g1_g2_selection_information": false,
+    "used_human_candidate_specific_guidance": false
+  }
+}
