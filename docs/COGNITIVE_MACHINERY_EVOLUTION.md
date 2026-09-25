@@ -55,9 +55,10 @@ parameter-count or intelligence inference from topology.
 ### Increment 1 — executable primitive registry
 
 `genesis/cognitive_executor.py` executes a deliberately small deterministic primitive catalogue under
-an externally imposed node-execution ceiling. Recurrent state remains outside the genome. Actual CPU
-process time is reported only as a compute proxy; energy remains unavailable unless it is independently
-instrumented.
+an externally imposed node-execution ceiling. Recurrent state remains outside the genome. Recurrent
+edges have source -> target semantics across logical steps, so recurrent topology changes affect
+execution rather than remaining decorative structure. Actual CPU process time is reported only as a
+compute proxy; energy remains unavailable unless it is independently instrumented.
 
 ### Increment 2 — bounded architecture mutations
 
@@ -82,12 +83,23 @@ checks. Those remain external or trust-root-governed.
 
 ## Planned increments
 
-### Increment 3 — lineage-held architecture search
+### Increment 3 — lineage-held architecture search (proposal path implemented)
 
-Let a lineage-held policy propose architecture mutations from admitted evidence. Candidate
-architectures execute in isolation and the unchanged evaluator compares them with the parent under
-matched budgets and fresh holdout tasks. Selection should preserve a Pareto view rather than reward
-capability at any compute cost.
+`genesis/cognitive_search.py` now represents bounded architecture-search policy as canonical,
+content-addressed lineage data. A fixed interpreter deterministically enumerates structurally valid
+descendants through the bounded mutation engine, deduplicates equal child architectures, skips
+retained candidate identities and refuses a policy whose candidate limit or primitive vocabulary
+exceeds externally supplied ceilings.
+
+`genesis/cognitive_search_controller.py` binds the seed policy into `LineageState`, runs its proposal
+step inside the existing isolation boundary and reconstructs the expected candidate host-side before
+returning it. Proposal generation cannot spend the external budget, mutate lineage state, inspect a
+grader or emit a verdict. The policy survives checkpoint restoration.
+
+The evaluation/adoption half of Increment 3 remains separate: candidate architectures still need an
+external matched-budget measurement record before any descendant may be adopted. That next layer
+must preserve the policy/parent/proposal/child identities emitted here and must not move scoring into
+the mutable search policy.
 
 ### Increment 4 — resource-aware causal adoption
 
