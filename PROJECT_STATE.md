@@ -1,6 +1,6 @@
 # Mira Genesis — current authoritative project state
 
-**Updated: 6 September 2026 — M124/H69 closed without replay; H69 untested.**
+**Updated: 23 September 2026 — RSI transfer replication V22 frozen before proposer execution; V21 preserved as positive but incompletely reproducible process-dominance evidence.**
 
 This is the reader-facing navigation and interpretation snapshot. Frozen experiment records,
 immutable results, `DECISIONS.md`, experiment-local evidence and the machine-readable
@@ -10,7 +10,34 @@ The superseded 2 September/M120 snapshot is preserved byte-for-byte at
 [`docs/state-history/PROJECT_STATE_PRE_SYNC_2026-09-05.md`](docs/state-history/PROJECT_STATE_PRE_SYNC_2026-09-05.md).
 Nothing historical is rewritten by this synchronization.
 
-## Current answer
+## Project-wide current answer
+
+The active project-wide frontier is now the **RSI transfer / recursive-meta-improvement line**, not
+the September carrier-readiness line.
+
+- **V21 / Brewstead transfer:** positive process-dominance evidence. On three real-repository repair
+  processes, G2 reached the same recorded best quality as G1 with fewer represented search requests.
+  V21 does **not** close L4 because the exact reserved evaluator source and the V21 scalar utility
+  implementation were not retained; that archival defect is preserved in `docs/rsi-v21/`.
+- **V22 / retained-evaluator replication:** prospectively frozen **before any proposer output**.
+  Three fresh Brewstead tasks, reserved objectives, G1/G2 executable policy bytes, explicit utility,
+  campaign semantics, proposal evaluator and final adjudicator are retained. Calibration and the
+  complete apparatus CI are green. Execution identity is `4320ff8a…`, sealed by
+  `docs/rsi-v22/V22_FREEZE_002.json`. The campaign is **not yet adjudicated**.
+- **V23 / conditional recursive successor:** preregistered before the V22 result. A positive V22
+  opens the stronger question `G2 -> better meta-search -> G3 -> fresh holdout gain`, with matched
+  G1-meta, G2-ablation and no-meta controls. A negative V22 instead requires a successor targeted at
+  the measured failure. See `docs/RSI_GENERAL_SUCCESSOR_MAP_2026-09-23.md`.
+- **Existing DEVELOPMENT recursive apparatus:** current `main` already contains persistent
+  search-policy and MetaPolicy evolution, a two-transition retained MetaPolicy descent fixture, and
+  an evidence-adaptive recursive research strategy. This reduces the engineering gap to V23 but does
+  not replace V23's causal ablation, matched-control or fresh-holdout requirements.
+
+No V21/V22 statement here changes a generality gate, establishes AGI or establishes open-ended RSI.
+The intended progression is to test increasingly general **causal recursive improvement** while
+keeping evaluator authority, provenance and rollback external to the candidate lineage.
+
+## Separate carrier-line answer
 
 The latest merged carrier milestone is **M124/H69**. It is **closed at DEVELOPMENT readiness without
 replay and H69 is UNTESTED**. No qualifying scientific generation ran, no carrier bank was built and

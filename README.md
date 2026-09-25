@@ -7,36 +7,59 @@ measurement boundaries.
 
 The project was originated and is directed by **Anthony Mets**.
 
-The project is deliberately narrower than the phrase “self-improving AI” usually suggests. It does
-not treat a model rewriting source code as proof that a lineage owns the improvement process. The
-research question is instead whether progressively more of the machinery for diagnosis,
-transformation, validation, adoption and later improvement can become **lineage-owned, causal and
-replayable**.
+The project's **long-horizon research direction is general recursive self-improvement**: a
+persistent software lineage that can improve not only task solutions but progressively the machinery
+that discovers, evaluates and retains later improvements, repeat that process across materially
+different domains, and improve its disposable tools and execution environment as part of the same
+causal lineage.
 
-> **Objective:** build a program capable of **empirical metamorphosis** — a persistent lineage that
-> diagnoses its own limitations, modifies its body and progressively its own acquisition machinery,
-> evaluates its descendants experimentally, adopts or rejects transformations on evidence, retains
-> what it acquired, and continues after a change of body or substrate. Stated in full at
-> [`docs/METAMORPHOSIS_TARGET.md`](docs/METAMORPHOSIS_TARGET.md).
+That is a direction, **not a current claim**. Mira Genesis deliberately requires much narrower,
+prospectively testable statements at each step. A model rewriting source code, an agent improving a
+benchmark score, or a later generation outperforming an earlier one is not by itself evidence that
+the lineage owns a recursive improvement process. The stronger question is whether an acquired
+improvement becomes causally responsible for making a later improvement discoverable or cheaper,
+and whether that relation survives fresh transfer, ablation and repeated generations.
+
+> **Architectural objective:** build a program capable of **empirical metamorphosis** — a persistent
+> lineage that diagnoses its own limitations, modifies its body and progressively its own acquisition
+> machinery, evaluates its descendants experimentally, adopts or rejects transformations on
+> evidence, retains what it acquired, and continues after a change of body or substrate. This is the
+> architectural bridge toward the wider RSI direction. See
+> [`docs/METAMORPHOSIS_TARGET.md`](docs/METAMORPHOSIS_TARGET.md) and
+> [`docs/RSI_GENERAL_SUCCESSOR_MAP_2026-09-23.md`](docs/RSI_GENERAL_SUCCESSOR_MAP_2026-09-23.md).
 >
-> **Where the line stands:** the M095–M102 acquisition line qualified cumulative, carrier-neutral
-> acquisition under real interference. M107 then extended the lower interpreter endogenously, M108
-> modified the acquisition machinery itself, M109 had a modified machinery produce the next
-> modification from the lineage's own blame findings, M110 carried such a modification into a
-> materially different consumer family, and M111 reached self-directed diagnosis at recursive depth
-> three. M112 removed project authorship of the worlds. M113–M125 are an apparatus-convergence line
-> against a separate carrier question and remain **untested**, not negative.
+> **Where the line stands — 23 September 2026:** the project now has two connected
+> frontiers. The integrated `genesis/` runtime exists and composes the earlier bounded mechanisms,
+> while the active RSI transfer line asks whether an acquired improvement to the **improvement
+> policy itself** transfers to real software and then helps produce its own successor.
 >
-> **What is missing is not another mechanism.** These primitives had never run as one program.
-> The integrated runtime now exists at [`genesis/`](genesis/), and one lineage runs the whole cycle
-> end to end — measure, diagnose, transform, verify, adopt or reject, retain, change substrate, and
-> evolve again in the new form. It runs against **fixtures**, it is DEVELOPMENT apparatus, and it
-> advances no gate. What it establishes is that the mechanisms compose and that the program refuses
-> what it claims to refuse; whether the same holds with a real mechanism attached is the current
-> frontier. Ten defects found in it after the fact, and the questions still open, are recorded at
-> [`experiments/GENESIS/RUNTIME_NOTES.md`](experiments/GENESIS/RUNTIME_NOTES.md); what a run has to
-> exhibit, and which of those properties are driven to their negative, at
-> [`experiments/GENESIS/DEMONSTRATION_DEFINITION.md`](experiments/GENESIS/DEMONSTRATION_DEFINITION.md).
+> **V21** supplied positive process-dominance evidence on three Brewstead repairs: G2 reached the
+> same observed quality ceiling as G1 with fewer represented search requests. V21 is **not** treated
+> as a fully reproducible L4 closure because the retained archive no longer contains the exact
+> reserved evaluator source and scalar utility implementation. That limitation is preserved in
+> `docs/rsi-v21/` rather than repaired after the fact.
+>
+> **V22** is the prospective retained-evaluator replication. Before any proposer output, it freezes
+> three fresh Brewstead tasks, their reserved JUnit objectives, executable G1/G2 policy bytes,
+> explicit lexicographic utility, real-repair tree adapter, campaign engine and final adjudicator.
+> Calibration is green, the tested apparatus identity is frozen in
+> `docs/rsi-v22/V22_FREEZE_002.json`, and the next scientific action is the blind R1 proposer
+> round. V22 has **no result yet**.
+>
+> **V23** is conditionally preregistered before the V22 outcome. If V22 is positive, the next target
+> is causal recursive meta-improvement: test whether G2 improves the process that discovers a G3,
+> whether G3 beats G2 on fresh holdout tasks, and whether ablating the G2-acquired mechanism weakens
+> that successor transition. The broader path is recorded in
+> `docs/RSI_GENERAL_SUCCESSOR_MAP_2026-09-23.md`.
+>
+> The repository already contains a **DEVELOPMENT recursive substrate** below that scientific target:
+> retained MetaPolicy descent has exercised `M0→M1→M2`, search-policy descent `P0→P1→P2`, and
+> body descent `B0→B1→B2` in one persistent fixture campaign, while
+> `genesis.recursive_research_strategy` can retain evidence-backed strategy generations such as
+> `S0→S1→S2`. Those mechanisms are useful apparatus, not V23 evidence: their objectives, structural
+> edits and adaptation rules remain project-authored and the MetaPolicy certificate explicitly does
+> not establish the counterfactual machinery ablation V23 requires.
+
 
 For the detailed current snapshot, see
 [`docs/CURRENT_RESEARCH_FRONTIER.md`](docs/CURRENT_RESEARCH_FRONTIER.md).
@@ -84,9 +107,10 @@ The current staged objective is:
 M091 demonstrated endogenous extension in a bounded abstract setting; M097 brought one acquired
 operation into the real-software line, M100 repeated the enabling relation twice, M101 moved the
 relation across authored text, record and Python-syntax carriers, and M102 acquired a registry
-policy under real forgetting pressure before reusing the chain in SQLite. The current frontier is
-whether an acquired state-owned improvement can expand the constructive reach of the acquisition
-machinery itself.
+policy under real forgetting pressure before reusing the chain in SQLite. M107–M112 later pushed
+that question into interpreter and acquisition-machinery modification. The current frontier is the
+V22/V23 sequence described above: real-project transfer of an acquired search-policy improvement,
+then causal recursive production of a better successor policy.
 
 ## Where the project stands now
 
