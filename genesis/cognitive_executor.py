@@ -1,9 +1,10 @@
 """DEVELOPMENT executor for content-addressed cognitive architectures.
 
-The executor is deliberately small and deterministic.  It executes only primitives supplied by an
+The executor is deliberately small and deterministic. It executes only primitives supplied by an
 explicit registry, keeps recurrent state outside the architecture genome, and records observations
-from the actual execution.  CPU process time is reported only as a compute proxy; energy is never
-inferred from it.
+from the actual execution. Recurrent edges have real source -> target semantics: a target receives
+the previous-step state of the recurrent edge's source node. CPU process time is reported only as a
+compute proxy; energy is never inferred from it.
 """
 from __future__ import annotations
 
@@ -11,13 +12,12 @@ import time
 from dataclasses import dataclass
 from typing import Any, Callable, Mapping
 
-from .cognitive_architecture import (
-    CognitiveArchitectureError,
-    architecture_digest,
-    canonical_architecture,
-)
+from .cognitive_architecture import architecture_digest, canonical_architecture
 
-Primitive = Callable[[tuple[Any, ...], Any, Mapping[str, Any]], tuple[Any, Any]]
+Primitive = Callable[
+    [tuple[Any, ...], Mapping[str, Any], Mapping[str, Any]],
+    tuple[Any, Any],
+]
 
 
 @dataclass(frozen=True)
@@ -32,15 +32,23 @@ class CognitiveExecutionError(RuntimeError):
     """Raised when an admitted architecture cannot be executed safely."""
 
 
-def _identity(values: tuple[Any, ...], previous: Any, config: Mapping[str, Any]) -> tuple[Any, Any]:
-    del previous, config
+def _identity(
+    values: tuple[Any, ...],
+    recurrent_values: Mapping[str, Any],
+    config: Mapping[str, Any],
+) -> tuple[Any, Any]:
+    del recurrent_values, config
     if len(values) != 1:
         raise CognitiveExecutionError("identity expects exactly one input")
     return values[0], None
 
 
-def _sum(values: tuple[Any, ...], previous: Any, config: Mapping[str, Any]) -> tuple[Any, Any]:
-    del previous, config
+def _sum(
+    values: tuple[Any, ...],
+    recurrent_values: Mapping[str, Any],
+    config: Mapping[str, Any],
+) -> tuple[Any, Any]:
+    del recurrent_values, config
     if not values:
         raise CognitiveExecutionError("sum expects at least one input")
     try:
@@ -49,16 +57,27 @@ def _sum(values: tuple[Any, ...], previous: Any, config: Mapping[str, Any]) -> t
         raise CognitiveExecutionError("sum accepts additive values only") from exc
 
 
-def _state_cell(values: tuple[Any, ...], previous: Any, config: Mapping[str, Any]) -> tuple[Any, Any]:
+def _state_cell(
+    values: tuple[Any, ...],
+    recurrent_values: Mapping[str, Any],
+    config: Mapping[str, Any],
+) -> tuple[Any, Any]:
     del config
     if len(values) != 1:
         raise CognitiveExecutionError("state_cell expects exactly one feedforward input")
-    current = values[0] if previous is None else previous
-    return current, values[0]
+    if len(recurrent_values) > 1:
+        raise CognitiveExecutionError("state_cell accepts at most one recurrent source")
+    current = values[0]
+    previous = next(iter(recurrent_values.values())) if recurrent_values else None
+    return (current if previous is None else previous), current
 
 
-def _threshold_router(values: tuple[Any, ...], previous: Any, config: Mapping[str, Any]) -> tuple[Any, Any]:
-    del previous
+def _threshold_router(
+    values: tuple[Any, ...],
+    recurrent_values: Mapping[str, Any],
+    config: Mapping[str, Any],
+) -> tuple[Any, Any]:
+    del recurrent_values
     if len(values) != 3:
         raise CognitiveExecutionError("threshold_router expects selector, low and high inputs")
     threshold = config.get("threshold", 0)
@@ -87,10 +106,13 @@ def execute_architecture(
 ) -> ExecutionResult:
     """Execute one logical step under an externally supplied node-execution ceiling.
 
-    Input nodes are values supplied by the caller and are not executed as primitives.  Recurrent
-    edges read the *previous* step's state for their target; they never alter within-step ordering.
-    Primitive callables receive ``(feedforward_values, previous_state, config)`` and return
-    ``(output, next_state)``.  Only nodes with recurrent incoming edges persist next state.
+    Input nodes are caller-supplied values and are not executed as primitives. Feedforward edges
+    determine within-step ordering. Each recurrent edge source -> target supplies the target with
+    the previous-step state retained by source. A primitive receives
+    (feedforward_values, recurrent_source_values, config) and returns (output, next_state).
+
+    A node with outgoing recurrent edges persists next_state when the primitive supplies one,
+    otherwise its output. Input nodes with outgoing recurrent edges persist their supplied input.
     """
     active_registry = dict(DEVELOPMENT_PRIMITIVES if registry is None else registry)
     canonical = canonical_architecture(
@@ -113,6 +135,7 @@ def execute_architecture(
     recurrent_in: dict[str, list[str]] = {node_id: [] for node_id in node_by_id}
     outgoing: dict[str, list[str]] = {node_id: [] for node_id in node_by_id}
     indegree = {node_id: 0 for node_id in node_by_id}
+    recurrent_sources: set[str] = set()
     for edge in canonical["edges"]:
         if edge["kind"] == "feedforward":
             feedforward_in[edge["target"]].append(edge["source"])
@@ -120,6 +143,7 @@ def execute_architecture(
             indegree[edge["target"]] += 1
         else:
             recurrent_in[edge["target"]].append(edge["source"])
+            recurrent_sources.add(edge["source"])
 
     ready = sorted(node_id for node_id, degree in indegree.items() if degree == 0)
     order: list[str] = []
@@ -143,9 +167,18 @@ def execute_architecture(
     unknown_state = set(previous) - set(node_by_id)
     if unknown_state:
         raise CognitiveExecutionError("recurrent state contains unknown nodes: %s" % sorted(unknown_state))
+    inactive_state = set(previous) - recurrent_sources
+    if inactive_state:
+        raise CognitiveExecutionError(
+            "recurrent state contains nodes without outgoing recurrent edges: %s"
+            % sorted(inactive_state)
+        )
 
     values: dict[str, Any] = dict(inputs)
-    next_state: dict[str, Any] = {}
+    next_state: dict[str, Any] = {
+        node_id: values[node_id]
+        for node_id in sorted(declared_inputs & recurrent_sources)
+    }
     started = time.process_time_ns()
     primitive_calls = 0
     for node_id in executable:
@@ -154,9 +187,13 @@ def execute_architecture(
         if primitive is None:
             raise CognitiveExecutionError("primitive %r is not executable" % node["primitive"])
         args = tuple(values[source] for source in sorted(feedforward_in[node_id]))
-        old_state = previous.get(node_id)
+        recurrent_values = {
+            source: previous[source]
+            for source in sorted(recurrent_in[node_id])
+            if source in previous
+        }
         try:
-            output, proposed_state = primitive(args, old_state, node["config"])
+            output, proposed_state = primitive(args, recurrent_values, node["config"])
         except CognitiveExecutionError:
             raise
         except Exception as exc:
@@ -165,8 +202,8 @@ def execute_architecture(
             ) from exc
         primitive_calls += 1
         values[node_id] = output
-        if recurrent_in[node_id]:
-            next_state[node_id] = proposed_state
+        if node_id in recurrent_sources:
+            next_state[node_id] = output if proposed_state is None else proposed_state
 
     cpu_ns = time.process_time_ns() - started
     return ExecutionResult(
@@ -175,6 +212,7 @@ def execute_architecture(
         recurrent_state=next_state,
         observations={
             "primitive_calls": primitive_calls,
+            "recurrent_state_values": len(next_state),
             "cpu_process_time_ns": cpu_ns,
             "cpu_time_is_compute_proxy": True,
             "energy_joules": None,
