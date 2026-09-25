@@ -59,14 +59,16 @@ an externally imposed node-execution ceiling. Recurrent state remains outside th
 process time is reported only as a compute proxy; energy remains unavailable unless it is independently
 instrumented.
 
-### Increment 2 — bounded architecture mutations (in progress)
+### Increment 2 — bounded architecture mutations
 
 `genesis/cognitive_mutation.py` applies explicit externally chosen mutation intents and validates the
-result against admitted primitives and externally supplied size bounds. Primitive/config replacement
-and edge addition/removal are implemented. Node addition/removal and content-addressed mutation
-lineage are the next bounded extension.
+result against admitted primitives and externally supplied size bounds. Primitive/config replacement,
+node addition/removal and edge addition/removal are implemented. Every applied mutation can emit a
+content-addressed `MutationRecord` binding the canonical parent digest, proposal digest and child
+digest. Input/output protection, admitted primitive constraints and node/edge ceilings fail closed.
 
-Mutation policy, scoring and scientific selection remain outside this module.
+Mutation policy, scoring and scientific selection remain outside this module; the mutation engine
+therefore cannot decide that its own descendant is better.
 
 ## Boundary that must not move
 
