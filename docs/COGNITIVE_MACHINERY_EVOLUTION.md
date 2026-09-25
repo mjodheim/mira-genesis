@@ -101,12 +101,16 @@ external matched-budget measurement record before any descendant may be adopted.
 must preserve the policy/parent/proposal/child identities emitted here and must not move scoring into
 the mutable search policy.
 
-### Increment 4 — resource-aware causal adoption
+### Increment 4 — resource-aware causal adoption (measurement foundation implemented)
 
-Require an adopted architecture to carry independently measured capability and resource evidence.
-Where energy cannot be measured, say so; do not substitute an invented conversion from CPU seconds.
-Run ablations to distinguish “new topology caused the gain” from noise, larger budget, or a changed
-evaluation path.
+`genesis/cognitive_measurement.py` now creates content-addressed external measurement records that bind
+architecture, evaluator, case-set and budget identities. Matched comparison refuses changed evaluators,
+case sets or budgets and reports capability, node-execution and CPU-process-time deltas without issuing
+an adoption verdict. CPU time remains explicitly a compute proxy.
+
+Energy stays unavailable by default. An energy value is admitted only together with the identity of a
+real measurement instrument; the framework does not derive joules from CPU time. The next slice is the
+external adoption/rollback record plus paired causal ablations that reuse these identities and budgets.
 
 ### Increment 5 — mutate the mutation machinery
 
