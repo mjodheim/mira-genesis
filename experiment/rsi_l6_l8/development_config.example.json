@@ -1,0 +1,11 @@
+{
+  "_status": "DEVELOPMENT_EXAMPLE_NOT_A_CANONICAL_THRESHOLD_FREEZE",
+  "l6_min_causal_transitions": 3,
+  "l7_min_domain_families": 4,
+  "l7_min_external_maintained_domains": 1,
+  "internal_maintainer_ids": [
+    "genesis-owner"
+  ],
+  "l8_min_bottleneck_episodes": 4,
+  "l8_min_distinct_selected_components": 2
+}
